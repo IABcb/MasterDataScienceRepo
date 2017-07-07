@@ -1,0 +1,20 @@
+1) Iniciamos Zookeper --> $KAFKA_HOME/bin/zookeeper-server-start.sh $KAFKA_HOME/config/zookeeper.properties
+
+2) Iniciamos Kafka --> $KAFKA_HOME/bin/kafka-server-start.sh $KAFKA_HOME/config/server.properties
+
+3) Creamos Topic "visualization" --> $KAFKA_HOME/bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic visualization200
+
+
+4) $KAFKA_HOME/bin/kafka-topics.sh --list --zookeeper localhost:2181
+
+
+5) En el producer: 	python kafka_producer_p2.py visualization200 final_data.csv 0.5 1999-12 2000-02
+
+					python kafka_producer_p2.py visualization200 final_data.csv 0.25 2000-02 2007-01
+
+					python kafka_producer_p2.py visualization200 final_data.csv 0.5 2007-01 2009-01
+
+					python kafka_producer_p2.py visualization200 final_data.csv 0.5 2009-01 2013-01
+
+					python kafka_producer_p2.py visualization200 final_data.csv 0.5 2013-01 2016-12
+

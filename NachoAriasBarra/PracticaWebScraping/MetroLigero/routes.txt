@@ -1,0 +1,5 @@
+﻿route_id,agency_id,route_short_name,route_long_name,route_desc,route_type,route_url,route_color,route_text_color
+10__ML1___,CRTM,ML1,Las Tablas - Pinar de Chamartín,,0,http://www.crtm.es/tu-transporte-publico/metro-ligero/lineas/10__51___.aspx,3A7DDA,FFFFFF
+10__ML2___,CRTM,ML2,Colonia Jardín - Estación de Aravaca,,0,http://www.crtm.es/tu-transporte-publico/metro-ligero/lineas/10__2___.aspx,A60084,FFFFFF
+10__ML3___,CRTM,ML3,Colonia Jardín - Puerta de Boadilla,,0,http://www.crtm.es/tu-transporte-publico/metro-ligero/lineas/10__3___.aspx,ED1C24,FFFFFF
+10__ML4___,CRTM,ML4,Tranvía de Parla (Línea Circular),,0,http://www.crtm.es/tu-transporte-publico/metro-ligero/lineas/10__4___.aspx,7DB713,FFFFFF

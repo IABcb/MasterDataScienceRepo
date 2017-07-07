@@ -1,0 +1,370 @@
+---
+title: "Trabajo 1. Probabilidad y Variable Aleatoria"
+author: "Ignacio Arias Barra"
+date: "7 de noviembre de 2016"
+output: html_document
+---
+
+Una empresa de servicios de Internet quiere hacer una campaña para aplicar entre un 5% y un 25% de
+descuento a sus clientes de forma aleatoria y lineal, y entonces la probabilidad de que un cliente reciba un
+determinado descuento se puede modelizar mediante la siguiente función de densidad:
+
+$$f(x) = \begin{cases} k(25 − x), & \mbox{si }\ 5 \leq \mbox{ x } \leq \ 25\\0 & \mbox{resto}\end{cases}$$
+
+Responde a las siguientes cuestiones:
+
+1. Calcula k para que f (x) sea realmente una funcion de densidad
+
+*La función de densidad de una V.A continua nos sirve para calcular probabilidades integrando intervalos debajo de su curva.*
+
+*Para comprobar si la función f(x) es realmente una función de densidad, vamos a usar una de sus propiedades: la propiedad de que la integral entre menos infinito e infinito es igual a 1, como mostramos en la siguiente ecuación*
+
+$$\begin{equation}
+1 = \int_{-\infty}^{\infty} f(x) \cdot dx
+\end{equation}$$
+
+*Como viene indicado, esta función tiene un valor igual a cero, para todo el intervalo que no esté entre 5 y 25. Debido a esto, podemos acotar el intervalo de integración. A la vez, sustituimos f(x) en el intervalo definido*
+
+$$\begin{equation}
+1 = \int_{5}^{25} k \ (25 - x) \cdot dx
+\end{equation}$$
+
+*Despejamos k, para poder hallar su valor*
+
+$$\begin{equation}
+k =\frac{1}{\int_{5}^{25} \ (25 - x) \cdot dx}  \
+\end{equation}$$
+
+```{r, calculo_k}
+fdesp  <- function(x) 25-x
+integ <- integrate(fdesp, 5, 25)$value
+k <- 1/integ
+k
+
+#Función de densidad
+f <- function(x) 0.005*(25-x)
+```
+*El valor obtenido de k es 0.005*
+
+2. Calcula la probabilidad de que un cliente obtenga mas de un 20% de descuento
+
+*Para calcular esta probabilidad, se va a emplear la función de distribución de probabilidad. Para calcularla, integraremos la funcióń de densidad.*
+
+$$\begin{equation}
+ F(x) = P[X \ > \ x] = \int_{x}^{\infty} f(x) \cdot dx
+\end{equation}$$
+
+*Con este cálculo, obtenemos la probabilidad de que el resultado esté por encima de un valor dado*
+
+*Definimos el suceso A = obtener más de 20% de descuento*
+
+*Calculamos la probabilidad de A, en el intervalo definido por la función de densidad, desde nuestro valor deseado*
+
+$$\begin{equation}
+ F(x) = P[X\ > 20] \ = \int_{20}^{25} 0.005 \ (25 - x) \cdot dx
+\end{equation}$$
+
+```{r prob_descuento_mayor_20}
+PA <- integrate(f,20,25)$value
+PA
+```
+
+*La probabilidad de que un cliente obtenga más de un 20% es de *`r PA` *.*
+
+*A continuación se representa la función de densidad: *
+```{r gráfica_funcion_densidad, fig.align = "center"}
+library(ggplot2)
+#Intervalo de representación en la gráfica
+interv <- 0.1
+xmin_interv <- 0
+xmax_interv <- 30
+ymin_interv <- 0 
+ymax_interv <- 0.15
+xlimites <-c(xmin_interv,xmax_interv)
+ylimites <-c(ymin_interv,ymax_interv)
+
+x_v <- seq(xmin_interv, xmax_interv, by = interv)
+
+#Intervalo función distinto de 0
+xmin_f <- 5
+xmax_f <- 25
+#Intervalos de función igual a 0
+xminc1_f <- 0
+xmaxc1_f <- 5
+xminc2_f <- 25
+xmaxc2_f <- 30
+#Aplicamos función densidad a todo el intervalo
+y_f <- sapply(x_v,f)
+#Introducimos los ceros en los intervalos fuera de xmin_f y xmax_f
+y_f[((xminc1_f/interv)+1):((xmaxc1_f/interv))] <- 0
+y_f[((xminc2_f/interv)+1):((xmaxc2_f/interv)+1)] <- 0
+
+#Creamos DF
+valores <- data.frame(valores_x = x_v, f_x= y_f)
+
+#Representación
+f_drawing <- ggplot(valores, aes(valores_x)) +
+  geom_line(aes(y = f_x), colour = "green", size = 1) +
+  lims(x = xlimites, y = ylimites) + 
+  ggtitle("Función de densidad") + 
+  ylab("f(x)") +  xlab(bquote(~x[i]))
+f_drawing
+```
+
+*Los calculos realizados en este apartado se traducen en el cálculo del área por debajo de la línea de la función de densidad.*
+
+```{r, probabilidad_mas_20,fig.align = "center"}
+#Valor limite de probabilidad a calcular
+v_prob = 20
+
+#Creamos el area que dibujaremos para el cálculo de probabilidad
+y2 <- y_f
+y2[((xminc1_f/interv)+1):((v_prob/interv)+1)] <- 0
+
+#Añadimos columna al DF
+valores <- data.frame(valores, prob = y2)
+
+#Representación
+f_drawing +
+  geom_line(aes(x = v_prob, y = f_x), colour = "red", size = 0.4)+
+  geom_line(aes(y = valores$prob), colour = NA) +
+  ggtitle("Prob. más del 20% de descuento") + 
+  geom_polygon(data = valores, aes(x = valores_x, y=y2),alpha = 0.6,  fill = "yellow")
+```
+
+*El área marcada en amarillo, corresponde al área calculada en la integral. Ésta define la probabilidad de que un cliente obtenga más de un 20% de descuento.*
+
+3. ¿Cuál es el descuento medio que se espera aplicar?
+
+*Para obtener el descuento medio, calcularemos la esperanza de la variable, definida como: *
+
+$$\begin{equation}
+ E[X]  = \int_{-\infty}^{\infty} x \cdot f(x) \cdot dx
+\end{equation}$$
+
+```{r}
+f2 <- function(x) x*f(x)
+esperanza <-integrate(f2,5,25)$value
+esperanza
+```
+*Por lo tanto, el descuento medio que se espera será de *`r esperanza`*.*
+
+4. Calcula la varianza de la variable aleatoria
+
+*Se define la varianza de la variable como: *
+$$\begin{equation}
+ Var[X]  = \ E[(X- \mu)^2] = E[X^2] - E[X]^2
+\end{equation}$$
+
+*Calculamos cada apartado por separado*
+$$\begin{equation}
+E[X^2] = \int_{-\infty}^{\infty} x² \cdot f(x) \cdot dx
+\end{equation}$$
+```{r}
+f3 <- function(x) x^2*f(x)
+Ex2<- integrate(f3,5,25)$value
+Ex2
+
+```
+$$\begin{equation}
+E[X]^2 = (\int_{-\infty}^{\infty} x \cdot f(x) \cdot dx)^2
+\end{equation}$$
+```{r}
+Ex_2 <- esperanza^2
+Ex_2
+```
+
+*Por último, calculamos la varianza*
+```{r}
+varianza <- Ex2 - Ex_2
+varianza
+```
+*La varianza tiene un valor de * `r varianza`*.*
+
+5. ¿Entre qué valores estarán probablemente la mitad de los descuentos
+realizados?
+
+*En este apartado vamos a acotar la probabilidad de de los descuentos centrales de varias formas.*
+
+*La primera es, la desigualdad de Tchebyshev. Esta desigualdad nos permite acotar la probabilidad entre dos valores. Entre sus diferentes expresiones, usaremos la siguiente:*
+
+$$ P \left[ \left| X - \mu  \right| < k\sigma \right] \geq 1 - \dfrac{1}{k^{2}}$$
+
+*Esta desigualdad nos indica que los valores a obtener estarán entre:*
+
+$$\begin{equation}
+\mu-\sigma k < x < \mu+\sigma k
+\end{equation}$$
+
+*Queremos acotar la probabilidad de la mitad de los descuentos, es decir, 0.5. Calculamos k: *
+
+$$\begin{equation}
+0.5 = 1 - \dfrac{1}{k^{2}};\    k = \sqrt \frac{1}{1-0.5}
+\end{equation}$$
+
+```{r}
+k = sqrt(1/(1-0.5))
+k
+```
+
+*Con el valor de k obtenido, *`r k`*, procedemos a calcular los límites del intervalo.*
+
+*Siendo sigma la desviación típica: *
+
+$$\begin{equation}
+Var[X] = \sigma^2; \sigma = \sqrt(Var[X])
+\end{equation}$$
+
+```{r}
+sigma <- sqrt(varianza)
+```
+
+*Calculamos el intervalo.*
+```{r}
+lim_sup_tc_mu <- esperanza + k*sigma
+lim_inf_tc_mu <- esperanza - k*sigma
+lim_inf_tc_mu
+lim_sup_tc_mu
+```
+
+
+*Con el cálculo respecto a la media, tenemos que los descuentos centrales se encontrarán entre * `r lim_inf_tc_mu` *y* `r lim_sup_tc_mu`.
+
+*Para la segunda forma de cálculo, utilizamos el área bajo la curva de la función de densidad. Dicho área, va a tener un valor de 0.5, con valor central la media.*
+
+*La operación a realizar sería la siguiente:*
+$$\begin{equation}
+0.5 = \int_{\mu-\sigma k}^{\mu+\sigma k} f(x) \cdot dx
+\end{equation}$$
+
+*Una vez realizado el cálculo, llegamos obtener una nueva k en función de la media.*
+```{r}
+k = 200 / (100*sigma - 4*sigma*esperanza)
+lim_mayor <- esperanza + sigma*k 
+lim_menor <- esperanza - sigma*k
+
+lim_menor
+lim_mayor
+```
+
+*El intervalo calculado, en función a la media, se comprende entre* `r lim_menor` *y* `r lim_mayor`.
+
+*Al conocer la función de densidad, se ha podido calcular el intervalo de esta segunda forma. Con esto hemos calculado el 50% de descuentos que se aplican en torno al valor medio de descuento, obteniendo unos intervalo más acotados que con la desigualdad de Tchebyshev.*
+
+*Ahora, vamos a calcular entre qué dos valores se encuentran la mitad de los descuentos que se hacen. Para ello, vamos a calcular en qué valores se encuentran los cuartiles 25 y 75.*
+
+*Calculamos la función inversa de la función de distribución para calcular cuartiles.*
+
+```{r} 
+Fx_inv <- function(x)
+{
+  sol1_pos <- (0.125 + (sqrt(((-0.125)^2) - (4*(0.0025)*(0.5625+x)))))/0.005
+  sol2_neg <- (0.125 - (sqrt(((-0.125)^2) - (4*(0.0025)*(0.5625+x)))))/0.005
+  Fx_result <- c(sol1_pos, sol2_neg)
+  Fx_result
+}
+```
+
+*Obtenemos los límites del intervalo.*
+
+```{r}
+Lim_cuartil_inf <- sapply(0.25, Fx_inv)
+Lim_cuartil_sup <- sapply(0.75, Fx_inv)
+
+Lim_cuartil_inf[2]
+Lim_cuartil_sup[2]
+```
+
+*Representamos los descuentos centrales respecto a la mediana (representada en rojo).*
+
+```{r}
+area_desc <- valores$f_x
+area_desc[((xminc1_f/interv)+1):((Lim_cuartil_inf[2]/interv)+1)] <- 0
+area_desc[((Lim_cuartil_sup[2]/interv)+1):((xmaxc2_f/interv)+1)] <- 0
+
+valores <- data.frame(valores, mitad_descuentos = area_desc)
+f_drawing + 
+  geom_line(aes(x = Lim_cuartil_inf[2], y = f_x), color = "black", linetype = 5) + 
+  geom_line(aes(x = Lim_cuartil_sup[2], y = f_x), color = "black", linetype = 5) + 
+  geom_line(aes(y = area_desc), color=NA) + 
+  geom_line(aes(x=(sapply(0.5,Fx_inv))[2], y = f_x), linetype = 3, color = "red") + 
+  geom_polygon(data = valores, aes(x = valores_x, y=mitad_descuentos),alpha = 0.6,  fill = "yellow")
+```
+
+6. ¿Cuál es la moda de la variable aleatoria?
+
+*Se define la moda como el valor para el cual obtenemos el máximo de la función de densidad de la V.A*
+
+*Vamos a obtener el dato gráficamente*
+
+```{r}
+f_max <- max(valores$f_x)
+valores <- data.frame(valores, max_fx = f_max)
+
+f_drawing + 
+  geom_line(aes(y = valores$max_fx))
+
+```
+
+*Como se puede observar en la figura, el valor que nos da el máximo sería el 5.*
+*Por lo tanto el 5% de los descuentos será la moda.*
+
+*Si observamos los valores producidos durante los cálculos para la representación de gráficas, podemos obtener el valor de la moda, siendo el mismo valor 5*
+```{r}
+pos_vmax <- which(valores$f_x == f_max)
+moda <- valores$valores_x[pos_vmax]
+moda
+```
+7. Calcula la mediana de la variable aleatoria
+
+*Primero obtenemos la función de distribución, integrando como a continuación:*
+
+$$\begin{equation}
+F(x) = \int_{5}^{x} \ 0.005\ (25 - x) \cdot dx 
+\end{equation}$$
+
+*El resultado que nos queda, es el siguiente:*
+
+$$\begin{equation}
+F(x) = \ 0.0025x^2\ +0.125x\ -0.5625
+\end{equation}$$
+
+*Si queremos calculal algun percentil, tenemos que calcular la función inversa de a Fx.* 
+*Como tenemos una función de segundo grado, tendremos dos posibles valores de la x y por lo tanto, dos posibles funciones inversas válidas: *
+
+*Función 1*
+$$\begin{equation}
+F^{-1}(p) = \frac{0.125 + \sqrt((-0.125)^2 - 4 * 0.0025 *(0.5625+x) ) }{0.005}
+\end{equation}$$
+
+*Función 2*
+
+$$\begin{equation}
+F^{-1}(p) = \frac{0.125 - \sqrt((-0.125)^2 - 4 * 0.0025 *(0.5625+x) ) }{0.005}
+\end{equation}$$
+
+*Utilizamos la función inversa de la función de distribución, para hallar el percentil 50, donde se encuentra la mediana.*
+
+```{r}
+mediana <- sapply(0.5,Fx_inv)
+mediana
+```
+*Los dos posibles valores, obtenidos en la mediana son* `r mediana[1]` *y* `r mediana[2]`*.*
+
+*El intervalo en el que estaba acotado nuestra función, va desde 5 hasta 25, por lo que nuestro valor de la mediana es de * `r mediana[2]` *.*
+
+*Representamos el valor F(x) = 0.5 en la función de distribución y vemos como coincide el valor obtenido con *`r mediana[2]`*.*
+
+```{r}
+Fx <- function(x) 0.005*((25*x)-((x^2)/(2))-(112.5))
+y_Fx <- sapply(valores$valores_x,Fx)
+
+F_drawing <- ggplot(valores, aes(valores_x)) + 
+  geom_line(aes(y = y_Fx), color = "green") +
+  ggtitle("Función de distribución de probabilidad") + 
+  ylab("F(x)") +  xlab("x")
+F_drawing + 
+  geom_line(aes(y = 0.5), color = "black", linetype = 5) +
+  geom_line(aes(x = mediana[2], y = y_Fx), color = "black", linetype = 5)
+  
+```

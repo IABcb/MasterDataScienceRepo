@@ -1,0 +1,109 @@
+﻿¿Existe un vocabulario de etiquetas para mi problema? 
+Algunas ontologías...
+
+Descripción de documentos: www.dublincore.org
+
+Descripción de personas/gente: www.foaf-project.org
+
+Exploring 
+Semantic Web examples (Hebeler et al., 2009)
+semantic-mediawiki.org
+www.twine.com
+
+www.microformats.org
+
+Semantic radar example
+dbpedia.org/sparql
+www.trueknowledge.com
+
+
+
+Otras direcciones de interés: http://schema.rdfs.org/mappings.html
+
+
+REVISADAS 
+
+
+---- Buscador de ontologías: http://swoogle.umbc.edu/
+
+Descripción de cosas: 
+
+www.geonames.com
+http://www.oasis–open.org/cover/xml.html
+
+http://www.rosettanet.org
+
+xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#
+
+http://frot.org/space/0.1
+
+http://www.ksl.stanford.edu/projects/DAML/UNSPSC.daml 
+
+http://e-tourism.deri.at/ont/e-tourism.owl
+http://schema.org/
+
+http://dublincore.org/
+
+
+ELEGIDAS
+
+
+xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos
+	
+-lat
+	
+-long
+
+
+http://e-tourism.deri.at/ont/e-tourism.owl
+
+	-hasParking
+
+
+http://schema.org/
+
+	-address	
+
+	-areaServed
+	
+	-accessibilityFeature
+
+
+http://dublincore.org/
+
+	-type
+
+
+http://xmlns.com/foaf/0.1/
+
+	-name
+
+http://www.daml.org/2003/05/subway/subway-ont
+
+	-adjacentTo
+
+	-airport
+
+	-homepage
+
+	-line
+
+	-location
+
+	-stations
+
+
+
+http://www.crg.cs.nott.ac.uk/~cmg/Equator/Downloads/docs/ect/curioushome.rdf
+	
+	-isAccesible
+
+
+
+http://ontologi.es/rail/vocab
+
+
+
+
+
+

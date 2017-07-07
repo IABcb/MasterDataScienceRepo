@@ -1,0 +1,78 @@
+{
+ "by_repo": {
+  "sum_other_doc_count": 4689,
+  "doc_count_error_upper_bound": 115,
+  "buckets": [
+   {
+    "key": "git://git.opnfv.org/releng",
+    "Commits": {
+     "value": 3297
+    },
+    "doc_count": 3297
+   },
+   {
+    "key": "git://git.opnfv.org/functest",
+    "Commits": {
+     "value": 2302
+    },
+    "doc_count": 2302
+   },
+   {
+    "key": "git://git.opnfv.org/yardstick",
+    "Commits": {
+     "value": 1224
+    },
+    "doc_count": 1224
+   },
+   {
+    "key": "git://git.opnfv.org/apex",
+    "Commits": {
+     "value": 1135
+    },
+    "doc_count": 1135
+   },
+   {
+    "key": "git://git.opnfv.org/armband",
+    "Commits": {
+     "value": 1102
+    },
+    "doc_count": 1102
+   },
+   {
+    "key": "git://git.opnfv.org/fuel",
+    "Commits": {
+     "value": 1062
+    },
+    "doc_count": 1062
+   },
+   {
+    "key": "git://git.opnfv.org/compass4nfv",
+    "Commits": {
+     "value": 1026
+    },
+    "doc_count": 1026
+   },
+   {
+    "key": "git://git.opnfv.org/joid",
+    "Commits": {
+     "value": 776
+    },
+    "doc_count": 776
+   },
+   {
+    "key": "git://git.opnfv.org/qtip",
+    "Commits": {
+     "value": 690
+    },
+    "doc_count": 690
+   },
+   {
+    "key": "git://git.opnfv.org/vswitchperf",
+    "Commits": {
+     "value": 573
+    },
+    "doc_count": 573
+   }
+  ]
+ }
+}

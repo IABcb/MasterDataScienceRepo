@@ -1,0 +1,78 @@
+{
+ "by_author": {
+  "sum_other_doc_count": 11172,
+  "doc_count_error_upper_bound": 185,
+  "buckets": [
+   {
+    "key": "Morgan Richomme",
+    "doc_count": 1013,
+    "lines_added_per_developer": {
+     "value": 97558.0
+    }
+   },
+   {
+    "key": "Jose Lausuch",
+    "doc_count": 963,
+    "lines_added_per_developer": {
+     "value": 95683.0
+    }
+   },
+   {
+    "key": "Tim Rozet",
+    "doc_count": 865,
+    "lines_added_per_developer": {
+     "value": 25872.0
+    }
+   },
+   {
+    "key": "Fatih Degirmenci",
+    "doc_count": 805,
+    "lines_added_per_developer": {
+     "value": 25391.0
+    }
+   },
+   {
+    "key": "Narinder Gupta",
+    "doc_count": 653,
+    "lines_added_per_developer": {
+     "value": 32653.0
+    }
+   },
+   {
+    "key": "Alexandru Avadanii",
+    "doc_count": 635,
+    "lines_added_per_developer": {
+     "value": 24782.0
+    }
+   },
+   {
+    "key": "Ryota MIBU",
+    "doc_count": 458,
+    "lines_added_per_developer": {
+     "value": 12427.0
+    }
+   },
+   {
+    "key": "Aric Gardner",
+    "doc_count": 453,
+    "lines_added_per_developer": {
+     "value": 12084.0
+    }
+   },
+   {
+    "key": "bryan.sullivan",
+    "doc_count": 447,
+    "lines_added_per_developer": {
+     "value": 32360.0
+    }
+   },
+   {
+    "key": "Dan Radez",
+    "doc_count": 412,
+    "lines_added_per_developer": {
+     "value": 25224.0
+    }
+   }
+  ]
+ }
+}

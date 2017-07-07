@@ -1,0 +1,78 @@
+{
+ "by_company": {
+  "sum_other_doc_count": 1502,
+  "doc_count_error_upper_bound": 3,
+  "buckets": [
+   {
+    "key": "Unknown",
+    "doc_count": 5647,
+    "Developer": {
+     "value": 246
+    }
+   },
+   {
+    "key": "Ericsson",
+    "doc_count": 2837,
+    "Developer": {
+     "value": 140
+    }
+   },
+   {
+    "key": "Huawei",
+    "doc_count": 2078,
+    "Developer": {
+     "value": 105
+    }
+   },
+   {
+    "key": "Red Hat",
+    "doc_count": 1189,
+    "Developer": {
+     "value": 41
+    }
+   },
+   {
+    "key": "Orange",
+    "doc_count": 1061,
+    "Developer": {
+     "value": 54
+    }
+   },
+   {
+    "key": "ZTE Corporation",
+    "doc_count": 845,
+    "Developer": {
+     "value": 44
+    }
+   },
+   {
+    "key": "Intel",
+    "doc_count": 763,
+    "Developer": {
+     "value": 66
+    }
+   },
+   {
+    "key": "AT&T",
+    "doc_count": 700,
+    "Developer": {
+     "value": 16
+    }
+   },
+   {
+    "key": "Canonical, Ltd.",
+    "doc_count": 639,
+    "Developer": {
+     "value": 15
+    }
+   },
+   {
+    "key": "ENEA AB",
+    "doc_count": 615,
+    "Developer": {
+     "value": 23
+    }
+   }
+  ]
+ }
+}

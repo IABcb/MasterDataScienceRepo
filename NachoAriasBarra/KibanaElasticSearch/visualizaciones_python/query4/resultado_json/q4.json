@@ -1,0 +1,204 @@
+{
+ "by_company": {
+  "sum_other_doc_count": 0,
+  "doc_count_error_upper_bound": 0,
+  "buckets": [
+   {
+    "doc_count": 5647,
+    "key": "Unknown",
+    "Projects": {
+     "value": 55
+    }
+   },
+   {
+    "doc_count": 2837,
+    "key": "Ericsson",
+    "Projects": {
+     "value": 35
+    }
+   },
+   {
+    "doc_count": 2078,
+    "key": "Huawei",
+    "Projects": {
+     "value": 25
+    }
+   },
+   {
+    "doc_count": 1189,
+    "key": "Red Hat",
+    "Projects": {
+     "value": 12
+    }
+   },
+   {
+    "doc_count": 1061,
+    "key": "Orange",
+    "Projects": {
+     "value": 9
+    }
+   },
+   {
+    "doc_count": 845,
+    "key": "ZTE Corporation",
+    "Projects": {
+     "value": 17
+    }
+   },
+   {
+    "doc_count": 763,
+    "key": "Intel",
+    "Projects": {
+     "value": 12
+    }
+   },
+   {
+    "doc_count": 700,
+    "key": "AT&T",
+    "Projects": {
+     "value": 14
+    }
+   },
+   {
+    "doc_count": 639,
+    "key": "Canonical, Ltd.",
+    "Projects": {
+     "value": 5
+    }
+   },
+   {
+    "doc_count": 615,
+    "key": "ENEA AB",
+    "Projects": {
+     "value": 7
+    }
+   },
+   {
+    "doc_count": 366,
+    "key": "Linux Foundation",
+    "Projects": {
+     "value": 49
+    }
+   },
+   {
+    "doc_count": 308,
+    "key": "NEC",
+    "Projects": {
+     "value": 22
+    }
+   },
+   {
+    "doc_count": 221,
+    "key": "Dell",
+    "Projects": {
+     "value": 9
+    }
+   },
+   {
+    "doc_count": 209,
+    "key": "Mirantis",
+    "Projects": {
+     "value": 6
+    }
+   },
+   {
+    "doc_count": 122,
+    "key": "Nokia",
+    "Projects": {
+     "value": 10
+    }
+   },
+   {
+    "doc_count": 93,
+    "key": "Cisco",
+    "Projects": {
+     "value": 7
+    }
+   },
+   {
+    "doc_count": 62,
+    "key": "Cloudbase Solutions",
+    "Projects": {
+     "value": 6
+    }
+   },
+   {
+    "doc_count": 46,
+    "key": "SUSE",
+    "Projects": {
+     "value": 2
+    }
+   },
+   {
+    "doc_count": 23,
+    "key": "Juniper",
+    "Projects": {
+     "value": 3
+    }
+   },
+   {
+    "doc_count": 17,
+    "key": "Cavium",
+    "Projects": {
+     "value": 1
+    }
+   },
+   {
+    "doc_count": 13,
+    "key": "MontaVista",
+    "Projects": {
+     "value": 2
+    }
+   },
+   {
+    "doc_count": 6,
+    "key": "Hewlett Packard Enterprise Co.",
+    "Projects": {
+     "value": 1
+    }
+   },
+   {
+    "doc_count": 5,
+    "key": "Tata Consultancy",
+    "Projects": {
+     "value": 2
+    }
+   },
+   {
+    "doc_count": 4,
+    "key": "Wind River",
+    "Projects": {
+     "value": 1
+    }
+   },
+   {
+    "doc_count": 3,
+    "key": "Fraunhofer FOKUS",
+    "Projects": {
+     "value": 1
+    }
+   },
+   {
+    "doc_count": 2,
+    "key": "HP",
+    "Projects": {
+     "value": 1
+    }
+   },
+   {
+    "doc_count": 1,
+    "key": "Brocade",
+    "Projects": {
+     "value": 1
+    }
+   },
+   {
+    "doc_count": 1,
+    "key": "KTH Royal Institute of Technology",
+    "Projects": {
+     "value": 1
+    }
+   }
+  ]
+ }
+}

@@ -1,0 +1,78 @@
+{
+ "by_author": {
+  "sum_other_doc_count": 11172,
+  "doc_count_error_upper_bound": 185,
+  "buckets": [
+   {
+    "key": "Morgan Richomme",
+    "doc_count": 1013,
+    "commits_per_developer": {
+     "value": 1013
+    }
+   },
+   {
+    "key": "Jose Lausuch",
+    "doc_count": 963,
+    "commits_per_developer": {
+     "value": 963
+    }
+   },
+   {
+    "key": "Tim Rozet",
+    "doc_count": 865,
+    "commits_per_developer": {
+     "value": 865
+    }
+   },
+   {
+    "key": "Fatih Degirmenci",
+    "doc_count": 805,
+    "commits_per_developer": {
+     "value": 804
+    }
+   },
+   {
+    "key": "Narinder Gupta",
+    "doc_count": 653,
+    "commits_per_developer": {
+     "value": 653
+    }
+   },
+   {
+    "key": "Alexandru Avadanii",
+    "doc_count": 635,
+    "commits_per_developer": {
+     "value": 635
+    }
+   },
+   {
+    "key": "Ryota MIBU",
+    "doc_count": 458,
+    "commits_per_developer": {
+     "value": 456
+    }
+   },
+   {
+    "key": "Aric Gardner",
+    "doc_count": 453,
+    "commits_per_developer": {
+     "value": 448
+    }
+   },
+   {
+    "key": "bryan.sullivan",
+    "doc_count": 447,
+    "commits_per_developer": {
+     "value": 447
+    }
+   },
+   {
+    "key": "Dan Radez",
+    "doc_count": 412,
+    "commits_per_developer": {
+     "value": 412
+    }
+   }
+  ]
+ }
+}

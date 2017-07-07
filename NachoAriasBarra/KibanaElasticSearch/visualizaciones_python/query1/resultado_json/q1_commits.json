@@ -1,0 +1,78 @@
+{
+ "by_company": {
+  "sum_other_doc_count": 1502,
+  "doc_count_error_upper_bound": 3,
+  "buckets": [
+   {
+    "key": "Unknown",
+    "Commits": {
+     "value": 5647
+    },
+    "doc_count": 5647
+   },
+   {
+    "key": "Ericsson",
+    "Commits": {
+     "value": 2837
+    },
+    "doc_count": 2837
+   },
+   {
+    "key": "Huawei",
+    "Commits": {
+     "value": 2078
+    },
+    "doc_count": 2078
+   },
+   {
+    "key": "Red Hat",
+    "Commits": {
+     "value": 1189
+    },
+    "doc_count": 1189
+   },
+   {
+    "key": "Orange",
+    "Commits": {
+     "value": 1061
+    },
+    "doc_count": 1061
+   },
+   {
+    "key": "ZTE Corporation",
+    "Commits": {
+     "value": 845
+    },
+    "doc_count": 845
+   },
+   {
+    "key": "Intel",
+    "Commits": {
+     "value": 763
+    },
+    "doc_count": 763
+   },
+   {
+    "key": "AT&T",
+    "Commits": {
+     "value": 700
+    },
+    "doc_count": 700
+   },
+   {
+    "key": "Canonical, Ltd.",
+    "Commits": {
+     "value": 639
+    },
+    "doc_count": 639
+   },
+   {
+    "key": "ENEA AB",
+    "Commits": {
+     "value": 615
+    },
+    "doc_count": 615
+   }
+  ]
+ }
+}

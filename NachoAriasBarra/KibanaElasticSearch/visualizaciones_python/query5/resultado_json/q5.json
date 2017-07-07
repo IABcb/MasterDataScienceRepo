@@ -1,0 +1,902 @@
+{
+ "histogram": {
+  "buckets": [
+   {
+    "key": 1422835200000,
+    "key_as_string": "2015-02-02T00:00:00.000Z",
+    "commits": {
+     "value": 1
+    },
+    "doc_count": 1
+   },
+   {
+    "key": 1423440000000,
+    "key_as_string": "2015-02-09T00:00:00.000Z",
+    "commits": {
+     "value": 1
+    },
+    "doc_count": 1
+   },
+   {
+    "key": 1424044800000,
+    "key_as_string": "2015-02-16T00:00:00.000Z",
+    "commits": {
+     "value": 1
+    },
+    "doc_count": 1
+   },
+   {
+    "key": 1424649600000,
+    "key_as_string": "2015-02-23T00:00:00.000Z",
+    "commits": {
+     "value": 2
+    },
+    "doc_count": 2
+   },
+   {
+    "key": 1425254400000,
+    "key_as_string": "2015-03-02T00:00:00.000Z",
+    "commits": {
+     "value": 2
+    },
+    "doc_count": 2
+   },
+   {
+    "key": 1425859200000,
+    "key_as_string": "2015-03-09T00:00:00.000Z",
+    "commits": {
+     "value": 4
+    },
+    "doc_count": 4
+   },
+   {
+    "key": 1426464000000,
+    "key_as_string": "2015-03-16T00:00:00.000Z",
+    "commits": {
+     "value": 2
+    },
+    "doc_count": 2
+   },
+   {
+    "key": 1427068800000,
+    "key_as_string": "2015-03-23T00:00:00.000Z",
+    "commits": {
+     "value": 11
+    },
+    "doc_count": 11
+   },
+   {
+    "key": 1427673600000,
+    "key_as_string": "2015-03-30T00:00:00.000Z",
+    "commits": {
+     "value": 11
+    },
+    "doc_count": 11
+   },
+   {
+    "key": 1428278400000,
+    "key_as_string": "2015-04-06T00:00:00.000Z",
+    "commits": {
+     "value": 1
+    },
+    "doc_count": 1
+   },
+   {
+    "key": 1428883200000,
+    "key_as_string": "2015-04-13T00:00:00.000Z",
+    "commits": {
+     "value": 22
+    },
+    "doc_count": 22
+   },
+   {
+    "key": 1429488000000,
+    "key_as_string": "2015-04-20T00:00:00.000Z",
+    "commits": {
+     "value": 7
+    },
+    "doc_count": 7
+   },
+   {
+    "key": 1430092800000,
+    "key_as_string": "2015-04-27T00:00:00.000Z",
+    "commits": {
+     "value": 8
+    },
+    "doc_count": 8
+   },
+   {
+    "key": 1430697600000,
+    "key_as_string": "2015-05-04T00:00:00.000Z",
+    "commits": {
+     "value": 19
+    },
+    "doc_count": 19
+   },
+   {
+    "key": 1431302400000,
+    "key_as_string": "2015-05-11T00:00:00.000Z",
+    "commits": {
+     "value": 39
+    },
+    "doc_count": 39
+   },
+   {
+    "key": 1431907200000,
+    "key_as_string": "2015-05-18T00:00:00.000Z",
+    "commits": {
+     "value": 34
+    },
+    "doc_count": 34
+   },
+   {
+    "key": 1432512000000,
+    "key_as_string": "2015-05-25T00:00:00.000Z",
+    "commits": {
+     "value": 26
+    },
+    "doc_count": 26
+   },
+   {
+    "key": 1433116800000,
+    "key_as_string": "2015-06-01T00:00:00.000Z",
+    "commits": {
+     "value": 33
+    },
+    "doc_count": 33
+   },
+   {
+    "key": 1433721600000,
+    "key_as_string": "2015-06-08T00:00:00.000Z",
+    "commits": {
+     "value": 9
+    },
+    "doc_count": 9
+   },
+   {
+    "key": 1434326400000,
+    "key_as_string": "2015-06-15T00:00:00.000Z",
+    "commits": {
+     "value": 30
+    },
+    "doc_count": 30
+   },
+   {
+    "key": 1434931200000,
+    "key_as_string": "2015-06-22T00:00:00.000Z",
+    "commits": {
+     "value": 10
+    },
+    "doc_count": 10
+   },
+   {
+    "key": 1435536000000,
+    "key_as_string": "2015-06-29T00:00:00.000Z",
+    "commits": {
+     "value": 16
+    },
+    "doc_count": 16
+   },
+   {
+    "key": 1436140800000,
+    "key_as_string": "2015-07-06T00:00:00.000Z",
+    "commits": {
+     "value": 5
+    },
+    "doc_count": 5
+   },
+   {
+    "key": 1436745600000,
+    "key_as_string": "2015-07-13T00:00:00.000Z",
+    "commits": {
+     "value": 4
+    },
+    "doc_count": 4
+   },
+   {
+    "key": 1437350400000,
+    "key_as_string": "2015-07-20T00:00:00.000Z",
+    "commits": {
+     "value": 0
+    },
+    "doc_count": 0
+   },
+   {
+    "key": 1437955200000,
+    "key_as_string": "2015-07-27T00:00:00.000Z",
+    "commits": {
+     "value": 0
+    },
+    "doc_count": 0
+   },
+   {
+    "key": 1438560000000,
+    "key_as_string": "2015-08-03T00:00:00.000Z",
+    "commits": {
+     "value": 0
+    },
+    "doc_count": 0
+   },
+   {
+    "key": 1439164800000,
+    "key_as_string": "2015-08-10T00:00:00.000Z",
+    "commits": {
+     "value": 22
+    },
+    "doc_count": 22
+   },
+   {
+    "key": 1439769600000,
+    "key_as_string": "2015-08-17T00:00:00.000Z",
+    "commits": {
+     "value": 9
+    },
+    "doc_count": 9
+   },
+   {
+    "key": 1440374400000,
+    "key_as_string": "2015-08-24T00:00:00.000Z",
+    "commits": {
+     "value": 23
+    },
+    "doc_count": 23
+   },
+   {
+    "key": 1440979200000,
+    "key_as_string": "2015-08-31T00:00:00.000Z",
+    "commits": {
+     "value": 4
+    },
+    "doc_count": 4
+   },
+   {
+    "key": 1441584000000,
+    "key_as_string": "2015-09-07T00:00:00.000Z",
+    "commits": {
+     "value": 20
+    },
+    "doc_count": 20
+   },
+   {
+    "key": 1442188800000,
+    "key_as_string": "2015-09-14T00:00:00.000Z",
+    "commits": {
+     "value": 34
+    },
+    "doc_count": 34
+   },
+   {
+    "key": 1442793600000,
+    "key_as_string": "2015-09-21T00:00:00.000Z",
+    "commits": {
+     "value": 49
+    },
+    "doc_count": 49
+   },
+   {
+    "key": 1443398400000,
+    "key_as_string": "2015-09-28T00:00:00.000Z",
+    "commits": {
+     "value": 29
+    },
+    "doc_count": 29
+   },
+   {
+    "key": 1444003200000,
+    "key_as_string": "2015-10-05T00:00:00.000Z",
+    "commits": {
+     "value": 20
+    },
+    "doc_count": 20
+   },
+   {
+    "key": 1444608000000,
+    "key_as_string": "2015-10-12T00:00:00.000Z",
+    "commits": {
+     "value": 15
+    },
+    "doc_count": 15
+   },
+   {
+    "key": 1445212800000,
+    "key_as_string": "2015-10-19T00:00:00.000Z",
+    "commits": {
+     "value": 19
+    },
+    "doc_count": 19
+   },
+   {
+    "key": 1445817600000,
+    "key_as_string": "2015-10-26T00:00:00.000Z",
+    "commits": {
+     "value": 22
+    },
+    "doc_count": 22
+   },
+   {
+    "key": 1446422400000,
+    "key_as_string": "2015-11-02T00:00:00.000Z",
+    "commits": {
+     "value": 11
+    },
+    "doc_count": 11
+   },
+   {
+    "key": 1447027200000,
+    "key_as_string": "2015-11-09T00:00:00.000Z",
+    "commits": {
+     "value": 13
+    },
+    "doc_count": 13
+   },
+   {
+    "key": 1447632000000,
+    "key_as_string": "2015-11-16T00:00:00.000Z",
+    "commits": {
+     "value": 28
+    },
+    "doc_count": 28
+   },
+   {
+    "key": 1448236800000,
+    "key_as_string": "2015-11-23T00:00:00.000Z",
+    "commits": {
+     "value": 28
+    },
+    "doc_count": 28
+   },
+   {
+    "key": 1448841600000,
+    "key_as_string": "2015-11-30T00:00:00.000Z",
+    "commits": {
+     "value": 19
+    },
+    "doc_count": 19
+   },
+   {
+    "key": 1449446400000,
+    "key_as_string": "2015-12-07T00:00:00.000Z",
+    "commits": {
+     "value": 58
+    },
+    "doc_count": 59
+   },
+   {
+    "key": 1450051200000,
+    "key_as_string": "2015-12-14T00:00:00.000Z",
+    "commits": {
+     "value": 65
+    },
+    "doc_count": 65
+   },
+   {
+    "key": 1450656000000,
+    "key_as_string": "2015-12-21T00:00:00.000Z",
+    "commits": {
+     "value": 52
+    },
+    "doc_count": 52
+   },
+   {
+    "key": 1451260800000,
+    "key_as_string": "2015-12-28T00:00:00.000Z",
+    "commits": {
+     "value": 4
+    },
+    "doc_count": 4
+   },
+   {
+    "key": 1451865600000,
+    "key_as_string": "2016-01-04T00:00:00.000Z",
+    "commits": {
+     "value": 69
+    },
+    "doc_count": 69
+   },
+   {
+    "key": 1452470400000,
+    "key_as_string": "2016-01-11T00:00:00.000Z",
+    "commits": {
+     "value": 132
+    },
+    "doc_count": 132
+   },
+   {
+    "key": 1453075200000,
+    "key_as_string": "2016-01-18T00:00:00.000Z",
+    "commits": {
+     "value": 86
+    },
+    "doc_count": 86
+   },
+   {
+    "key": 1453680000000,
+    "key_as_string": "2016-01-25T00:00:00.000Z",
+    "commits": {
+     "value": 112
+    },
+    "doc_count": 112
+   },
+   {
+    "key": 1454284800000,
+    "key_as_string": "2016-02-01T00:00:00.000Z",
+    "commits": {
+     "value": 91
+    },
+    "doc_count": 91
+   },
+   {
+    "key": 1454889600000,
+    "key_as_string": "2016-02-08T00:00:00.000Z",
+    "commits": {
+     "value": 59
+    },
+    "doc_count": 59
+   },
+   {
+    "key": 1455494400000,
+    "key_as_string": "2016-02-15T00:00:00.000Z",
+    "commits": {
+     "value": 75
+    },
+    "doc_count": 75
+   },
+   {
+    "key": 1456099200000,
+    "key_as_string": "2016-02-22T00:00:00.000Z",
+    "commits": {
+     "value": 108
+    },
+    "doc_count": 108
+   },
+   {
+    "key": 1456704000000,
+    "key_as_string": "2016-02-29T00:00:00.000Z",
+    "commits": {
+     "value": 6
+    },
+    "doc_count": 6
+   },
+   {
+    "key": 1457308800000,
+    "key_as_string": "2016-03-07T00:00:00.000Z",
+    "commits": {
+     "value": 16
+    },
+    "doc_count": 16
+   },
+   {
+    "key": 1457913600000,
+    "key_as_string": "2016-03-14T00:00:00.000Z",
+    "commits": {
+     "value": 22
+    },
+    "doc_count": 22
+   },
+   {
+    "key": 1458518400000,
+    "key_as_string": "2016-03-21T00:00:00.000Z",
+    "commits": {
+     "value": 18
+    },
+    "doc_count": 18
+   },
+   {
+    "key": 1459123200000,
+    "key_as_string": "2016-03-28T00:00:00.000Z",
+    "commits": {
+     "value": 6
+    },
+    "doc_count": 6
+   },
+   {
+    "key": 1459728000000,
+    "key_as_string": "2016-04-04T00:00:00.000Z",
+    "commits": {
+     "value": 34
+    },
+    "doc_count": 34
+   },
+   {
+    "key": 1460332800000,
+    "key_as_string": "2016-04-11T00:00:00.000Z",
+    "commits": {
+     "value": 32
+    },
+    "doc_count": 32
+   },
+   {
+    "key": 1460937600000,
+    "key_as_string": "2016-04-18T00:00:00.000Z",
+    "commits": {
+     "value": 24
+    },
+    "doc_count": 24
+   },
+   {
+    "key": 1461542400000,
+    "key_as_string": "2016-04-25T00:00:00.000Z",
+    "commits": {
+     "value": 30
+    },
+    "doc_count": 30
+   },
+   {
+    "key": 1462147200000,
+    "key_as_string": "2016-05-02T00:00:00.000Z",
+    "commits": {
+     "value": 22
+    },
+    "doc_count": 22
+   },
+   {
+    "key": 1462752000000,
+    "key_as_string": "2016-05-09T00:00:00.000Z",
+    "commits": {
+     "value": 23
+    },
+    "doc_count": 23
+   },
+   {
+    "key": 1463356800000,
+    "key_as_string": "2016-05-16T00:00:00.000Z",
+    "commits": {
+     "value": 19
+    },
+    "doc_count": 19
+   },
+   {
+    "key": 1463961600000,
+    "key_as_string": "2016-05-23T00:00:00.000Z",
+    "commits": {
+     "value": 15
+    },
+    "doc_count": 15
+   },
+   {
+    "key": 1464566400000,
+    "key_as_string": "2016-05-30T00:00:00.000Z",
+    "commits": {
+     "value": 18
+    },
+    "doc_count": 18
+   },
+   {
+    "key": 1465171200000,
+    "key_as_string": "2016-06-06T00:00:00.000Z",
+    "commits": {
+     "value": 6
+    },
+    "doc_count": 6
+   },
+   {
+    "key": 1465776000000,
+    "key_as_string": "2016-06-13T00:00:00.000Z",
+    "commits": {
+     "value": 36
+    },
+    "doc_count": 36
+   },
+   {
+    "key": 1466380800000,
+    "key_as_string": "2016-06-20T00:00:00.000Z",
+    "commits": {
+     "value": 6
+    },
+    "doc_count": 6
+   },
+   {
+    "key": 1466985600000,
+    "key_as_string": "2016-06-27T00:00:00.000Z",
+    "commits": {
+     "value": 13
+    },
+    "doc_count": 13
+   },
+   {
+    "key": 1467590400000,
+    "key_as_string": "2016-07-04T00:00:00.000Z",
+    "commits": {
+     "value": 40
+    },
+    "doc_count": 40
+   },
+   {
+    "key": 1468195200000,
+    "key_as_string": "2016-07-11T00:00:00.000Z",
+    "commits": {
+     "value": 39
+    },
+    "doc_count": 39
+   },
+   {
+    "key": 1468800000000,
+    "key_as_string": "2016-07-18T00:00:00.000Z",
+    "commits": {
+     "value": 32
+    },
+    "doc_count": 32
+   },
+   {
+    "key": 1469404800000,
+    "key_as_string": "2016-07-25T00:00:00.000Z",
+    "commits": {
+     "value": 38
+    },
+    "doc_count": 38
+   },
+   {
+    "key": 1470009600000,
+    "key_as_string": "2016-08-01T00:00:00.000Z",
+    "commits": {
+     "value": 14
+    },
+    "doc_count": 14
+   },
+   {
+    "key": 1470614400000,
+    "key_as_string": "2016-08-08T00:00:00.000Z",
+    "commits": {
+     "value": 21
+    },
+    "doc_count": 21
+   },
+   {
+    "key": 1471219200000,
+    "key_as_string": "2016-08-15T00:00:00.000Z",
+    "commits": {
+     "value": 29
+    },
+    "doc_count": 29
+   },
+   {
+    "key": 1471824000000,
+    "key_as_string": "2016-08-22T00:00:00.000Z",
+    "commits": {
+     "value": 28
+    },
+    "doc_count": 28
+   },
+   {
+    "key": 1472428800000,
+    "key_as_string": "2016-08-29T00:00:00.000Z",
+    "commits": {
+     "value": 56
+    },
+    "doc_count": 56
+   },
+   {
+    "key": 1473033600000,
+    "key_as_string": "2016-09-05T00:00:00.000Z",
+    "commits": {
+     "value": 47
+    },
+    "doc_count": 47
+   },
+   {
+    "key": 1473638400000,
+    "key_as_string": "2016-09-12T00:00:00.000Z",
+    "commits": {
+     "value": 37
+    },
+    "doc_count": 37
+   },
+   {
+    "key": 1474243200000,
+    "key_as_string": "2016-09-19T00:00:00.000Z",
+    "commits": {
+     "value": 66
+    },
+    "doc_count": 66
+   },
+   {
+    "key": 1474848000000,
+    "key_as_string": "2016-09-26T00:00:00.000Z",
+    "commits": {
+     "value": 27
+    },
+    "doc_count": 27
+   },
+   {
+    "key": 1475452800000,
+    "key_as_string": "2016-10-03T00:00:00.000Z",
+    "commits": {
+     "value": 11
+    },
+    "doc_count": 11
+   },
+   {
+    "key": 1476057600000,
+    "key_as_string": "2016-10-10T00:00:00.000Z",
+    "commits": {
+     "value": 15
+    },
+    "doc_count": 15
+   },
+   {
+    "key": 1476662400000,
+    "key_as_string": "2016-10-17T00:00:00.000Z",
+    "commits": {
+     "value": 16
+    },
+    "doc_count": 16
+   },
+   {
+    "key": 1477267200000,
+    "key_as_string": "2016-10-24T00:00:00.000Z",
+    "commits": {
+     "value": 6
+    },
+    "doc_count": 6
+   },
+   {
+    "key": 1477872000000,
+    "key_as_string": "2016-10-31T00:00:00.000Z",
+    "commits": {
+     "value": 20
+    },
+    "doc_count": 20
+   },
+   {
+    "key": 1478476800000,
+    "key_as_string": "2016-11-07T00:00:00.000Z",
+    "commits": {
+     "value": 20
+    },
+    "doc_count": 20
+   },
+   {
+    "key": 1479081600000,
+    "key_as_string": "2016-11-14T00:00:00.000Z",
+    "commits": {
+     "value": 12
+    },
+    "doc_count": 12
+   },
+   {
+    "key": 1479686400000,
+    "key_as_string": "2016-11-21T00:00:00.000Z",
+    "commits": {
+     "value": 22
+    },
+    "doc_count": 22
+   },
+   {
+    "key": 1480291200000,
+    "key_as_string": "2016-11-28T00:00:00.000Z",
+    "commits": {
+     "value": 18
+    },
+    "doc_count": 18
+   },
+   {
+    "key": 1480896000000,
+    "key_as_string": "2016-12-05T00:00:00.000Z",
+    "commits": {
+     "value": 9
+    },
+    "doc_count": 9
+   },
+   {
+    "key": 1481500800000,
+    "key_as_string": "2016-12-12T00:00:00.000Z",
+    "commits": {
+     "value": 36
+    },
+    "doc_count": 36
+   },
+   {
+    "key": 1482105600000,
+    "key_as_string": "2016-12-19T00:00:00.000Z",
+    "commits": {
+     "value": 19
+    },
+    "doc_count": 19
+   },
+   {
+    "key": 1482710400000,
+    "key_as_string": "2016-12-26T00:00:00.000Z",
+    "commits": {
+     "value": 2
+    },
+    "doc_count": 2
+   },
+   {
+    "key": 1483315200000,
+    "key_as_string": "2017-01-02T00:00:00.000Z",
+    "commits": {
+     "value": 1
+    },
+    "doc_count": 1
+   },
+   {
+    "key": 1483920000000,
+    "key_as_string": "2017-01-09T00:00:00.000Z",
+    "commits": {
+     "value": 17
+    },
+    "doc_count": 17
+   },
+   {
+    "key": 1484524800000,
+    "key_as_string": "2017-01-16T00:00:00.000Z",
+    "commits": {
+     "value": 8
+    },
+    "doc_count": 8
+   },
+   {
+    "key": 1485129600000,
+    "key_as_string": "2017-01-23T00:00:00.000Z",
+    "commits": {
+     "value": 11
+    },
+    "doc_count": 11
+   },
+   {
+    "key": 1485734400000,
+    "key_as_string": "2017-01-30T00:00:00.000Z",
+    "commits": {
+     "value": 30
+    },
+    "doc_count": 30
+   },
+   {
+    "key": 1486339200000,
+    "key_as_string": "2017-02-06T00:00:00.000Z",
+    "commits": {
+     "value": 16
+    },
+    "doc_count": 16
+   },
+   {
+    "key": 1486944000000,
+    "key_as_string": "2017-02-13T00:00:00.000Z",
+    "commits": {
+     "value": 43
+    },
+    "doc_count": 43
+   },
+   {
+    "key": 1487548800000,
+    "key_as_string": "2017-02-20T00:00:00.000Z",
+    "commits": {
+     "value": 20
+    },
+    "doc_count": 20
+   },
+   {
+    "key": 1488153600000,
+    "key_as_string": "2017-02-27T00:00:00.000Z",
+    "commits": {
+     "value": 14
+    },
+    "doc_count": 14
+   },
+   {
+    "key": 1488758400000,
+    "key_as_string": "2017-03-06T00:00:00.000Z",
+    "commits": {
+     "value": 9
+    },
+    "doc_count": 9
+   },
+   {
+    "key": 1489363200000,
+    "key_as_string": "2017-03-13T00:00:00.000Z",
+    "commits": {
+     "value": 44
+    },
+    "doc_count": 44
+   },
+   {
+    "key": 1489968000000,
+    "key_as_string": "2017-03-20T00:00:00.000Z",
+    "commits": {
+     "value": 23
+    },
+    "doc_count": 23
+   }
+  ]
+ }
+}

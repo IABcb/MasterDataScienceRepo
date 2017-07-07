@@ -1,0 +1,19 @@
+[
+  {
+    "_id": "6dbc58f0-3c80-11e7-bc14-2b97cf79a9cf",
+    "_type": "dashboard",
+    "_source": {
+      "title": "DashBoard_Elastic_Practica",
+      "hits": 0,
+      "description": "",
+      "panelsJSON": "[{\"col\":1,\"id\":\"e8cbffa0-395b-11e7-94ba-910ee74e9632\",\"panelIndex\":1,\"row\":1,\"size_x\":3,\"size_y\":5,\"type\":\"visualization\"},{\"col\":1,\"id\":\"30ce67d0-395b-11e7-94ba-910ee74e9632\",\"panelIndex\":2,\"row\":6,\"size_x\":3,\"size_y\":5,\"type\":\"visualization\"},{\"col\":4,\"id\":\"c09f2880-395c-11e7-94ba-910ee74e9632\",\"panelIndex\":3,\"row\":1,\"size_x\":3,\"size_y\":5,\"type\":\"visualization\"},{\"col\":4,\"id\":\"92b92b40-395d-11e7-94ba-910ee74e9632\",\"panelIndex\":4,\"row\":6,\"size_x\":3,\"size_y\":5,\"type\":\"visualization\"},{\"col\":7,\"id\":\"271b6380-3976-11e7-a221-b5c14b52d864\",\"panelIndex\":5,\"row\":10,\"size_x\":6,\"size_y\":6,\"type\":\"visualization\"},{\"col\":1,\"id\":\"bbc08c70-3973-11e7-a221-b5c14b52d864\",\"panelIndex\":6,\"row\":11,\"size_x\":6,\"size_y\":5,\"type\":\"visualization\"},{\"col\":7,\"id\":\"41f788e0-395e-11e7-94ba-910ee74e9632\",\"panelIndex\":7,\"row\":1,\"size_x\":3,\"size_y\":4,\"type\":\"visualization\"},{\"col\":7,\"id\":\"72a8bea0-395e-11e7-94ba-910ee74e9632\",\"panelIndex\":8,\"row\":5,\"size_x\":3,\"size_y\":4,\"type\":\"visualization\"},{\"col\":10,\"id\":\"bcf54870-395e-11e7-94ba-910ee74e9632\",\"panelIndex\":9,\"row\":1,\"size_x\":3,\"size_y\":4,\"type\":\"visualization\"},{\"col\":10,\"id\":\"f4142740-395e-11e7-94ba-910ee74e9632\",\"panelIndex\":10,\"row\":5,\"size_x\":3,\"size_y\":5,\"type\":\"visualization\"},{\"col\":7,\"id\":\"1e606ae0-397d-11e7-a221-b5c14b52d864\",\"panelIndex\":11,\"row\":16,\"size_x\":6,\"size_y\":5,\"type\":\"visualization\"},{\"col\":7,\"id\":\"1c1d1e80-3965-11e7-bfd7-a75442eec853\",\"panelIndex\":12,\"row\":21,\"size_x\":6,\"size_y\":6,\"type\":\"visualization\"},{\"col\":1,\"id\":\"03f5f510-370e-11e7-a115-91b76e5b4506\",\"panelIndex\":13,\"row\":16,\"size_x\":6,\"size_y\":5,\"type\":\"visualization\"},{\"col\":1,\"id\":\"f92c0f10-3984-11e7-a221-b5c14b52d864\",\"panelIndex\":14,\"row\":21,\"size_x\":6,\"size_y\":6,\"type\":\"visualization\"}]",
+      "optionsJSON": "{\"darkTheme\":false}",
+      "uiStateJSON": "{\"P-1\":{\"vis\":{\"colors\":{\"Number of commits\":\"#E0752D\"}}},\"P-11\":{\"vis\":{\"colors\":{\"Number of projects\":\"#F2C96D\"}}},\"P-14\":{\"vis\":{\"colors\":{\"Number of developers\":\"#0A437C\"}}},\"P-2\":{\"vis\":{\"colors\":{\"Number of developers\":\"#0A437C\"}}},\"P-6\":{\"spy\":{\"mode\":{\"fill\":false,\"name\":null}},\"vis\":{\"colors\":{\"Number of commits\":\"#E0752D\"},\"legendOpen\":true}},\"P-7\":{\"vis\":{\"colors\":{\"Number of commits\":\"#E0752D\"}}},\"P-8\":{\"vis\":{\"colors\":{\"Number of developers\":\"#0A437C\"}}}}",
+      "version": 1,
+      "timeRestore": false,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"filter\":[{\"query\":{\"query_string\":{\"analyze_wildcard\":true,\"query\":\"*\"}}}]}"
+      }
+    }
+  }
+]

@@ -1,0 +1,253 @@
+{
+ "by_repo": {
+  "sum_other_doc_count": 0,
+  "doc_count_error_upper_bound": 0,
+  "buckets": [
+   {
+    "doc_count": 854,
+    "Authors": {
+     "value": 49
+    },
+    "key": "git://git.opnfv.org/releng"
+   },
+   {
+    "doc_count": 602,
+    "Authors": {
+     "value": 34
+    },
+    "key": "git://git.opnfv.org/functest"
+   },
+   {
+    "doc_count": 409,
+    "Authors": {
+     "value": 27
+    },
+    "key": "git://git.opnfv.org/fuel"
+   },
+   {
+    "doc_count": 292,
+    "Authors": {
+     "value": 23
+    },
+    "key": "git://git.opnfv.org/yardstick"
+   },
+   {
+    "doc_count": 166,
+    "Authors": {
+     "value": 9
+    },
+    "key": "git://git.opnfv.org/genesis"
+   },
+   {
+    "doc_count": 116,
+    "Authors": {
+     "value": 13
+    },
+    "key": "git://git.opnfv.org/opnfvdocs"
+   },
+   {
+    "doc_count": 114,
+    "Authors": {
+     "value": 11
+    },
+    "key": "git://git.opnfv.org/sfc"
+   },
+   {
+    "doc_count": 85,
+    "Authors": {
+     "value": 11
+    },
+    "key": "git://git.opnfv.org/sdnvpn"
+   },
+   {
+    "doc_count": 51,
+    "Authors": {
+     "value": 5
+    },
+    "key": "git://git.opnfv.org/netready"
+   },
+   {
+    "doc_count": 31,
+    "Authors": {
+     "value": 3
+    },
+    "key": "git://git.opnfv.org/multisite"
+   },
+   {
+    "doc_count": 20,
+    "Authors": {
+     "value": 5
+    },
+    "key": "git://git.opnfv.org/apex"
+   },
+   {
+    "doc_count": 14,
+    "Authors": {
+     "value": 3
+    },
+    "key": "git://git.opnfv.org/octopus"
+   },
+   {
+    "doc_count": 12,
+    "Authors": {
+     "value": 2
+    },
+    "key": "git://git.opnfv.org/genesisreq"
+   },
+   {
+    "doc_count": 11,
+    "Authors": {
+     "value": 6
+    },
+    "key": "git://git.opnfv.org/pharos"
+   },
+   {
+    "doc_count": 7,
+    "Authors": {
+     "value": 2
+    },
+    "key": "git://git.opnfv.org/joid"
+   },
+   {
+    "doc_count": 7,
+    "Authors": {
+     "value": 3
+    },
+    "key": "git://git.opnfv.org/promise"
+   },
+   {
+    "doc_count": 6,
+    "Authors": {
+     "value": 4
+    },
+    "key": "git://git.opnfv.org/doctor"
+   },
+   {
+    "doc_count": 5,
+    "Authors": {
+     "value": 2
+    },
+    "key": "git://git.opnfv.org/escalator"
+   },
+   {
+    "doc_count": 4,
+    "Authors": {
+     "value": 2
+    },
+    "key": "git://git.opnfv.org/compass4nfv"
+   },
+   {
+    "doc_count": 4,
+    "Authors": {
+     "value": 2
+    },
+    "key": "git://git.opnfv.org/ovsnfv"
+   },
+   {
+    "doc_count": 3,
+    "Authors": {
+     "value": 2
+    },
+    "key": "git://git.opnfv.org/availability"
+   },
+   {
+    "doc_count": 3,
+    "Authors": {
+     "value": 2
+    },
+    "key": "git://git.opnfv.org/copper"
+   },
+   {
+    "doc_count": 3,
+    "Authors": {
+     "value": 2
+    },
+    "key": "git://git.opnfv.org/ipv6"
+   },
+   {
+    "doc_count": 3,
+    "Authors": {
+     "value": 1
+    },
+    "key": "git://git.opnfv.org/storperf"
+   },
+   {
+    "doc_count": 2,
+    "Authors": {
+     "value": 1
+    },
+    "key": "git://git.opnfv.org/inspector"
+   },
+   {
+    "doc_count": 2,
+    "Authors": {
+     "value": 1
+    },
+    "key": "git://git.opnfv.org/lsoapi"
+   },
+   {
+    "doc_count": 2,
+    "Authors": {
+     "value": 1
+    },
+    "key": "git://git.opnfv.org/moon"
+   },
+   {
+    "doc_count": 2,
+    "Authors": {
+     "value": 1
+    },
+    "key": "git://git.opnfv.org/vswitchperf"
+   },
+   {
+    "doc_count": 1,
+    "Authors": {
+     "value": 1
+    },
+    "key": "git://git.opnfv.org/barometer"
+   },
+   {
+    "doc_count": 1,
+    "Authors": {
+     "value": 1
+    },
+    "key": "git://git.opnfv.org/bottlenecks"
+   },
+   {
+    "doc_count": 1,
+    "Authors": {
+     "value": 1
+    },
+    "key": "git://git.opnfv.org/domino"
+   },
+   {
+    "doc_count": 1,
+    "Authors": {
+     "value": 1
+    },
+    "key": "git://git.opnfv.org/fastpathmetrics"
+   },
+   {
+    "doc_count": 1,
+    "Authors": {
+     "value": 1
+    },
+    "key": "git://git.opnfv.org/onosfw"
+   },
+   {
+    "doc_count": 1,
+    "Authors": {
+     "value": 1
+    },
+    "key": "git://git.opnfv.org/parser"
+   },
+   {
+    "doc_count": 1,
+    "Authors": {
+     "value": 1
+    },
+    "key": "git://git.opnfv.org/sandbox"
+   }
+  ]
+ }
+}

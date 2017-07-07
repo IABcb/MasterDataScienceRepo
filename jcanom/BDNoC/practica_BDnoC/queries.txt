@@ -1,0 +1,68 @@
+1. Listado de todas las publicaciones de un autor determinado.
+
+	db.getCollection('dblp').find({ $or: [ { 'author': 'Yang Liu' }, { 'authors.author': 'Yang Liu' } ] })
+
+2. Número de publicaciones de un autor determinado.
+
+	db.getCollection('dblp').find({ $or: [ { 'author': 'Yang Liu' }, { 'authors.author': 'Yang Liu' } ] }).count()
+
+3. Número de artículos en revista para el año 2016.
+
+	db.getCollection('dblp').find({ 'type': 'article', year:'2016' }).count()
+
+4. Número de autores ocasionales, es decir, que tengan menos de 5 publicaciones en total.
+
+	
+
+5. Número de artículos de revista (article) y número de artículos en congresos
+(inproceedings) de los diez autores con más publicaciones totales.
+
+
+
+6. Número medio de autores de todas las publicaciones que tenga en su conjunto de datos.
+
+
+
+7. Listado de coautores de un autor (Se denomina coautor a cualquier persona que haya
+firmado una publicación).
+
+
+
+8. Edad de los 5 autores con un periodo de publicaciones más largo (Se considera la Edad
+de un autor al número de años transcurridos desde la fecha de su primera publicación
+hasta la última registrada).
+
+
+
+9. Número de autores novatos, es decir, que tengan una Edad menor de 5 años (Se
+considera la edad de un autor al número de años transcurridos desde la fecha de su
+primera publicación hasta la última registrada).
+
+
+
+10. Porcentaje de publicaciones en revistas con respecto al total de publicaciones
+
+    db.getCollection('dblp').find({ 'type': 'article' }).count()/db.getCollection('dblp').find({}).count()
+
+
+Queries NEO4J
+
+1. 10 autores con más publicaciones
+
+MATCH (P1:Author)-->() 
+RETURN P1.name,count(*) as degree 
+ORDER BY degree DESC LIMIT 10
+
+2. Coautores y número de veces que han colaborado
+
+MATCH (P1:Author)-->()<--(P2:Author) 
+RETURN P1.name,P2.name,count(*) as coauthorship 
+ORDER BY coauthorship DESC LIMIT 10
+
+3. Tipo de publicación más popular
+
+MATCH (t1:Tipo)<--() 
+RETURN t1.name,count(*) as degree 
+ORDER BY degree DESC LIMIT 1
+
+

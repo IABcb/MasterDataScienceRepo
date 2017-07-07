@@ -1,0 +1,72 @@
+---
+title: "Ejemplo Poisson"
+output: html_document
+---
+
+
+En el fichero Datos-Encuesta-USA.RData aparecen datos del General Social Survey hecho en USA a finales de los 90, hemos seleccionado sólo 5 de las variables presentes en la encuesta, concretamente:
+
+- **FEMALE**: Indica si la persona encuestada es hombre (0) o mujer (1).
+- **CHILDS**: Número de hijos que tiene la persona encuestada.
+- **YEAR**: Año en el que la persona participó en la encuesta (entre 1972 y 1998).
+- **AGE**: Edad de la persona en el momento de participar en la encuesta.
+- **DEG**: Nivel de estudios, variable que va de 0 a 4, donde 3 y 4 quiere decir grado universitario o superior.
+
+Lee los datos con ayuda de R. 
+
+
+```{r}
+load("DatosEncuestaUSA.RData")
+```
+
+El objetivo es analizar el número de hijos que tienen las mujeres que tenían una edad de 40 años en el instante de participación en la encuesta, interesa analizar las mujeres que participaron en la encuesta en la década de 1990.
+
+Con el siguiente código R puedes seleccionar la variable de interés, hijos, de mujeres con 40 años y que particiaron en los años 90 en la encuesta (la encuesta no incluye años más allá de 1999).
+
+```{r}
+hijos<-Y$CHILDS[Y$FEMALE==1 & Y$YEAR>=1990 & Y$AGE==40 & !is.na(Y$DEG)]
+hijos<-hijos[!is.na(hijos)]
+```
+
+En el objeto hijos aparecen el número de hijos que tienen las mujeres selccionadas. En concreto se trata de una muestra de tamaño $n= 155$.
+
+Es muy usual en la práctica de la estadística usar el modelo *Poisson* para representar una variable aleatoria que es un conteo, veremos más adelante cómo usar técnicas gráficas y procedimientos para analizar suposiciones como ésta (asumir un determinado modelo paramétrico para uos datos). Por el momento, supongamos que 
+$$N_i = \mbox{ Número de hijos que tiene cada mujer de esta población}$$
+
+esta variable es aleatoria, y representamos su aleatoriedad mediante una $Po(\lambda)$, con $\lambda$ el número esperado de hijos que tienen las mujeres de esta poblacion.
+
+Es decir la masa de probabilidad, suponiendo $\lambda$ conocido es:
+
+$P(X = x) = \frac{e^{-\lambda} \lambda^{x}}{x!}$, 
+$x = 0,1,2,...,\infty$
+
+El objetivo de este ejercicio es estimar puntualmente $\lambda$.
+
+\section{Estimador máximo verosímil}
+
+Escribe la función de verosimilitud para $\lambda$. Recuerda que es:
+
+$$L(\lambda | n_1,\ldots,n_{155}) = f(n_1, \ldots, n_{155} | \lambda)$$
+
+Escribe esta función para el caso del modelo Poisson. Encuenta el valor de $\lambda$ que lo maximiza. Puedes usar técnicas matemáticas para encontrar el máximo, o calcularlo con ayuda de R (dibujando la función, donde el argumento es $\lambda$, y usando la función *optimize* 
+de R para buscar el valor que maximiza esta función).
+
+Para buscar el máximo usando R tienes que programar primero la función verosimilitud en R (yo la he llamado *vero.pois*), y después usar los siguientes argumentos:
+
+*optimize(f = , interval = ,  ..., lower = min(interval),
+         upper = max(interval), maximum = FALSE,
+         tol = .Machine$double.eps^0.25)*
+
+
+Tienes que especificar que optimize calcule un máximo, y que busque en un intervalo (por ejemplo prueba con el intervalo 0, 10), además hay que pasarle el resto de argumentos de la función *vero.pois*.
+
+\section{Estimador Bayesiano}
+
+Para el modelo Poisson existe una distribución a priori conjugada, la densidad Gamma sobre $\lambda$, de parámetros $a$ y $b$.
+
+$f(\lambda) =\frac{b^a}{\Gamma(a)} \lambda^{a-1} exp  \left( -b \lambda\right)$, $0 < \lambda < \infty$
+
+Supón que usamos una distribución inicial sobre $\lambda$ $\sim$ $Ga(2,1)$. Calcula la distribución a posteriori. Dibuja con ayuda de R ambas funciones (código muy parecido al que usamos para el modelo Beta-Binomial), pero ahora hay que usar la distribución adecuada como distribución a posteriori, con los parámetros que tocan.
+
+Proporciona un estimador puntual para $\lambda$ usando esta distribución a posteriori.
+

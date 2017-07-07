@@ -1,0 +1,397 @@
+{
+  "dblp": {
+    "article": [
+      {
+        "author": "Sanjeev Saxena",
+        "title": "Parallel Integer Sorting and Simulation Amongst CRCW Models.",
+        "pages": "607-619",
+        "year": "1996",
+        "volume": "33",
+        "journal": "Acta Inf.",
+        "number": "7",
+        "url": "db/journals/acta/acta33.html#Saxena96",
+        "ee": "http://dx.doi.org/10.1007/BF03036466",
+        "_mdate": "2011-01-11",
+        "_key": "journals/acta/Saxena96"
+      },
+      {
+        "author": "Hans Ulrich Simon",
+        "title": "Pattern Matching in Trees and Nets.",
+        "pages": "227-248",
+        "year": "1983",
+        "volume": "20",
+        "journal": "Acta Inf.",
+        "url": "db/journals/acta/acta20.html#Simon83",
+        "ee": "http://dx.doi.org/10.1007/BF01257084",
+        "_mdate": "2016-07-13",
+        "_key": "journals/acta/Simon83"
+      },
+      {
+        "author": [
+          "Nathan Goodman",
+          "Oded Shmueli"
+        ],
+        "title": "NP-complete Problems Simplified on Tree Schemas.",
+        "pages": "171-178",
+        "year": "1983",
+        "volume": "20",
+        "journal": "Acta Inf.",
+        "url": "db/journals/acta/acta20.html#GoodmanS83",
+        "ee": "http://dx.doi.org/10.1007/BF00289414",
+        "_mdate": "2011-01-11",
+        "_key": "journals/acta/GoodmanS83"
+      },
+      {
+        "author": "Norbert Blum",
+        "title": "On the Power of Chain Rules in Context Free Grammars.",
+        "pages": "425-433",
+        "year": "1982",
+        "volume": "17",
+        "journal": "Acta Inf.",
+        "url": "db/journals/acta/acta17.html#Blum82",
+        "ee": "http://dx.doi.org/10.1007/BF00264161",
+        "_mdate": "2011-01-11",
+        "_key": "journals/acta/Blum82"
+      },
+      {
+        "author": "Arnold Schnhage",
+        "title": "Schnelle Multiplikation von Polynomen ber Krpern der Charakteristik 2.",
+        "journal": "Acta Inf.",
+        "volume": "7",
+        "year": "1977",
+        "pages": "395-398",
+        "url": "db/journals/acta/acta7.html#Schonhage77",
+        "ee": "http://dx.doi.org/10.1007/BF00289470",
+        "_mdate": "2013-11-28",
+        "_key": "journals/acta/Schonhage77"
+      },
+      {
+        "author": "Juha Honkala",
+        "title": "A characterization of rational D0L power series.",
+        "pages": "19-24",
+        "year": "2011",
+        "volume": "48",
+        "journal": "Acta Inf.",
+        "number": "1",
+        "ee": "http://dx.doi.org/10.1007/s00236-010-0128-1",
+        "url": "db/journals/acta/acta48.html#Honkala11",
+        "_mdate": "2011-02-16",
+        "_key": "journals/acta/Honkala11"
+      },
+      {
+        "author": [
+          "Chua-Huang Huang",
+          "Christian Lengauer"
+        ],
+        "title": "The Derivation of Systolic Implementations of Programs.",
+        "pages": "595-632",
+        "year": "1987",
+        "volume": "24",
+        "journal": "Acta Inf.",
+        "number": "6",
+        "url": "db/journals/acta/acta24.html#HuangL87",
+        "ee": "http://dx.doi.org/10.1007/BF00282618",
+        "_mdate": "2011-01-11",
+        "_key": "journals/acta/HuangL87"
+      },
+      {
+        "author": [
+          "Alain Finkel",
+          "Annie Choquet"
+        ],
+        "title": "Fifo Nets Without Order Deadlock.",
+        "pages": "15-36",
+        "year": "1988",
+        "volume": "25",
+        "journal": "Acta Inf.",
+        "number": "1",
+        "url": "db/journals/acta/acta25.html#FinkelC87",
+        "ee": "http://dx.doi.org/10.1007/BF00268843",
+        "_mdate": "2015-01-08",
+        "_key": "journals/acta/FinkelC87"
+      },
+      {
+        "author": "Joachim Biskup",
+        "title": "On the Complementation Rule for Multivalued Dependencies in Database Relations.",
+        "pages": "297-305",
+        "year": "1978",
+        "volume": "10",
+        "journal": "Acta Inf.",
+        "url": "db/journals/acta/acta10.html#Biskup78",
+        "ee": "http://dx.doi.org/10.1007/BF00264322",
+        "_mdate": "2011-01-11",
+        "_key": "journals/acta/Biskup78"
+      },
+      {
+        "author": [
+          "Symeon Bozapalidis",
+          "Zoltn Flp 0001",
+          "George Rahonis"
+        ],
+        "title": "Equational weighted tree transformations.",
+        "pages": "29-52",
+        "year": "2012",
+        "volume": "49",
+        "journal": "Acta Inf.",
+        "number": "1",
+        "ee": "http://dx.doi.org/10.1007/s00236-011-0148-5",
+        "url": "db/journals/acta/acta49.html#BozapalidisFR12",
+        "_mdate": "2015-07-14",
+        "_key": "journals/acta/BozapalidisFR12"
+      },
+      {
+        "author": [
+          "Victor Khomenko",
+          "Alex Kondratyev",
+          "Maciej Koutny",
+          "Walter Vogler"
+        ],
+        "title": "Merged processes: a new condensed representation of Petri net behaviour.",
+        "pages": "307-330",
+        "year": "2006",
+        "volume": "43",
+        "journal": "Acta Inf.",
+        "number": "5",
+        "ee": "http://dx.doi.org/10.1007/s00236-006-0023-y",
+        "url": "db/journals/acta/acta43.html#KhomenkoKKV06",
+        "_mdate": "2006-11-22",
+        "_key": "journals/acta/KhomenkoKKV06"
+      },
+      {
+        "author": "Wim H. Hesselink",
+        "title": "Verifying a simplification of mutual exclusion by Lycklama-Hadzilacos.",
+        "pages": "199-228",
+        "year": "2013",
+        "volume": "50",
+        "journal": "Acta Inf.",
+        "number": "3",
+        "ee": "http://dx.doi.org/10.1007/s00236-013-0178-2",
+        "url": "db/journals/acta/acta50.html#Hesselink13",
+        "_mdate": "2013-05-10",
+        "_key": "journals/acta/Hesselink13"
+      },
+      {
+        "author": "Christian Ronse",
+        "title": "A Three-Stage Construction for Multiconnection Networks.",
+        "pages": "197-206",
+        "year": "1983",
+        "volume": "20",
+        "journal": "Acta Inf.",
+        "url": "db/journals/acta/acta20.html#Ronse83",
+        "ee": "http://dx.doi.org/10.1007/BF00289416",
+        "_mdate": "2011-01-11",
+        "_key": "journals/acta/Ronse83"
+      },
+      {
+        "author": [
+          "Carol Critchlow",
+          "Prakash Panangaden"
+        ],
+        "title": "The Expressive Power of Delay Operators in SCCS.",
+        "pages": "447-452",
+        "year": "1991",
+        "volume": "28",
+        "journal": "Acta Inf.",
+        "number": "5",
+        "url": "db/journals/acta/acta28.html#CritchlowP91",
+        "ee": "http://dx.doi.org/10.1007/BF01178582",
+        "_mdate": "2011-01-11",
+        "_key": "journals/acta/CritchlowP91"
+      },
+      {
+        "author": "Robin Milner",
+        "title": "Calculi for Interaction.",
+        "pages": "707-737",
+        "year": "1996",
+        "volume": "33",
+        "journal": "Acta Inf.",
+        "number": "8",
+        "url": "db/journals/acta/acta33.html#Milner96",
+        "ee": "http://dx.doi.org/10.1007/BF03036472",
+        "_mdate": "2011-01-11",
+        "_key": "journals/acta/Milner96"
+      },
+      {
+        "author": "John Darlington",
+        "title": "A Synthesis of Several Sorting Algorithms.",
+        "pages": "1-30",
+        "year": "1978",
+        "volume": "11",
+        "journal": "Acta Inf.",
+        "url": "db/journals/acta/acta11.html#Darlington78",
+        "ee": "http://dx.doi.org/10.1007/BF00264597",
+        "_mdate": "2011-01-11",
+        "_key": "journals/acta/Darlington78"
+      },
+      {
+        "author": [
+          "Maria Calzarossa",
+          "M. Italiani",
+          "Giuseppe Serazzi"
+        ],
+        "title": "A Workload Model Representative of Static and Dynamic Characteristics.",
+        "pages": "255-266",
+        "year": "1986",
+        "volume": "23",
+        "journal": "Acta Inf.",
+        "number": "3",
+        "url": "db/journals/acta/acta23.html#CalzarossaIS86",
+        "ee": "http://dx.doi.org/10.1007/BF00289113",
+        "_mdate": "2011-01-11",
+        "_key": "journals/acta/CalzarossaIS86"
+      },
+      {
+        "author": "Vincent Vajnovszki",
+        "title": "Gray visiting Motzkins.",
+        "pages": "793-811",
+        "year": "2002",
+        "volume": "38",
+        "journal": "Acta Inf.",
+        "number": "11/12",
+        "ee": "http://link.springer.de/link/service/journals/00236/bibs/2038011/20380793.htm",
+        "url": "db/journals/acta/acta38.html#Vajnovszki02",
+        "_mdate": "2003-11-25",
+        "_key": "journals/acta/Vajnovszki02"
+      },
+      {
+        "author": [
+          "Walter Vogler",
+          "Christian Stahl",
+          "Richard Mller 0001"
+        ],
+        "title": "Trace- and failure-based semantics for responsiveness.",
+        "pages": "499-552",
+        "year": "2014",
+        "volume": "51",
+        "journal": "Acta Inf.",
+        "number": "8",
+        "ee": "http://dx.doi.org/10.1007/s00236-014-0205-y",
+        "url": "db/journals/acta/acta51.html#VoglerS014",
+        "_mdate": "2014-11-03",
+        "_key": "journals/acta/VoglerS014"
+      },
+      {
+        "author": "Luc Devroye",
+        "title": "Branching Processes in the Analysis of the Heights of Trees.",
+        "pages": "277-298",
+        "year": "1987",
+        "volume": "24",
+        "journal": "Acta Inf.",
+        "number": "3",
+        "url": "db/journals/acta/acta24.html#Devroye87",
+        "ee": "http://dx.doi.org/10.1007/BF00265991",
+        "_mdate": "2011-01-11",
+        "_key": "journals/acta/Devroye87"
+      },
+      {
+        "author": [
+          "T. C. Hu",
+          "K. C. Tan"
+        ],
+        "title": "Least Upper Bound on the Cost of Optimum Binary Search Trees.",
+        "journal": "Acta Inf.",
+        "volume": "1",
+        "year": "1972",
+        "pages": "307-310",
+        "url": "db/journals/acta/acta1.html#HuT72",
+        "ee": "http://dx.doi.org/10.1007/BF00289510",
+        "_mdate": "2011-01-11",
+        "_key": "journals/acta/HuT72"
+      },
+      {
+        "author": "William R. Franta",
+        "title": "The Mathematical Analysis of the Computer System Modeled as a Two Stage Cyclic Queue.",
+        "pages": "187-209",
+        "year": "1976",
+        "volume": "6",
+        "journal": "Acta Inf.",
+        "url": "db/journals/acta/acta6.html#Franta76",
+        "ee": "http://dx.doi.org/10.1007/BF00268500",
+        "_mdate": "2011-01-11",
+        "_key": "journals/acta/Franta76"
+      },
+      {
+        "author": "Ekkart Kindler",
+        "title": "Invariants, Composition, and Substitution.",
+        "journal": "Acta Inf.",
+        "volume": "32",
+        "number": "4",
+        "year": "1995",
+        "pages": "299-312",
+        "url": "db/journals/acta/acta32.html#Kindler95",
+        "ee": "http://dx.doi.org/10.1007/BF01178381",
+        "_mdate": "2011-01-11",
+        "_key": "journals/acta/Kindler95"
+      },
+      {
+        "author": "Demetres D. Kouvatsos",
+        "title": {
+          "i": " G/G/1/N ",
+          "__text": "Maximum Entropy and the \n Queue."
+        },
+        "pages": "545-565",
+        "year": "1986",
+        "volume": "23",
+        "journal": "Acta Inf.",
+        "number": "5",
+        "url": "db/journals/acta/acta23.html#Kouvatsos86",
+        "ee": "http://dx.doi.org/10.1007/BF00288469",
+        "_mdate": "2011-01-11",
+        "_key": "journals/acta/Kouvatsos86"
+      },
+      {
+        "author": [
+          "Sergei Gorlatch",
+          "Christian Lengauer"
+        ],
+        "title": "Abstraction and Performance in the Design of Parallel Programs: An Overview of the SAT Approac\nh.",
+        "pages": "761-803",
+        "year": "2000",
+        "volume": "36",
+        "journal": "Acta Inf.",
+        "number": "9/10",
+        "ee": "http://link.springer.de/link/service/journals/00236/bibs/0036009/00360761.htm",
+        "url": "db/journals/acta/acta36.html#GorlatchL00",
+        "_mdate": "2003-11-25",
+        "_key": "journals/acta/GorlatchL00"
+      },
+      {
+        "author": "Roland Meyer",
+        "title": {
+          "i": "pi",
+          "__text": "A theory of structural stationarity in the \n -Calculus."
+        },
+        "pages": "87-137",
+        "year": "2009",
+        "volume": "46",
+        "journal": "Acta Inf.",
+        "number": "2",
+        "ee": "http://dx.doi.org/10.1007/s00236-009-0091-x",
+        "url": "db/journals/acta/acta46.html#Meyer09",
+        "_mdate": "2009-06-22",
+        "_key": "journals/acta/Meyer09"
+      },
+      {
+        "author": "Stefan Reisch",
+        "title": "Hex ist PSPACE-vollstndig.",
+        "pages": "167-191",
+        "year": "1981",
+        "volume": "15",
+        "journal": "Acta Inf.",
+        "url": "db/journals/acta/acta15.html#Reisch81",
+        "ee": "http://dx.doi.org/10.1007/BF00288964",
+        "_mdate": "2011-01-11",
+        "_key": "journals/acta/Reisch81"
+      },
+      {
+        "author": [
+          "Erzsbet Csuhaj-Varj",
+          "Victor Mitrana"
+        ],
+        "title": "Evolutionary Systems: A Language Generating Device Inspired by Evolving Communities of Cells.",
+        "_mdate": "2003-11-25",
+        "_key": "journals/acta/Csuhaj-VarjuM00"
+      }
+    ]
+  }
+}

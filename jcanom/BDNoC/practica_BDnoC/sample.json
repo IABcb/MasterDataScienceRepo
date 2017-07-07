@@ -1,0 +1,69 @@
+{
+  "dblp": {
+    "article": [
+      {
+        "@mdate": "2011-01-11",
+        "@key": "journals/acta/Saxena96",
+        "author": "Sanjeev Saxena",
+        "title": "Parallel Integer Sorting and Simulation Amongst CRCW Models.",
+        "pages": "607-619",
+        "year": "1996",
+        "volume": "33",
+        "number": "7",
+        "url": "db/journals/acta/acta33.html#Saxena96",
+        "ee": "http://dx.doi.org/10.1007/BF03036466"
+      },
+      {
+        "@mdate": "2016-07-13",
+        "@key": "journals/acta/Simon83",
+        "author": "Hans Ulrich Simon",
+        "title": "Pattern Matching in Trees and Nets.",
+        "pages": "227-248",
+        "year": "1983",
+        "volume": "20",
+        "journal": "Acta Inf.",
+        "url": "db/journals/acta/acta20.html#Simon83",
+        "ee": "http://dx.doi.org/10.1007/BF01257084"
+      },
+      {
+        "@mdate": "2011-01-11",
+        "@key": "journals/acta/GoodmanS83",
+        "author": [
+          "Nathan Goodman",
+          "Oded Shmueli"
+        ],
+        "title": "NP-complete Problems Simplified on Tree Schemas.",
+        "pages": "171-178",
+        "year": "1983",
+        "volume": "20",
+        "journal": "Acta Inf.",
+        "url": "db/journals/acta/acta20.html#GoodmanS83",
+        "ee": "http://dx.doi.org/10.1007/BF00289414"
+      },
+      {
+        "@mdate": "2011-01-11",
+        "@key": "journals/acta/Blum82",
+        "author": "Norbert Blum",
+        "title": "On the Power of Chain Rules in Context Free Grammars.",
+        "pages": "425-433",
+        "year": "1982",
+        "volume": "17",
+        "journal": "Acta Inf.",
+        "url": "db/journals/acta/acta17.html#Blum82",
+        "ee": "http://dx.doi.org/10.1007/BF00264161"
+      },
+      {
+        "@mdate": "2013-11-28",
+        "@key": "journals/acta/Schonhage77",
+        "author": "Arnold Schnhage",
+        "title": "Schnelle Multiplikation von Polynomen ber Krpern der Charakteristik 2.",
+        "journal": "Acta Inf.",
+        "volume": "7",
+        "year": "1977",
+        "pages": "395-398",
+        "url": "db/journals/acta/acta7.html#Schonhage77",
+        "ee": "http://dx.doi.org/10.1007/BF00289470"
+      }
+    ]
+  }
+}

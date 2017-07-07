@@ -4,7 +4,7 @@ Este respositorio ha sido creado para recopilar todas las prácticas del Máster
 La estructura que sigue este respositorio es la siguiente:
 
 CarpetaNombreUsuario/
-  nombrepractica1
+  \nnombrepractica1
   nombrepractica2
   nombrepractica3
   ...

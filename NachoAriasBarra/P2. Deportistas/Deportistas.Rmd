@@ -1,0 +1,564 @@
+---
+title: "Análisis de datos - Deportistas "
+author: "Ignacio Arias Barra"
+date: "16 January 2017"
+output: html_document
+---
+
+**INTRODUCCIÓN**
+
+En la presente práctica se analizarán datos pertenecientes a deportistas australianos que realizan diferentes deportes. Dichos datos hacen referencia a:
+
+* **Sex:** sexo del deportista (0 = hombre, 1 = mujer)
+*  **Ht:** Altura (cm)
+*  **Wt:** Peso (Kg)
+*  **BMI:** Índice de masa corporal
+*  **Bfat:** Porcentaje de grasa corporal
+*  **Sport:** Deporte que practican
+
+El primero paso a realizar será la introducción de los datos recogidos a partir de la lectura del fichero Deportistas.csv.
+
+```{r lectura_datos}
+data = read.csv("Deportistas.csv")
+```
+
+**1. ANÁLISIS DESCRIPTIVO DE LOS DATOS**
+
+A continuación se realizará un análisis descriptivo de la muestra. En este análisis veremos qué tipo de distribución sigue cada tipo de datos recogidos en conjunto y en función de cada sexo. A partir de aquí veremos otros parámetros como la media, mediana y varianza. Esto nos permitirá detectar valores muy extremos o la presencia de datos nulos.
+
+Para empezar, consideramos que la muestra proporcionada consituye una m.a.s (muestra aleatoria simple). Este tipo de muestreo indica que los individuos de la muestra han tenido la misma probabilidad de ser seleccionados. También se considerará que son independientes entre sí, por lo que la función de densidad conjunta será igual al productorio de las marginales.
+
+Como se ha indicado anteriormente, los datos extraídos hacen referencia a deportistas de ambos sexos indicando su altura (cm), peso, índice de masa corporal, porcentaje de grasa corporal y el deporte que practican.
+
+Se definen unas funciones que ayudarán a determinar si la distribución de cada tipo de dato se puede considerar como una normal o no. La primera, *hist_f* dibujará el histograma de los datos a la vez que representará la densidad superpuesta.
+La segunda, *qq_f*, representará la función cuantil cuantil para determinar a partir del patrón resultante si la distribución es normal o no. Por último, se realizará un test de normalidad *shapiro* en el que dependiendo del valor p resultante se podrá determinar con más seguridad si se trata de una normal. A mayor valor de p, con mayor seguridad se puede afirmar que se está ante una normal.
+
+```{r funciones_test_normalidad, message=FALSE}
+library(ggplot2)
+library(dplyr)
+library(scales)
+library(nortest)
+
+# Histograma y función densidad
+hist_f <- function(data, column){
+    hist_density <- ggplot(data, aes(x=column)) +
+    ggtitle('Histograma y densidad') + xlab('Valores') + ylab('Densidad') +
+    geom_histogram(aes(y=..density..), binwidth=.5, colour="black", fill="white") +
+    geom_density(alpha=.2, fill="#FF6666")
+hist_density
+}
+
+# Gráfico cuantil cuantil
+qq_f <- function(data, column){
+  qqnorm(column, pch = 20, col = alpha("red4", 0.5),las = 1);  qqline(column, lwd = 2); grid()
+}
+
+# Test de normalidad
+shapiro_f <- function(data, column){
+  sha <- shapiro.test(column)
+  sha
+}
+```
+
+Para estudiar los datos por cada sexo, separamos el dataframe en dos, filtrando por la columna *Sex*, siendo *h_df* el dataframe con los datos de los hombres y *m_df* el dataframe con los datos de las mujeres.
+
+```{r separacion_dataframes}
+h_df <- data %>% filter(Sex==0)
+total_hombres <- h_df %>% count()  
+
+m_df <- data %>% filter(Sex==1)
+total_mujeres <- m_df %>% count
+```
+
+Para cada tipo de dato analizaremos el total de la muestra y después los valores para los hombres y por último para las mujeres.
+
+**1.1 ALTURA**
+
+Se empezará estudiando la distribución de los datos de altura en conjunto y por sexo. Para ello, se aplicarán las funciones previamente definidas.
+
+*Toda la muestra:*
+
+```{r analisis_altura}
+column = data$Ht
+
+# Histograma
+hist_f(data, column)
+# Gráfico cuantil cuantil
+qq_f(data, column)
+# Test de normalidad
+shapiro_f(data, column)
+
+mean_ht_total = mean(column)
+var_ht_total = var(column)
+median_ht_total = median(column)
+```
+
+*Altura hombres:*
+
+```{r altura_hombres}
+column = h_df$Ht
+# Histograma hombres
+hist_f(h_df, column)
+# Gráfico cuantil cuantil
+qq_f(h_df, column)
+# Test de normalidad
+shapiro_f(h_df, column)
+
+mean_ht_h = mean(column)
+var_ht_h = var(column)
+median_ht_h = median(column)
+```
+
+*Altura mujeres:*
+
+```{r altura_mujeres}
+column = m_df$Ht
+# Histograma mujeres
+hist_f(m_df, column)
+# Gráfico cuantil cuantil
+qq_f(m_df, column)
+# Test de normalidad
+shapiro_f(m_df, column)
+
+mean_ht_m = mean(column)
+var_ht_m = var(column)
+median_ht_m = median(column)
+```
+
+Como podemos observar, los histogramas tanto de los datos totales como los separados por sexo, presentan una distribución que puede caracterizarse como normal en torno al valor `r mean_ht_total` en el caso de los datos totales. La densidad superpuesta corrobora la forma de distribución normal. Para el total de las muestras, tenemos una mediana de `r median_ht_total` y una varianza de `r var_ht_total`
+
+En cuanto a las gráficas cuantil-cuantil, podemos observar que los valores obtenidos tienen una forma muy próxima a los valores teóricos de una normal, por lo que es otro índice de que estamos ante una distribución normal.
+
+Por último, el valor de p obtenido en cada test de normalizado realizado, pueden ser interpretado como lo suficientemente alto como para indicar definitivamente que estamos ante una distribución normal.
+
+**1.2 PESO**
+
+A continuación tenemos en cuenta el peso.
+
+*Toda la muestra:*
+
+```{r analisis_peso}
+# Histograma
+column = data$Wt
+# Histograma
+hist_f(data, column)
+# Gráfico cuantil cuantil
+qq_f(data, column)
+# Test de normalidad
+shapiro_f(data, column)
+
+mean_wt_total = mean(column)
+var_wt_total = var(column)
+median_wt_total = median(column)
+```
+
+*Peso hombres:*
+
+```{peso_hombres}
+column = h_df$Wt
+# Histograma hombres
+hist_f(h_df, column)
+# Gráfico cuantil cuantil
+qq_f(h_df, column)
+# Test de normalidad
+shapiro_f(h_df, column)
+
+mean_ht_h = mean(column)
+var_ht_h = var(column)
+median_ht_h = median(column)
+```
+
+*Peso mujeres:*
+
+```{peso_mujeres}
+column = m_df$Wt
+# Histograma mujeres
+hist_f(m_df, column)
+# Gráfico cuantil cuantil
+qq_f(m_df, column)
+# Test de normalidad
+shapiro_f(m_df, column)
+
+mean_ht_h = mean(column)
+var_ht_h = var(column)
+median_ht_h = median(column)
+```
+
+De nuevo, como en el caso anterior, los histogramas tanto de los datos totales como los separados por sexo, presentan una distribución que puede caracterizarse como normal en torno al valor `r mean_wt_total` en el caso de los datos totales. La densidad superpuesta corrobora la forma de distribución normal. Para el total de las muestras, tenemos una mediana de `r median_wt_total` y una varianza de `r var_wt_total`
+
+En cuanto a las gráficas cuantil-cuantil, podemos observar que los valores obtenidos tienen una forma muy próxima a los valores teóricos de una normal, por lo que es otro índice de que estamos ante una distribución normal.
+
+Por último, el valor de p obtenido en cada test de normalizado realizado, pueden ser interpretado como lo suficientemente alto como para indicar definitivamente que estamos ante una distribución normal.
+
+**1.3 ÍNDICE MASA COPORAL**
+
+En este apartado tenemos en cuenta el BMI o índice de masa corporal. Cabe decir que la fórmula para su cálculo es la siguiente:
+
+$$\begin{equation}
+BMI= \frac{Weight (kg)}{Height(m)²}\
+\end{equation}$$
+
+Para los valores obtenidos, existen escalas que clasifican el BMI en función del valor obtenido. Dicha escala podría resumirse como en la siguiente tabla:
+
+*CLASIFICACIÓN ÍNDICE MASA CORPORAL*
+
+Encabezado Tabla         |   Rango        
+------------------------ | ---------------- 
+Debajo del peso normal   |  <18.50          
+Peso Normal              |  18.50 - 24.99       
+Sobrepeso                |  25.00 - 29.99          
+Obesidad                 |  >30.00    
+
+```{r}
+total_deportistas <- data %>% count()
+BMI_debajo_peso_normal <- data %>% filter(BMI<18.5) %>% count()
+BMI_peso_normal <- data %>% filter(BMI>18.5 & BMI<24.99) %>% count()
+BMI_sobrepeso <- data %>% filter(BMI<25 & BMI>29.9) %>% count()
+BMI_obesidad <- data %>% filter(BMI>30) %>% count()
+```
+
+Tras revisar los pesos de cada deportista, vemos que el número de deportistas que tienen una categoría de peso por debajo del normal es de `r BMI_debajo_peso_normal`. La mayoría de los deportistas, tienen un peso normal, haciendo un total de `r BMI_peso_normal` de `r total_deportistas` que hay en toda la muestra. También se puede apreciar como `r BMI_sobrepeso` deportistas están en sobrepeso, siendo `r BMI_obesidad` los deportistas con obesidad.
+
+*Toda la muestra:*
+
+```{r analisis_BMI}
+BMI_f <- function(wt, ht){wt/((ht/100)^2)}
+
+column = data$BMI
+# Histograma
+hist_f(data, column)
+# Gráfico cuantil cuantil
+qq_f(data, column)
+# Test de normalidad
+shapiro_f(data, column)
+
+mean_bmi_total = mean(column)
+var_bmi_total = var(column)
+median_bmi_total = median(column)
+```
+
+*BMI hombres:*
+
+```{r BMI_hombres}
+column = h_df$BMI
+# Histograma hombres
+hist_f(h_df, column)
+# Gráfico cuantil cuantil
+qq_f(h_df, column)
+# Test de normalidad
+shapiro_f(h_df, column)
+
+mean_bmi_h = mean(column)
+var_bmi_h = var(column)
+median_bmi_h = median(column)
+```
+
+*BMI mujeres:*
+
+```{r BMI_mujeres}
+column = m_df$BMI
+# Histograma mujeres
+hist_f(m_df, column)
+# Gráfico cuantil cuantil
+qq_f(m_df, column)
+# Test de normalidad
+shapiro_f(m_df, column)
+
+mean_bmi_m = mean(column)
+var_bmi_m = var(column)
+median_bmi_m = median(column)
+```
+ 
+Los resultados obtenidos de los gráficos de los histogramas con las densidades superpuestas, nos hacen pensar que estamos de nuevo ante una distribución normal. Teniendo en cuenta los valores de ambos sexos, tenemos una media de `r mean_bmi_total`, una varianza de `r var_bmi_total` y una mediana de `r median_bmi_total`. En las gráficas se observa que una de las colas tiene valores muy extremos que apriori podrían hacer que la media se vea muy afectada no siendo un valor representativo de la muestra. Sin embargo, al observar la mediana vemos que tiene un valor similar, por lo que esos valores no afectan a la media.
+
+En el caso de los deportistas que son hombres, tenemos una media de `r mean_bmi_h` una varianza de `r var_bmi_h` y una mediana de `r median_bmi_h`.
+
+En el caso de los deportistas que son mujeres, tenemos una media de `r mean_bmi_m` una varianza de `r var_bmi_m` y una mediana de `r median_bmi_m`.
+
+Observando los estadísticos calculados para cada sexo, podemos ver que al igual que en el caso de la muestra entera, la media no se ve afectada por los valores extremos, siendo la mediana de similar valor a la media.
+
+Para los gráficos cuantil cuantil, de nuevo se observa que los resultados obtenidos tienen una forma muy similar a los de una normal.
+
+Finalmente, con los valores p obtenidos en los diferentes test shapiro, determinaremos finalmente que el BMI también sigue una distribución normal.
+
+
+**1.4 PORCENTAJE GRASA COPORTAL**
+
+Por último, analizaremos el porcentaje de grasa corporal pero antes se presenta la tabla para valores característicos del porcentaje de grasa según hombres o mujeres.
+
+ *CLASIFICACIÓN PORCENTAJE DE GRASA CORPORAL*
+
+Encabezado Tabla |   Mujeres        | Hombres 
+---------------- | ---------------- | ----------------
+Grasa esencial   |  10-13%          | 2-5% 
+Atleta           |  14-20%          | 6-13%  
+Fitness          |  21-24%          | 14-17%
+Aceptable        |  25-31%          | 18-25%
+Obesidad         |  32% o más       | 26% o más    
+
+```{r}
+grasa_mujeres_obesidad <- m_df %>% filter(Bfat >= 32) %>% count()
+grasa_mujeres_aceptable <- m_df %>% filter(Bfat >= 25 & Bfat < 32) %>% count()
+grasa_mujeres_fitness <- m_df %>% filter(Bfat >= 21 & Bfat < 25) %>% count()
+grasa_mujeres_atleta <- m_df %>% filter(Bfat >= 14 & Bfat < 21) %>% count()
+grasa_mujeres_esencial <- m_df %>% filter(Bfat >= 6 & Bfat < 14) %>% count()
+
+grasa_hombres_obesidad <- h_df %>% filter(Bfat >= 26) %>% count()
+grasa_hombres_aceptable <- h_df %>% filter(Bfat >= 18 & Bfat < 26) %>% count()
+grasa_hombres_fitness <- h_df %>% filter(Bfat >= 14 & Bfat < 18) %>% count()
+grasa_hombres_atleta <- h_df %>% filter(Bfat >= 6 & Bfat < 14) %>% count()
+grasa_hombres_esencial <- h_df %>% filter(Bfat >= 2 & Bfat < 6) %>% count()
+```
+
+Del total de `r total_mujeres` que hay en la muestra, tenemos que:
+
+*  `r grasa_mujeres_obesidad` mujer tiene obesidad.
+*  `r grasa_mujeres_aceptable` mujeres son aceptables.
+*  `r grasa_mujeres_fitness` mujeres tienen categoría fitness.
+*  `r grasa_mujeres_atleta` mujeres tienen categoría atleta.
+*  `r grasa_mujeres_esencial` mujeres poseen la grasa esencial.
+
+Por el lado de los hombres, de `r total_hombres` que hay, tenemos que:
+
+*  `r grasa_hombres_obesidad` hombres tienen obesidad.
+*  `r grasa_hombres_aceptable` hombres son aceptables.
+*  `r grasa_hombres_fitness` hombres tienen categoría fitness.
+*  `r grasa_hombres_atleta` hombres tienen categoría atleta.
+*  `r grasa_hombres_esencial` hombres poseen la grasa esencial.
+
+*Toda la muestra:*
+
+```{r analisis_grasa_corporal}
+column = data$Bfat
+# Histograma
+hist_f(data, column)
+# Gráfico cuantil cuantil
+qq_f(data, column)
+# Test de normalidad
+shapiro_f(data, column)
+
+mean_bfat_total = mean(column)
+var_bfat_total = var(column)
+median_bfat_total = median(column)
+```
+
+*Porcentaje grasa coporal en hombres:*
+
+```{r grasa_hombres}
+column = h_df$Bfat
+# Histograma hombres
+hist_f(h_df, column)
+# Gráfico cuantil cuantil
+qq_f(h_df, column)
+# Test de normalidad
+shapiro_f(h_df, column)
+
+mean_bfat_h = mean(column)
+var_bfat_h = var(column)
+median_bfat_h = median(column)
+```
+
+*Porcentaje grasa corporal en mujeres:*
+
+```{r grasa_mujeres}
+column = m_df$Bfat
+# Histograma mujeres
+hist_f(m_df, column)
+# Gráfico cuantil cuantil
+qq_f(m_df, column)
+# Test de normalidad
+shapiro_f(m_df, column)
+
+mean_bfat_m = mean(column)
+var_bfat_m = var(column)
+median_bfat_m = median(column)
+```
+
+En este caso, observando las pruebas para evaluar la normalidad de los datos del porcentaje de grasa coportal, los datos recogidos no parecen seguir una distribución normal.
+
+Sólo los datos de las mujeres parecen presentar un gráfico cuantil-cuantil y un valor p que determinen que sigan una normal.
+
+**2. INTERVALO DE CONFIANZA**
+
+Para calcular un intervalo de confianza en general se ha de usar una función de los datos y de los parámetros de la que no se sabe su distribución. Ésta es llamada *cantidad pivotal* y tenemos que encontrar la más adecuada para nuestro parámetro en particular, el BMI medio.
+
+Antes de comenzar el cálculo del intervalo, se ha de señalar que el tamaño de la muestra es de `r total_deportistas`. Al ser un m.a.s. de tamaño grande (n ≥ 30), sea cual sea la distribución del BMI, podemos aplicar el Teorema Central del Límite, y obtener la nuestra cantidad pivotal será,
+
+$$\begin{equation}
+\frac{\bar{X} - \mu}{S/ \sqrt{n}} \sim N(0,1) \
+\end{equation}$$
+
+siendo S^2 la *cuasi-varianza muestral* y S la *cuasi-desviación típica*:
+
+$$\begin{equation}
+S^2 = \frac{1}{n-1} \sum_{i=1}^{n}({x_{i} - \bar{x}})^2 \\
+S = \sqrt(\frac{1}{n-1} \sum_{i=1}^{n}({x_{i} - \bar{x}})^2)
+\end{equation}$$
+
+En *r*, para el cálculo de la *cuasi-varianza muestral* ya se encuentra implementada la función *var*.
+
+Centrándonos en el intervalo a calcular del 98% (confianza $\alpha$ = 0.98) para el BMI medio, tiene que tener la siguiente forma para ambos sexos (contenido entre los cuantiles z):
+
+$$\begin{equation}
+[- z_{1-\alpha /2} <\frac{\bar{X} - \mu}{S/ \sqrt{n}}  < z_{1-\alpha /2}]
+\end{equation}$$
+
+Despejando, llegamos a que el intervalo de confianza aproximado para la media poblacional de la característica BMI tiene la expresión:
+
+$$\begin{equation}
+[\bar{X} - z_{1-\alpha /2} \ \frac{S}{\sqrt{n}}, \bar{X} + z_{1-\alpha /2} \ \frac{S}{\sqrt{n}}]
+\end{equation}$$
+
+Con $$\bar{X}$$ la media muestral y *n* el tamaño de la muestra.
+
+*Datos iniciales*
+
+```{r BMI_intervalo_datos}
+int_conf = 98
+alpha = 1 - int_conf/100
+```
+
+*Hombres*
+
+```{r BMI_intervalo_hombres}
+x_mean_h <- mean_bmi_h
+s_h <- sqrt(var_bmi_h)
+n_h <- total_hombres
+l_inf_h <- x_mean_h-qnorm(1-alpha/2)*s_h/sqrt(n_h)
+l_sup_h <- x_mean_h+qnorm(1-alpha/2)*s_h/sqrt(n_h)
+```
+
+El intervalo para los hombres, está comprendido en [`r l_inf_h`, `r l_sup_h`].
+
+*Mujeres*
+
+```{r BMI_intervalo_mujeres}
+x_mean_m <- mean_bmi_m
+s_m <- sqrt(var_bmi_m)
+n_m <- total_mujeres
+l_inf_m <- x_mean_m-qnorm(1-alpha/2)*s_m/sqrt(n_m)
+l_sup_m <- x_mean_m+qnorm(1-alpha/2)*s_m/sqrt(n_m)
+```
+
+El intervalo para las mujeres, está comprendido en [`r l_inf_m`, `r l_sup_m`].
+
+Lo se ha calculado con este intervalo es que, con una confianza del 98%, en la repetición de obtención de muchas muestras y posterior cálculo de los intervalos, el 98% de las veces dicho intervalo va a contener al verdadero valor real del BMI medio.
+
+**3. CONTRASTE DE HIPÓTESIS**
+
+Para realizar un contraste de hipótesis, el primer punto a tener en cuenta es la definición de dichas hipótesis. Una vez formuladas y con la ayuda de las funciones t.test y var.test, estableceremos los contrastes de hipótesis para calcular el *p-valor*. A partir de este valor determinaremos el resultado del contraste en función del nivel de significación que se estipule. Dicho nivel de significación, es la probabilidad de error tipo 1 que estamos dispuestos a asumir. Es decir, que la hipótesis nula sea cierta y la rechacemos.
+
+Las hipótesis a formular para la comparación de las medias son:
+
+*Hipótesis nula*
+
+*  **H0:** no hay diferencia entre el BMI medio de los deportistas en base a su sexo.
+*  **H0** (modo formal): $$\mu_{BMIh} = \mu_{BMIm}$$ o también $$\mu_{BMIh} - \mu_{BMIm} = 0$$  
+
+*Hipótesis alternativa*
+
+*  **H1:** si hay diferencia entre el BMI medio de los deportistas en base a su sexo.
+*  **H1** (modo formal): $$\mu_{BMIh} \not= \mu_{BMIm}$$ o también $$\mu_{BMIh} - \mu_{BMIm} \not= 0$$ 
+
+Para rechazar o no la hipótesis H0, fijaremos un nivel de significación $\alpha$ = 0.01, de tal manera que si el *p-valor* obtenido es menor a dicho valor, rechazaremos la hipótesis H0. En caso contrario, no se rechazará la hipótesis.
+
+En los contrastes de hipótesis sobre medias poblacionales, lo normal es no conocer la varianza, como en este caso. Por ello, debemos emplear un estadístico del tipo:
+
+$$\frac{\bar{X} - \mu}{\sigma/ \sqrt{n}}$$
+Al no tener el valor de la varianza poblacional, sustituimos el valor $\sigma$ por un estimador suyo. El elegido será la *cuasi-desviación típica muestral* $S_x$:
+
+$$\frac{\bar{X} - \mu}{S_{x}/ \sqrt{n}}$$
+
+Sin embargo, ahora la distribución no será normal sino que será una estrechamente relacionada con ésta, llamada *t de Student*.
+Este estadístico será el usado para el cálculo de *p-valores* al igual que se usaba en el cálculo de intervalos y tendrá $$T_{n-1}$$ grados de libertad donde *n* es el tamaño de la muestra.
+
+En la comparación de las medias, se ha de recalcar que las muestras que se han recogido son independientes. En el caso opuesto estarían las muestras apareadas, cuyas medias harían referencia a extracciones de las mismas muestras en diferentes tiempos, por ejemplo.
+
+A la hora del contraste de medias en r, tenemos que contrastar antes si las varianzas de ambas muestras son iguales o no. Para ello, tenemos que definir unas hipótesis acerca de las mismas. Usaremos la *cuasi-varianza*.
+
+*Hipótesis nula*
+
+*  **H0:** asumimos varianzas iguales.
+*  **H0** (modo formal): $$S_{x_h} = S_{x_h}$$ o también$$ \frac{S_{x_h}}{S_{x_m}} = 1$$.
+
+*Hipótesis alternativa*
+
+*  **H1:** asumimos varianzas distintas.
+*  **H1** (modo formal): $$S_{x_h} \not= S_{x_h}$$ o también $$\frac{S_{x_h}}{S_{x_m}} \not= 1$$
+
+```{r test_comparacion_varianzas}
+# Nivel de significación
+alpha <- 0.01
+var.test(BMI~Sex, data = data, alternative = "two.sided", conf.level=1-alpha)
+```
+
+Fijándonos en el p-valor, vemos que tiene un valor mayor que 0.1, por lo que no rechazamos H0. Es decir, para este caso, consideramos que las varianzas son iguales.
+
+```{r boxplot_varianzas}
+boxplot(BMI~Sex,data=data)
+```
+
+Si observamos el boxplot generado, vemos como la altura de las cajas (que representan el tercer y primer cuartil de la distribución, viendo la caja de arriba hacia abajo), es prácticamente la misma. Lo que nos puede dar a pensar que en efecto las varianzas se pueden considerar como iguales.
+
+A continuación se procede a la comparación de hipótesis de las medias.
+
+```{r test_comparacion_medias}
+t.test(x = h_df$BMI, y = m_df$BMI,alternative="two.sided",mu=0, paired=FALSE, var.equal=TRUE, conf.level=1-alpha)
+```
+El p-valor obtenido es de $$1.094 * 10^{-6}$$, muy por debajo del nivel de significación adoptado. Debido a esto, se debe rechazar la hipótesis nula H0 en el que se indicaba que no había diferencia entre las medias de los BMI en función del sexo y adoptar la hipótesis H1 en la que se indicaba que sí había diferencia entre ambos valores.
+
+Como se puede observar, el contraste ha dado lugar a dos medias diferentes, siendo la x la de los hombres y la y la de las mujeres. Dicho contraste está basado en la distribución t de Student con 200 grados de libertad (muestras de los hombres + muestras de las mujeres - 2)
+
+**4. GRASA CORPORAL**
+
+Como se describió en el primer apartado, el porcentaje de grasa corporal no parece seguir una distribución normal. 
+
+En el caso de los deportistas, el cálculo del IMC no es muy eficaz, ya que sólo tiene en cuenta el peso. Generalmente los deportistas tienen un mayor peso que las personas normales debido al alto porcentaje de masa muscular (que es más pesada que la grasa). 
+
+Por ello, vamos a realizar el contraste de hipótesis de las medias en base a los porcentajes de grasa corporal.
+
+Primero, vemos si consideramos las varianzas como iguales, como en el caso anterior.
+
+*Hipótesis nula*
+
+*  **H0:** asumimos varianzas iguales.
+*  **H0** (modo formal): $$S_{x_h} = S_{x_h}$$ o también$$ \frac{S_{x_h}}{S_{x_m}} = 1$$.
+
+*Hipótesis alternativa*
+
+*  **H1:** asumimos varianzas distintas.
+*  **H1** (modo formal): $$S_{x_h} \not= S_{x_h}$$ o también $$\frac{S_{x_h}}{S_{x_m}} \not= 1$$
+
+```{r test_comparacion_varianzas_bfat}
+# Nivel de significación
+alpha <- 0.01
+var.test(Bfat~Sex, data = data, alternative = "two.sided", conf.level=1-alpha)
+```
+
+Como se puede observar, el p-valor obtenido es muy inferior al 0.01 esablecido. Debido a esto, rechazamos la hipótesis nula, adoptando la hipótesis alternativa. Consideramos que las varianzas no son iguales.
+
+```{r boxplot_varianzas_Bfat}
+boxplot(Bfat~Sex,data=data)
+```
+
+En el box plot se puede apreciar como la altura de las cajas es diferente, lo que da una idea de que las varianzas también lo son.
+
+Establecemos las hipótesis par las medias de los porcentajes de grasa corporal.
+
+*Hipótesis nula*
+
+*  **H0:** no hay diferencia entre el porcentaje de grasa corporal medio de los deportistas en base a su sexo.
+*  **H0** (modo formal): $$\mu_{Bfath} = \mu_{Bfatm}$$ o también $$\mu_{Bfath} - \mu_{Bfatm} = 0$$  
+
+*Hipótesis alternativa*
+
+*  **H1:** si hay diferencia entre el porcentaje de grasa corporal medio de los deportistas en base a su sexo.
+*  **H1** (modo formal): $$\mu_{Bfath} \not= \mu_{Bfatm}$$ o también $$\mu_{Bfath} - \mu_{Bfatm} \not= 0$$ 
+
+```{r test_comparacion_medias_Bfat}
+t.test(x = h_df$Bfat, y = m_df$Bfat,alternative="two.sided",mu=0, paired=FALSE, var.equal=FALSE, conf.level=1-alpha)
+```
+
+Los porcentajes medios para hombres y para mujeres no son iguales. El *p-valor* obtenido es muy inferior a 0.01 por lo que rechazamos la hipótesis H0 que indicaba que las medias eran iguales. Por lo tanto, adoptamos la hipótesis H1 en la que se indicaba que sí había diferencia entre ambas medias.
+
+Como se puede observar, la media de porcentaje de grasa corporal en las mujeres es bastante mayor que para el caso de los hombres. Esto es lógico, ya que la constitución del cuerpo de una mujer hace que tenga más partes grasas que un hombre, aunque ambos sean deportistas.

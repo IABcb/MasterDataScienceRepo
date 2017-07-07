@@ -1,0 +1,374 @@
+---
+title: "Práctica 2"
+author: "Ignacio Arias Barra"
+date: "9 de noviembre de 2016"
+output: html_document
+---
+#pnorm CALCULA PROBABILIDAD DE X<= x, q = x en la función
+#dnorm CALCULA PROBABILIDAD DE VALOR EXACTOR X = x, x = x en la función
+```{r }
+library(PASWR2)
+library(dplyr)
+datos <- BATTERY
+```
+
+ACTIVIDAD 1
+
+Pregunta 1
+```{r histograma_conjunto}
+histograma_conjunto <- ggplot(datos, aes(x=datos$lifetime)) + 
+  geom_histogram() + 
+  ggtitle("Histograma conjunto") + ylab("Densidad") + xlab("Tiempo de vida (horas)")
+histograma_conjunto
+```
+
+*Como se indica en el enunciado, necesitamos separar los datos para ver los valores de cada variable (batería).*
+
+Pregunta 2
+```{r }
+datosagrupados <- datos %>% group_by(facility)
+#datosA
+lifetime <- datosagrupados %>% filter(facility == 'A')
+datosA <- data.frame(lifetime)
+#datosB
+lifetime <- datosagrupados %>% filter(facility == 'B')
+datosB <- data.frame(lifetime)
+```
+
+*Hemos creado dos datframes, uno por tipo de batería. Cada uno contiene su lifetime*
+
+Pregunta 3
+```{r histograma_A}
+histogramaA <- ggplot(datosA, aes(x=datosA$lifetime)) +
+  geom_histogram(color = "black", fill = "white", binwidth = 1)+
+  ggtitle("Histograma datosA") + ylab("Densidad") + xlab("Tiempo de vida (horas)")
+histogramaA
+```
+
+*El histograma representado corresponde a los datosA. Según se aprecia, no parece seguir una distribución normal, ya que tenemos dos zonas con máximos. Estas zonas pueden corresponderse con dos modas, por lo que sería una distribución bimodal, no siendo esto propio de una distribución normal.*
+
+```{r histograma_B}
+histogramaB <- ggplot(datosB, aes(x=datosB$lifetime)) +
+  geom_histogram(binwidth=1, color = "black", fill = "white") +
+  ggtitle("Histograma datosB") + ylab("Densidad") + xlab("Tiempo de vida (horas)")
+histogramaB
+
+```
+*Observando el histograma de los datosB, podemos suponer que si sigue una distribucióń normal, ya que en aspecto se parece.*
+
+Pregunta 4
+
+Test de normalidad
+```{r density_A}
+histA_density <- ggplot(datosA, aes(x=lifetime)) + 
+    geom_histogram(aes(y=..density..), binwidth=.5, colour="black", fill="white") +
+    geom_density(alpha=.2, fill="#FF6666") 
+histA_density
+```
+
+*Al representar la densidad superpuesta con el histograma, podemos ver que si se asemeja a una distribución normal.*
+
+```{r density_B}
+histB_density <- ggplot(datosB, aes(x=lifetime)) + 
+    geom_histogram(aes(y=..density..), binwidth=.5, colour="black", fill="white") +
+    geom_density(alpha=.2, fill="#FF6666") 
+histB_density
+```
+
+*En el caso de los datosB, vemos que sigue pareciéndose a una distribución normal.*
+
+*Gráfico cuantil-cuantil*
+
+```{r Grafico_cuantil_cuantil_A}
+library(scales)
+qqnorm(datosA$lifetime, pch = 20, col = alpha("red4", 0.5),las = 1);qqline(datosA$lifetime, lwd = 2); grid()
+```
+
+*Para que la distribución se asemeje a una normal, los cuantiles representados en rojo, deben asemejarse a la línea diagonal negra, que representa la disposición teórica de los mismos para una distribucióń normal.*
+
+*Como podemos ver para el caso de los datosA, los datos parecen seguir la distribución normal, aunque tengamos cierta separación en algunos puntos respecto a la diagonal.*
+
+```{r Grafico_cuantil_cuantil_B}
+qqnorm(datosB$lifetime, pch = 20, col = alpha("red4", 0.5),las = 1);qqline(datosB$lifetime, lwd = 2); grid()
+```
+
+*Con el gráfico cuantil cuantil, podemos ver que los datosB también siguen una distribución normal, ya que los cuantiles marcados en rojo siguen la línea negra.*
+
+*Por último, realizamos el test de normalidad para ambas baterías:*
+
+```{r normal_test_A}
+library(nortest)
+sha_A <- shapiro.test(datosA$lifetime)
+ad_A <- ad.test(datosA$lifetime)
+sha_A
+ad_A
+```
+
+*El dato obtenido del test Shapiro *(`r sha_A`)* y el obtenido del test de  Anderson *(`r ad_A`)* para la batería A, muestran valores de p grandes, lo que indica que estamos ante una alta probabilidad de encontrarnos antes una función normal*
+
+```{r normal_test_B}
+sha_B <- shapiro.test(datosB$lifetime)
+ad_B <- ad.test(datosB$lifetime)
+sha_B
+ad_B
+```
+
+*El dato obtenido del test Shapiro *(`r sha_B`)* y el obtenido del test de  Anderson *(`r ad_B`)* para la batería B, muestran valores de p grandes, lo que indica que estamos ante una alta probabilidad de encontrarnos antes una función normal*
+
+ACTIVIDAD 2
+
+Pregunta 1
+
+*A  continuación realizaremos una estimación de la media y la varianza de la población, a partir del método de los momentos.*
+
+*Este método consiste en igualar los momentos muestrales a los momentos poblacionales. En concreto los momentos de orden uno (media) y de orden dos (varianza).*
+
+*Momento muestral y momento poblacional:*
+$$\begin{equation}
+\ m  = \frac{1}{n} \
+\sum_{i=1}^{n} X_{i}\
+\end{equation}$$
+
+$$\begin{equation}
+\mu  = E(x)
+\end{equation}$$
+
+*Ecuación para los momentos de orden uno, estimación de la media poblacional*
+$$\begin{equation}
+\ m_{1}  = \mu_{1}\\
+\frac{1}{n}\sum_{i=1}^{n} X_{i} = E(X)\
+\end{equation}$$
+
+*Ecuación para los momentos de orden dos, estimación de la varianza poblacional*
+
+$$\begin{equation}
+\ m_{2}  = \mu_{2}\\
+\frac{1}{n}\sum_{i=1}^{n} X_{i}^2 = E(X^2)\\
+E(X^2) = Var(X) + E(X)^2 = \sigma^2 + \mu^2\\
+\frac{1}{n}\sum_{i=1}^{n} X_{i}^2 = \sigma^2 + \mu^2
+\end{equation}$$
+
+*Batería A*
+```{r estimacion_mediaA}
+med_muestralA <- mean(datosA$lifetime)
+med_poblacionalA <- med_muestralA
+med_poblacionalA
+```
+
+*Al igualar el valor de la media muestral* `r med_muestralA` * al de la media poblacional (momentos de orden uno) obtenemos una media poblacional estimada de* `r med_poblacionalA`.
+
+```{r estimacion_varianzaA}
+momento2_A = sum((datosA$lifetime)^2)/length(datosA$lifetime)
+var_poblacionalA = momento2_A - med_muestralA^2
+var_poblacionalA
+sdA <- sqrt(var_poblacionalA)
+sdA
+
+# Según corrección, valdría con la desviación típica muestral
+sdA2 <-sd(datosA$lifetime)
+sdA2
+```
+
+*Al igualar el valor del momento muestral de orden dos * `r momento2_A` * al momento poblacional de orden dos, obtenemos una varianza poblacional estimada de * `r var_poblacionalA` * y una desviación típica de * `r sdA`.
+
+*Batería B*
+
+```{r estimacion_mediaB}
+med_muestralB <- mean(datosB$lifetime)
+med_poblacionalB <- med_muestralB
+med_poblacionalB
+```
+
+*Al igualar el valor de la media muestral* `r med_muestralB` * al de la media poblacional (momento de orden uno) obtenemos una media poblacional estimada de* `r med_poblacionalB`.
+
+```{r estimacion_varianzaB}
+momento2_B = sum((datosB$lifetime)^2)/length(datosB$lifetime)
+var_poblacionalB = momento2_B - med_muestralB^2
+var_poblacionalB
+sdB <- sqrt(var_poblacionalB)
+sdB
+
+# Según corrección, valdría con la desviación típica muestral
+sdB2 <-sd(datosB$lifetime)
+sdB2
+```
+
+*Al igualar el valor del momento muestral de orden dos * `r momento2_B` * al momento poblacional de orden dos, obtenemos una varianza poblacional estimada de* `r var_poblacionalB`* y una desviación típica de * `r sdB`.
+
+Pregunta 2
+```{r prob_A_mas_210}
+time <- 210
+pmas_210 <- pnorm(q = time, mean = med_poblacionalA, sd = sdA, lower.tail = FALSE)
+pmas_210
+```
+
+*La probabilidad de que una batería A dure más de *`time`* horas es de *`r pmas_210`
+
+Pregunta 3
+```{r prob_B_menos_175}
+time <- 175
+pmenos_175 <- pnorm(q = time, mean = med_poblacionalB, sd = sdB)
+pmenos_175
+
+```
+*La probabilidad de que una batería B dure menos de *`time`* horas es de *`r pmenos_175`
+
+Pregunta 4
+```{r }
+cuant <- 3
+dur_cuant <- qnorm(cuant/100,mean=med_poblacionalB,sd=sdB)
+dur_cuant
+
+```
+
+Representación gráfica
+```{r }
+qqq <- qnorm(0.03, med_poblacionalB, sdB); qqq
+
+curve(dnorm(x, med_poblacionalB, sdB), 170, 190)
+abline(v = qnorm(0.03, med_poblacionalB, sdB))
+text(qqq, 0.001, "3%", pos = 2)
+```
+
+*El valor obtenido es * `r dur_cuant`
+
+ACTIVIDAD 3
+```{r}
+durMin_admisB <- 175
+```
+
+Pregunta 1
+```{r }
+lote <- 10
+defectuosas <- 0
+pninguna_defec <- pbinom(q = defectuosas, size = lote, prob = pmenos_175)
+pninguna_defec
+```
+
+*La probabilidad de que de un grupo de 10 baterías B no haya ninguna defectuosa es de *`r pninguna_defec`.
+
+Pregunta 2
+```{r }
+numero_de_defectuosa <- 5
+# Actual
+p_hastaprimera_defec <- pmenos_175*(1-pmenos_175)^(numero_de_defectuosa-1)
+p_hastaprimera_defec
+
+# Correccion
+p_hastaprimera_defec2 = dgeom(4,pmenos_175)
+p_hastaprimera_defec2
+
+```
+
+*La probabilidad de que la primera defectuosa sea la quinta batería producida es de* `r p_hastaprimera_defec`
+
+Pregunta 3
+```{r }
+#A -> categoría de defectuosos
+                      #Fc.prob   #Fc en r
+num_bats_lote <- 20      #N   -> n = 20 - 3
+num_defects_lote <- 3    #D   -> m
+num_mini_lote <- 5       #n   -> k
+num_defec_mini_lote <- 1 #X   -> x
+
+p0 <- phyper(q = 0, m = num_defects_lote, k = num_mini_lote, n = num_bats_lote -  num_defects_lote)
+palmenos1 <- 1-p0
+palmenos1
+
+```
+
+*La probabilida de sacar al menos una batería defectuosa de un lote de 5, la podemos calcular como uno menos la probabilidad de que saquemos cero baterías defectuosas. El resultado obtenido es de *`r palmenos1`.
+
+ACTIVIDAD 4
+```{r }
+baterias_dia <- 1000
+defectuosas_dia <- 12
+
+```
+
+Pregunta 1
+```{r }
+bats_defec <- 20
+pmenoso20_dia_defec <- ppois(q = bats_defec, lambda = defectuosas_dia)
+pmasde20_dia <- 1 - pmenoso20_dia_defec
+pmasde20_dia
+```
+
+*Calculamos la probabilidad de obtener más de 20 baterías defectuosas al día como uno menos la probabilidad de obtener 20 o menos baterías defectuosas. Esto nos da una probabilidad de * `r pmasde20_dia`.
+
+Pregunta 2
+```{r }
+pcero_defec <- ppois(q = 0, lambda = defectuosas_dia)
+pcero_defec
+```
+
+*La probabilid de no obtener ninguna batería defectuosa en todo el día es de * `r pcero_defec`.
+
+Pregunta 3
+
+*Representamos la función de densidad para las baterías defectuosas a lo largo de las mil producidas diariamente.*
+
+```{r }
+library (ggplot2)
+
+lambda <- defectuosas_dia
+x_data <- seq(1,baterias_dia)
+y_data <- dpois(x_data,lambda)
+pois_df <- data.frame(x=x_data, y=y_data)
+
+ggplot(pois_df, aes(x_data)) +
+    geom_line(aes(y=y_data), size = 0.5) +
+  geom_vline(xintercept = lambda, colour="red", size = 0.25, linetype = 2) +
+  xlab("Baterías") + ylab("Densidad") + ggtitle("Fc. densidad: baterías defectuosas / día")
+
+```
+
+*Considerando el número de baterías defectuosas por día como una V.A independiente del resto de días, la distribución que se obtendrá con la suma de las V.A para toda la semana, será una dsitribución de Poisson con parámetro * $$\lambda = $$ `r lambda*5`
+
+```{r}
+dias_semana <- 5
+lambda <- defectuosas_dia * dias_semana
+x_data <- seq(1,baterias_dia*dias_semana)
+y_data <- dpois(x_data,lambda)
+pois_df <- data.frame(x=x_data, y=y_data)
+
+ggplot(pois_df, aes(x_data)) +
+    geom_line(aes(y=y_data), size = 0.5) +
+    geom_vline(xintercept = lambda, colour="red", size = 0.25, linetype = 2) +
+  xlab("Baterías") + ylab("Densidad") + ggtitle("Fc. densidad: baterías defectuosas / semana")
+```
+
+*Podemos ver en ambas gráficas como la línea discontinua, que corta el máximo de ambas funciones de densidad, coincide con la media de baterías defectuosas por día (en el primer caso) y por semana (en el segundo caso).*
+
+ACTIVIDAD 5
+
+```{r }
+a = 100
+b = 185
+```
+
+Pregunta 1
+```{r }
+dias <- 5
+prod_dia <- 1000
+prod_semanal <- dias * prod_dia
+
+simulacion_weibull <- rweibull(n = prod_semanal, shape = a, scale = b)
+```
+
+Pregunta 2
+```{r }
+duracion_media_wei <- mean(simulacion_weibull)
+duracion_media_wei
+```
+
+*Con el nuevo proceso se ha obtenido una duración media de *`r duracion_media_wei ` *horas, mientras que la media de duración de las baterías B estaba en *`r med_poblacionalB`. *Como se puede observa, ha habido una mejora en la duración de estas baterías con este proceso.*
+
+Pregunta 3
+```{r }
+time <- 175
+pmenos_175_dur_mejorada <- pweibull(q = time, shape = a, scale = b)
+pmenos_175_dur_mejorada
+```
+
+*Una vez calculada, la probabilidad de que una batería dure menos de 175 horas y por lo tanto se a inadmisible, es de *`r pmenos_175_dur_mejorada`.*. Recordemos que la probabilidad que teníamos anteriormente, con la distribución normal de las baterías B, era de*`r pmenos_175`. *A la vista de los resultados, vemos como se ha mejorado bastante la probabilidad de que salga una batería defectuosa, ya que ahora es menos probable.*

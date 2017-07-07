@@ -1,0 +1,564 @@
+\documentclass[10pt, spanish]{article}
+% \usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{fullpage}
+\usepackage{amsmath}
+\usepackage{mathtools}
+\usepackage{setspace}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{color}
+\usepackage{parskip}
+\usepackage{filecontents}
+
+
+
+%\usepackage[title]{appendix}
+%\usepackage[toc,page]{appendix}
+%\usepackage[titletoc]{appendix}
+%\doublespacing
+
+
+\usepackage[titletoc,toc,title]{appendix}
+\usepackage[nottoc,numbib]{tocbibind}
+
+\usepackage{titlesec}
+\setcounter{secnumdepth}{4}
+\titleformat{\paragraph}
+{\normalfont\normalsize\bfseries}{\theparagraph}{1em}{}
+\titlespacing*{\paragraph}
+{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
+
+\usepackage[unicode]{hyperref}
+
+
+%%% Fix for appendix bug:
+% http://tex.stackexchange.com/a/41658/226
+\makeatletter
+\let\oriAlph\Alph
+\let\orialph\alph
+\renewcommand{\@resets@pp}{\par
+  \@ppsavesec
+  \stepcounter{@pps}
+  \setcounter{section}{0}%
+  \if@chapter@pp
+    \setcounter{chapter}{0}%
+    \renewcommand\@chapapp{\appendixname}%
+    \renewcommand\thechapter{\@Alph\c@chapter}%
+  \else
+    \setcounter{subsection}{0}%
+    \renewcommand\thesection{\@Alph\c@section}%
+  \fi
+  \if@pphyper
+    \if@chapter@pp
+      \renewcommand{\theHchapter}{\theH@pps.\oriAlph{chapter}}%
+    \else
+      \renewcommand{\theHsection}{\theH@pps.\oriAlph{section}}%
+    \fi
+    \def\Hy@chapapp{appendix}%
+  \fi
+  \restoreapp
+}
+\makeatother
+
+
+%\hypersetup{pdfencoding=auto}
+%\usepackage[hidelinks,unicode]{hyperref}
+%\hypersetup{unicode = true}
+
+%\usepackage[colorlinks=true,linkcolor=blue,urlcolor=black,bookmarksopen=true]{hyperref}
+%\usepackage{bookmark}
+
+\begin{document}
+
+\begin{center}
+\thispagestyle{empty}
+
+\begin{Huge}
+\bf{Análisis de sentimientos con Hadoop} 
+\end{Huge}
+
+\vspace{1.5cm}
+
+\begin{LARGE}
+Sistemas distribuidos de procesamiento de datos
+\end{LARGE}
+
+\vspace{2cm}
+
+\begin{figure}[H]
+\begin{center}
+%\includegraphics[width=8cm]{Figuras/AnalisisSentimiento2.png}
+\end{center}
+\end{figure}
+
+\vspace{2cm}
+
+\begin{Large}
+\underline{Autores}\\
+\textit{Ignacio Arias Barra}\\
+\textit{Raúl Sánchez Martín}\\
+\end{Large}
+
+
+\end{center}
+
+\pagebreak
+
+%--INTRODUCTION--%
+
+\tableofcontents
+
+\thispagestyle{empty}
+
+\pagebreak
+
+\clearpage
+\setcounter{page}{1}
+
+\section{Objetivo de la práctica}
+
+El objetivo de la presente práctica consiste en aplicar tecnologías de procesamiento de datos distribuidos para analizar el contenido de una cantidad importante de \textit{tweets}. En concreto, sólo los \textit{tweets} provenientes de EEUU y escritos en inglés serán tenidos en cuenta. Aplicando un algoritmo de \textit{MapReduce} sobre dichos datos, se han realizado dos estudios conjuntos. Por un lado, se ha analizado la "felicidad absoluta" (se explicará con más detalle este término en secciones posteriores) de cada estado de EEUU. Por otro lado, se han obtenido cuáles son los 10 \textit{trending topics} más comentados en los \textit{tweets}. Además, este análisis se realizará aplicando diferentes modos de ejecución sobre conjuntos de datos de distinto tamaño, estudiando de esta manera la escalabilidad de la solución empleada.
+
+\section{Consideraciones previas}
+
+\subsection{Recogida de datos}
+
+Para realizar la recogida de datos, se ha utilizado el script de Python \texttt{twitterstream.py} proporcionado en el enunciado de la práctica. Durante la etapa de recogida de datos, no se ha realizado ningún tipo de filtrado. Como se ha comentado anteriormente, para poder realizar un estudio de escalabilidad posterior de los diferentes modos de ejecución empleados, se han recogido tres conjuntos de datos diferentes, con tamaños de $\sim$ 60 MBs, $\sim$ 600 MBs, y $\sim$ 2.6 GBs respectivamente.
+
+\subsection{Estructura de un \textit{tweet}}
+
+Para realizar la presente práctica, es necesario acceder a diferentes campos de los \textit{tweets}. Cada \textit{tweet}, leído como un objeto \texttt{JSON}, tiene asociado un gran número de campos, de los cuales nos interesan tres: 
+
+\begin{itemize}
+\item \texttt{text}, donde se incluye el propio texto del \textit{tweet}.
+\item \texttt{place}, donde se especifican diferentes aspectos de la localización del \textit{tweet}. Dentro de este campo, se pueden distinguir otra serie de subcampos, de los cuales sólo nos interesan tres:
+\begin{itemize}
+\item \texttt{country\_code}, donde se indica mediante un código de dos caracteres el país de origen del \textit{tweet} (\textit{US} para el caso de EEUU).
+\item \texttt{place\_type}, donde se especifica el tipo de lugar desde el cuál se tomó el \textit{tweet} (ciudad, pueblo, etc).
+\item \texttt{name}, donde se indica el nombre específico del lugar desde el cuál se tomó el \textit{tweet}.
+\end{itemize}
+\item \texttt{lang}, donde se indica el idioma en el cuál ha sido escrito el \textit{tweet}.
+\end{itemize}
+
+\subsection{Resultado deseado}
+
+Como se ha indicado anteriormente, se desea realizar un doble análisis de los \textit{tweets} estudiados: obtener la felicidad de cada estado y los 10 \textit{trending topics} más comentados. Debido a ciertas rigideces impuestas por las tecnologías de procesamiento de datos distribuidas utilizadas en la presente práctica, los resultados de ambos análisis han de ser incluidos en un mismo archivo de salida. Idealmente, dicho archivo tendrá la siguiente estructura. En primer lugar, se incluirá una línea de texto por estado para indicar su felicidad. En concreto, se seguirá el siguiente esquema:
+
+\texttt{("s", <state>), <happiness\_value>}
+
+\noindent
+donde \texttt{"s"} es una clave utilizada para indicar que esa línea incluye datos de la felicidad de un estado, \texttt{<state>} es el estado correspondiente a este \textit{tweet}, y \texttt{<happiness\_value>} es la felicidad calculada para este \textit{tweet}.
+
+Una vez incluida la información de cada estado, el archivo de salida incluirá 10 líneas adicionales incluyendo información de los 10 \textit{trending topics} obtenidos. En concreto, para cada \textit{trending topic}, se incluirá la siguiente información:
+
+\texttt{("w", <topic>), <topic\_counts>}
+
+donde \texttt{"w"} es una clave utilizada para indicar que la información incluida en esa línea es utilizada para analizar los \textit{trending topics}, \texttt{<topic>} la palabra marcada en el \textit{tweet} con un \# y que sirve para etiquetar la temática del mismo, y \texttt{<topic\_counts>} el número de veces que se ha contabilizado dicho \textit{topic}.
+
+Como resultado final, se obtendrá un archivo de salida con un esquema parecido al que sigue:
+
+\texttt{("s", <state\_1>), <happiness\_value\_1>}\\
+\texttt{("s", <state\_2>), <happiness\_value\_2>}\\
+\texttt{("s", <state\_3>), <happiness\_value\_3>}\\
+\texttt{...}\\
+\texttt{...}\\
+\texttt{("s", <state\_50>), <happiness\_value\_50>}\\
+\texttt{("w", <topic\_1>), <topic\_counts\_1>}\\
+\texttt{("w", <topic\_2>), <topic\_counts\_2>}\\
+\texttt{...}\\
+\texttt{("w", <topic\_10>), <topic\_counts\_10>}\\
+
+El archivo final obtenido será postprocesado utiliando diferentes códigos escritos en Python y R para obtener las gráficas finales.
+
+\section{Descripción del código desarrollado}
+\label{sec:codigo}
+
+La presente práctica se ha resuelto aplicando un algoritmo \textit{MapReduce} utilizando dos modos principales de ejecución: metodología \textit{streaming} y utilizando la librería \textit{mrjob}. Todos los códigos desarrollados se pueden encontrar en los ficheros adjuntos a la solución de la práctica en las rutas indicadas en el Apéndice \ref{app:ficheros}. A continuación se van a detallar la estructura principal de dichos códigos.
+
+\subsection{Código desarrollado para la librería \textit{mrjob}}
+\label{subsec:codigo_mrjob}
+
+La librería \textit{mrjob} permite ejecutar algoritmos \textit{MapReduce} en diferentes plataformas de una forma sencilla. Debido a que en la presenta práctica se va a realizar un estudio sobre la escalabilidad del código propuesto, y por tanto, se va a ejecutar en diferentes plataformas, se ha decidido implementar dicho código bajo esta librería. En concreto, el código se ha divido en los siguientes pasos:
+
+\begin{itemize}
+\item \textbf{Paso 1}: En este paso, se han incluido a su vez tres procesos:
+\begin{itemize}
+\item \textit{Proceso 1}, ejecutado por la función \texttt{mapper\_get\_words\_and\_states}.
+\item \textit{Proceso 2}, ejecutado por la función \texttt{combiner\_sum\_values}.
+\item \textit{Proceso 3}, ejecutado por la función \texttt{reducer\_prepare\_for\_TTs}.
+\end{itemize}
+\item \textbf{Paso 2}, ejecutado por la función \texttt{reducer\_get\_TTs\_states}.
+\end{itemize}
+
+A continuación, se va a proceder a describir cada una de las funciones comentadas anteriormente, especificando las entradas y salidas de cada una de ellas.
+
+\subsubsection{Función \texttt{mapper\_get\_words\_and\_states}}
+
+Esta es la principal función \textit{mapper} del código desarrollado. Como toda función \textit{mapper} de un algoritmo \textit{MapReduce}, la función \texttt{mapper\_get\_words\_and\_states} propuesta tiene como objetivo emitir una serie de pares clave-valor por cada entrada recibida. Para la emisión de dichos pares, se ha hecho uso del generador \textit{yield} proporcionador por el lenguaje de programación Python. Por otro lado, debido a la peculiaridad del problema resuelto en la presente práctica, se ha decidido integrar en esta misma función, además del objetivo anteriormente descrito, el proceso de limpieza de datos. Aunque se puede argumentar que la limpieza de datos debiera de realizarse en un paso previo, en este caso se realiza conjuntamente con el \textit{mapper} principal por las siguientes razones:
+
+\begin{itemize}
+\item En primer lugar, la función de limpieza estaría basada también en una función \textit{mapper}, ya que por cada dato de entrada, habría que emitir una salida del dato tratado. Debido a esta coyuntura, se ha creído conveniente juntar tanto la limpieza de los datos como la emisión de pares clave-valor ya que se ahorran líneas de código.
+\item Por otro lado, debido a las restricciones impuestas para considerar a un \textit{tweet} válido (detalladas posteriormente), un bajo porcentaje de los mismos cumple con estas condiciones. Por lo tanto, aunque el número de \textit{tweets} iniciales es muy alto, el número final de los mismos sobre los que se aplica el algoritmo \textit{MapReduce} es relativamente reducido en comparación con los iniciales. Si la función de limpieza se realizara fuera del algoritmo \textit{MapReduce}, en una función aparte, la mayor parte de la carga computacional recaería sobre dicha función de limpieza, y no sobre el algoritmo \textit{MapReduce}, no cumpliendo por tanto el principal propósito de la práctica.
+\end{itemize} 
+
+A continuación, se va a proceder a describir los procesos de filtrados de los \textit{tweets} y emisión pares clave-valor. Ambos procesos están incluidos de manera consecutiva en la función \texttt{mapper\_get\_words\_and\_states} de manera que el resultado del primero es la entrada del segundo.
+
+\paragraph{Filtrado de \textit{tweets}}
+
+El filtrado de los \textit{tweets} es realizado principalmente por la función \texttt{FilterTweets}. Como entrada, esta función recibe cada \textit{tweet} como un diccionario, siguiendo el siguiente esquema:
+
+\texttt{\{...,"text":<text\_of\_tweet>, "lang":<language>, "place":\{"place\_type":<type\_of\_place>,} \\ \texttt{"name":<name\_of\_place>, "\textcolor{white}{.} \hspace{-5.5mm} country\_code":<code\_of\_the\_country>\}, ...\}}
+
+Sobre dichos datos, se llevan a cabo las siguientes operaciones. En primer lugar, se realiza las siguientes comprobaciones de manera secuencial para considerar el \texttt{tweet} válido:
+
+\begin{enumerate}
+\item El campo \texttt{place} es válido.
+\item El campo \texttt{text} es válido. Si es así, dicha información se guarda en la variable \texttt{text\_of\_tweet}.
+\item El campo \texttt{lang} es válido.
+\end{enumerate}
+
+Una vez que se han realizado las comprobaciones anteriores, si son exitosas, se prosiguen con dos comprobaciones adicionales, esta vez sobre dos campos que están incluidos en el campo \texttt{place}:
+
+\begin{enumerate}
+\item El campo \texttt{country\_code} es igual a \texttt{US} (así restringimos los \textit{tweets} a los originados en EEUU).
+\item El campo \texttt{place\_type} es igual a \texttt{city}. Esta restricción es impuesta debido al método utilizado para obtener el estado originario de cada \textit{tweet}. Para ello, se ha utilizado un diccionario \cite{USCityDic}
+en el que se incluye un listado de las ciudades de EEUU y su estado correspondiente. Dicho diccionario es incluido como entrada tanto en la función \texttt{mapper\_get\_words\_and\_states} como en la función \texttt{FilterTweets}. El estado así obtenido se guarda en la variable \texttt{state}.
+\end{enumerate}
+
+Finalmente, se realiza una comprobación de que el campo \texttt{lang} es igual a \texttt{en}, confirmando de esa manera que el idioma en el que se ha escrito el \textit{tweet} es Inglés. 
+
+Habrá dos salidas posibles de la citada función. Si el \textit{tweet} es considerado inválido, i.e., no ha cumplido todas y cada una de los requisitos mencionados anteriormente, la salida será \texttt{None}. En caso contrario, la salida será un diccionario donde se incluye el estado originario del \textit{tweet} y su texto, tal y como sigue:
+
+\texttt{\{<state>:<text\_of\_tweet>\}}
+
+\paragraph{Emisión clave-valor}
+
+Una vez que el proceso de filtrado ha finalizado, la función \texttt{mapper\_get\_words\_and\_states} sigue realizando diversas operaciones sobre la salida de la función \texttt{FilterTweets}. En concreto, va a emitir dos grupos de pares clave-valor, tal y como sigue:
+
+\begin{itemize}
+\item \textbf{Grupo 1 de pares clave-valor}: En este caso, sólo se emite un par clave-valor, el cuál será utilizado principalmente para el cálculo de la felicidad de cada estado. La clave estará formada por una tupla como sigue: \texttt{("s", <state>)}, en la que \texttt{"s"} es una clave utilizada para saber que nos estamos refiriendo al cálculo de la felicidad por cada estado, y \texttt{<state>} es el estado originario del \textit{tweet}. El valor de esta tupla será la felicidad calculada para el texto del \textit{tweet}. Para realizar dicho cálculo, utilizaremos una lista de puntuaciones ya establecida donde se recoge el valor de felicidad asociada a un gran conjunto de palabras analizadas previamente. Dicho conjunto de puntuaciones, que oscila desde -5 para indicar la menor felicidad hasta +5 para la mayor, está recogida en el archivo \texttt{AFINN-111.txt} incluido en el enunciado. A cada una de las palabras recogidas en cada \textit{tweet} se le asignará por tanto una puntuación en función a la lista de puntuaciones previamente descrita. Aquellas palabras que aparezcan en un \textit{tweet} pero que no estén recogidas en esta lista de puntuaciones se les asignará un valor 0. Finalmente, se sumarán todas las puntuaciones y se obtendrá un valor final denominado felicidad de cada \textit{tweet}. Este proceso de puntuación es llevado a cabo por la función \texttt{ApplyScoresWords}. Por lo tanto, el esquema final del par clave-valor aquí procesado tiene la siguiente forma:
+
+\texttt{("s", <state>), <happiness\_value>}
+
+\item \textbf{Grupo 2 de pares clave-valor}: Por otro lado, se emitirán otro conjunto de pares clave-valor utilizadas para el cálculo de los 10 \textit{trending topics}. En concreto, por cada palabra del \textit{tweet} marcada con un hashtag (\#), que indicará el \textit{topic}, se emitirá la siguiente línea:
+
+\texttt{("w", <topic>), <topic\_counts>}
+
+donde \texttt{"w"} es una clave que utilizamos para indicar que dicha información es utilizada para el cálculo de los \textit{trending topics}, \texttt{<topic>} es el propio \textit{topic}, y \texttt{<topic\_counts>} es el número de veces que dicho tópico es citado en el \textit{tweet} (normalmente 1).
+\end{itemize}
+
+\subsubsection{Función \texttt{combiner\_sum\_values}}
+
+Debido a la implementación propia de la librería \textit{mrjob}, esta función recibe un conjunto ordenado de clave-grupo\_de\_valores que son el resultado de agrupar, para cada una de las claves emitidas por la función \texttt{mapper\_get\_words\_and\_states}, todos los valores asociados a ella. Esquemáticamente, estos datos de entrada tendrían la siguiente forma:
+
+\texttt{("s", <state\_1>), <happiness\_value\_1>, <happiness\_value\_2>, <happiness\_value\_3>, ...}\\
+\texttt{...}\\
+\texttt{("w", <topic\_1>), <topic\_counts\_1>, <topic\_counts\_2>, ...}
+
+La función aquí descrita lo único que realiza es emitir por cada par clave-grupo\_de\_valores inicial, otro par clave-valor\_agregado, donde la clave es la misma que la recibida inicialmente, y el valor\_agregado es la suma de todos los valores asociados a cada clave inicial. De forma esquemática, la salida de la función aquí descrita sería:
+
+\texttt{("s", <state\_1>), sum(<happiness\_value\_1>, <happiness\_value\_2>, <happiness\_value\_3>, ...)}\\
+\texttt{...}\\
+\texttt{("w", <topic\_1>), sum(<topic\_counts\_1>, <topic\_counts\_2>, ...)}
+
+\subsubsection{Función \texttt{reducer\_prepare\_for\_TTs}}
+
+Esta función, al igual que la anteriormente comentada, debido a la librería \textit{mrjob}, recibe un conjunto ordenado de pares clave-conjunto\_de\_valores resultado de agrupar el conjunto de pares clave-valor proveniente de la función \texttt{combiner\_sum\_values}. Por cada entrada recibida, se emite otro par clave-valor, con la siguiente estructura:
+
+\texttt{None, (sum(values), ("s", <state\_i>))}\\
+\texttt{...}\\
+\texttt{None, (sum(values), ("w", <topic\_i>))}\\
+
+Como se puede observar, en todos los casos, la clave emitida será \texttt{None}. Por otro lado, el valor del par emitido, estará formado por dos partes. Una parte inicial, que consistirá en la suma de todos los valores asociados con cada clave de entrada, y luego una segunda parte que es la propia clave inicial. La razón de elegir este esquema es para facilitar el proceso a ejecutar por la próxima función del algoritmo planteado.
+
+\subsubsection{Función \texttt{reducer\_get\_TTs\_states}}
+
+Esta función, al igual que las funciones dos funciones anteriores, va a recibir como entrada un conjunto agrupado de pares clave-valor proveniente de la función \texttt{reducer\_prepare\_for\_TTs}. En concreto, como todos los pares clave-valor provenientes de dicha función tienen la misma clave, la función aquí descrita tan solo recibe un par clave-valor, siguiendo este esquema:
+
+\texttt{None, ((sum(values), ("s", <state\_i>)), ((sum(values), ("w", <topic\_i>)), ...}
+
+En primer lugar, se almacenan todos los datos relativos a la felicidad de los estados y a los \textit{trending topics} en dos listas, \texttt{stateHap\_list} y \texttt{TTs\_list}, respectivamente. Para discernir entre un tipo de datos y el otro, se utilizarán las claves \texttt{"s"} y \texttt{"w"} comentadas en las secciones anteriores. Por ejemplo, la lista \texttt{stateHap\_list} tendrá el siguiente aspecto:
+
+\texttt{stateHap\_list = [((sum(values\_1), ("s", <state\_1>)), ((sum(values\_2), ("s", <state\_2>)), ...]}
+
+Ambas listas serán ordenadas de mayor a menor según el valor numérico del primer \textit{item} de cada elemento. Finalmente, cada elemento de cada lista será emitido cambiando el orden de sus \textit{items}, obteniéndose un resultado similar a:
+
+\texttt{("s", <state\_1>), value\_s1}
+\texttt{("s", <state\_2>), value\_s2}
+\texttt{...}
+\texttt{("w", <topic\_10>, value\_tt10)}
+
+En primer lugar, se incluirán todos los datos relativos a todos los estados, y posteriormente, se incluirán los datos de los 10 \textit{topics} más comentados.
+
+\subsection{Código desarrollado para la metodología \textit{streaming}}
+\label{subsec:codigo_streaming}
+
+El código explicado en la Sección \ref{subsec:codigo_mrjob} ha sido adaptado para poder ejecutarlo utilizando la metodología \textit{streaming} convencional. En concreto, este segundo código tiene tres pasos:
+
+\begin{itemize}
+\item \textbf{Paso 1}, ejecutado por el archivo \texttt{twitter\_streaming\_mapper.py}
+\item \textbf{Paso 2}, ejecutado por el archivo \texttt{twitter\_streaming\_reducer.py}.
+\item \textbf{Paso 3}, ejecutado por el archivo \texttt{filter\_streaming.py}
+\end{itemize}
+
+Los pasos 1 y 2 corresponderían, respectivamente, a los pasos \texttt{mapper} y \texttt{reducer} del algoritmo \textit{MapReduce} en su versión \textit{streaming}. En concreto, el archivo \texttt{twitter\_streaming\_mapper.py} implementa exactamente el mismo código que la función \texttt{mapper\_get\_words\_and\_states} descrita en la sección anterior. La única diferencia es que, para emitir los valores, en vez de utilizar la función \texttt{yield}, se utiliza la función convencional \texttt{print}. Por otro lado, el archivo \texttt{twitter\_streaming\_reducer.py} implementa el mismo código que la función \texttt{combiner\_sum\_values}. La única diferencia en este caso, es que la ordenación por claves en el código incluido en el \texttt{twitter\_streaming\_reducer.py} se ha de hacer de manera manual. Este aspecto era ejecutado directamente por la librería \textit{mrjob} en el caso de la función \texttt{combiner\_sum\_values}. Para realizarlo, simplemente habrá que tener en cuenta que los pares clave-valor se reciben de manera ordenada teniendo en cuenta la clave, y habrá que realizar las operaciones pertinentes para detectar cuando la clave recibida es distinta a la anterior. Por último, el archivo \texttt{filter\_streaming.py}, que actúa directamente sobre los resultados obtenidos del archivo \texttt{twitter\_streaming\_reducer.py}, implementa un código que es una mezcla al incluido en las funciones \texttt{reducer\_prepare\_for\_TTs} y \texttt{reducer\_get\_TTs\_states}. De esta manera, se obtiene exactamente el mismo resultado final por el código desarrollado para la metodología \textit{streaming} y para la librería \textit{mrjob}. Este aspecto se ha comprobado de manera concienzuda para todos conjuntos de datos analizados en la presente práctica.
+
+Los códigos aquí descritos, tanto en la Sección \ref{subsec:codigo_mrjob} como en la Sección \ref{subsec:codigo_streaming}, se pueden ejecutar siguiendo las instrucciones incluidas en el Apéndice \ref{app:ejecucion_codigos}.
+
+\section{Resultados y discusión}
+\label{sec:resultados}
+
+\subsection{Análisis de la felicidad por cada estado}
+\label{subsec:felicidad}
+
+A continuación, se procede a mostrar los resultados obtenidos relativos al análisis de la felicidad por cada estado. En concreto, el fichero de \textit{tweets} más grande ($\sim$ 2.6 GBs) fue el analizado para obtener estos resultados, sobre el que se aplicó el algoritmo descrito en la Sección \ref{subsec:codigo_mrjob}. Cabe mencionar que se comprobó que los diferentes modos de ejecución (Sección \ref{subsec:codigo_mrjob} y Sección \ref{subsec:codigo_streaming}), aplicados sobre los mismos conjuntos de datos, arrojaban los mismos resultados. La Fig. \ref{fig:BarHappinnes} muestra la felicidad calculada para cada estado en forma de gráfico de barras. Para facilitar la visualización de dicho análisis, se han graficado esos mismos resultados pero sobre el mapa geográfico de EEUU (Fig. \ref{fig:MapHappinnes}). Como se puede observar, la mayor parte de los estados poseen una felicidad moderada (color azul). El estado más feliz (color rojo) es California (CA), seguido por Nueva York (NY) y Tejas (TX) (ambos con un color verde). En el otro extremo, el estado menos feliz (color morado) es Florida (FL), seguido por Alabama (AL) y Massachusetts (MA).
+
+\begin{figure}[H]
+\begin{center}
+%\includegraphics[scale=1]{Figuras/BarHappiness.pdf}
+\caption{\label{fig:BarHappinnes}Felicidad calculada para cada estado.}
+\end{center}
+\end{figure}
+
+
+\begin{figure}[H]
+\begin{center}
+%\includegraphics[scale=1]{Figuras/MapHappiness.pdf}
+\caption{\label{fig:MapHappinnes}Distribución de la felicidad por estados.}
+\end{center}
+\end{figure}
+
+\subsection{Cálculo de los 10 \textit{trending topics}.}
+\label{subsec:trending_topics}
+
+
+En la Fig. \ref{fig:BarTweets} se muestran los 10 \textit{topics} más comentados en el mismo conjunto de \textit{tweets} que los analizados en la Sección \ref{subsec:felicidad}, aplicando el mismo modo de ejecución que en dicha sección. Destaca especialmente que hasta 7 de los 10 \textit{topics} más comentados están relacionados con temas laborales, resaltando la gran preocupación de la ciudadanía por este asunto.
+
+\begin{figure}[H]
+\begin{center}
+%\includegraphics[scale=1]{Figuras/BarTweets.pdf}
+\caption{\label{fig:BarTweets}10 \textit{trending topics} más comentados en los \textit{tweets} analizados.}
+\end{center}
+\end{figure}
+
+
+\subsection{Análisis de escalabilidad}
+\label{subsec:escalabilidad}
+
+\subsubsection{Diferentes modos de ejecución y plataformas empleadas}
+\label{subsubsec:modos_ejecucion_maquinas}
+
+Como se ha comentado en la Sección \ref{sec:codigo}, en la presente práctica se han empleado dos modos de ejecución diferentes: \textit{streaming} convencional y utilizando la librería \textit{mrjob} \cite{mrjob}. Esta última librería permite ejecutar el mismo código en diferentes plataformas, facilitando enormemente la labor del desarrollador. Por otra parte, estos dos métodos de trabajo se han desarrollado en 2 plataformas diferentes:
+
+\begin{itemize}
+\item \textbf{Local}: Para todas las ejecuciones en local, se ha utilizado un Laptop convencional de 2 núcleos y 12 GBs de memoria RAM. Aunque esta máquina disponía de dos núcleos, debido a que realmente todos los cálculos siempre eran realizados en un procesador sin ningún tipo de paralelización, a efectos prácticos, esta máquina tan sólo disponía de un núcleo. En esta máquina local se efectuaron cálculos en los dos modos de ejecución comentados: \textit{streaming} y utilizando la librería \textit{mrjob}.
+\item \textbf{Amazon EMR}: El portal de servicios de computación en la nube Amazon EMR \cite{amazon_emr}, también fue utilizado para ejecutar el algoritmo \textit{MapReduce} desarrollado en le presente trabajo. En este caso, todos los análisis se efectuaron utilizando la librería \textit{mrjob}, prescindiendo, por tanto, del modo de ejecución \textit{streaming}. En concreto, se utilizaron tres clústers diferentes:
+\begin{itemize}
+\item \textit{c1.medium}, que dispone de 2 núcleos y 1.7 GBs de memoria RAM.
+\item \textit{c1.xlarge}, que dispone de 8 núcleos y 7 GBs de memoria RAM.
+\item \textit{cc2.8xlarge}, que dispone de 32 núcleos y 60 GBs de memoria RAM.
+\end{itemize}
+\end{itemize}
+
+A continuación se realizará un análisis de los diferentes modos de ejecución y plataformas empleadas.
+
+\subsubsection{Ejecución en local: \textit{streaming} vs. \textit{mrjob}.}
+
+En la presente sección, se procederá a estudiar los diferentes modos de ejecución empleados en la esta práctica: \textit{streaming} y utilizando la librería \textit{mrjob}. Para ello, los códigos desarrollados en las Secciones \ref{subsec:codigo_mrjob} y \ref{subsec:codigo_streaming} han sido ejecutados, para los tres conjuntos de archivos estudiados, en la misma máquina local especificada en la sección anterior. Dado que ambos códigos son prácticamente idénticos, produciendo el mismo resultado, y además han sido ejecutados en la misma plataforma, las posibles diferencias de tiempo de cálculo entre ambos modos estarán originados por la librería \textit{mrjob}. En concreto, la Fig. \ref{fig:ExeLocal} muestra los tiempos de cálculo empleados por ambos modos de ejecución sobre los diferentes grupos de archivos estudiados. Se pueden observar dos aspectos importantes. En primer lugar, cómo es lógico, cuanto mayor es el tamaño de archivo, mayor es el tiempo de cálculo para ambos casos. Y por otro lado, independientemente del tamaño de archivo analizado, el tiempo de cálculo para la metodología \textit{streaming} es notablemente menor que el empleado por la librería \textit{mrjob}. Esto deja patente que, para las ejecuciones en local, es mucho mejor utilizar la metodología \textit{streaming}. Sin embargo, una gran ventaja de la librería \textit{mrjob} es que, utilizando exactamente el mismo código que el desarrollado para local, se puede ejecutar dicho código de una manera muy sencilla en Amazon EMR, sin necesidad de tener que realizar ningún tipo de configuración manual. Además de evitar diversos problemas en la propia ejecución del código, este fenómeno permite automatizar de una manera muy sencilla el lanzamiento de trabajos \textit{MapReduce} en Amazon EMR. Por otro lado, el uso de la librería \textit{mrjob} permite desarrollar un código con una mayor funcionalidad en menos líneas.
+
+\begin{figure}[H]
+\begin{center}
+%\includegraphics[scale=1]{Figuras/ExecutionLocal.pdf}
+\caption{\label{fig:ExeLocal}Tiempos de ejecución de los diferentes archivos analizados en local utilizando la metodología \textit{streaming} y \textit{mrjob}.}
+\end{center}
+\end{figure}
+
+\subsubsection{Ejecución con \textit{mrjob}: local vs. Amazon EMR.}
+
+En esta sección, se analizará el efecto de ejecutar el código desarrollado en la presente práctica para la librería \textit{mrjob} (Sección \ref{subsec:codigo_mrjob}) en local y en diferentes instancias de Amazon EMR. Respecto a estas últimas, se han analizado tres en concreto: \textit{c1.medium}, \textit{c1.xlarge} y \textit{cc2.8xlarge}, cuyas características vienen definidas en la Sección \ref{subsubsec:modos_ejecucion_maquinas}. Mientras que el tiempo de ejecución percibido por el usuario en el modo local es similar al tiempo de ejecución del código en cuestión, este no es el caso para aquellas análisis lanzados en instancias de Amazon EMR. En este caso, el tiempo de ejecución percibido por el usuario es la suma de dos tiempos: el tiempo necesario para levantar y configurar la instancia, y el tiempo necesario para realizar el cálculo. Dado que el primero puede llegar a ser importante ($\sim$ 25 - 30 minutos), la realización de un análisis en Amazon EMR sólo será beneficioso en casos en los que los archivos a analizar son de gran tamaño. En este escenario, la importante capacidad de cálculo que nos pueden proporcionar ciertas instancias de Amazon EMR puede lograr que la suma total de ambos tiempos sea menor que le tiempo de cálculo necesario para ejecutar dicho análisis en local.
+
+La Fig. \ref{fig:TotalMrjob} muestra los diferentes modos de ejecución del código incluido en la Sección \ref{subsec:codigo_mrjob} ejecutado en las diferentes plataformas comentadas. Se pueden observar varias peculiaridades. En primer lugar, el tiempo de ejecución en local es, para todos archivos de entrada considerados, significativamente menor que en cualquier instancia de Amazon EMR. Dado que las capacidades computacionales de estas últimas son, sobre todo para las instancias \textit{c1.xlarge} y \textit{cc2.8xlarge}, muy superiores a la máquina local, esto quiere decir que el tiempo necesario para levantar y configurar las instancias en Amazon EMR es mucho mayor, para cualquiera de los archivos de entrada analizados, a los tiempos empleados para en análisis en sí. Por otro lado, la instancia \textit{c1.medium} no fue capaz de analizar el archivo de mayor tamaño ($\sim$ 2.6 GBs). Esto puede ser debido a la escasa memoria RAM de esta instancia (1.7 GBs). Además, en la instancia \textit{c1.xlarge}, al igual que en la ejecución en local y en la instancia \textit{c1.medium}, a mayor tamaño de archivo inicial, mayor tiempo de cálculo. Sin embargo, mientras que en local y en la instancia \textit{c1.medium}, la diferencia del tiempo de cálculo del archivo de 60 MBs y el de 600 MBs es muy grande, dicha diferencia es escasa para la instancia \textit{c1.xlarge}. Esto hace sugerir que, en este caso, el tiempo para levantar la instancia es mucho mayor que el tiempo para realizar el cálculo, rondando el primero de ellos los $\sim$ 30 minutos. Por último, se puede apreciar un comportamiento extraño en la instancia \textit{cc2.8xlarge}. En este caso, los tiempos de ejecución totales son prácticamente idénticos para los tres archivos analizados. Incluso, parece que el mayor tiempo de cálculo corresponde al archivo de menor tamaño. Esto es un claro indicativo que, en este caso, el tiempo empleado para en análisis es despreciable en comparación con el tiempo necesario para levantar y configurar las diferentes instancias. Por lo tanto, se puede concluir que, para que sea beneficioso lanzar cálculos en Amazon EMR (llevando a cabo el análisis planteado en esta práctica), los archivos de entrada han de ser mucho mayores a 2.6 GBs, y quizás ronden el orden del TB.
+
+\begin{figure}[H]
+\begin{center}
+%\includegraphics[scale=1]{Figuras/ExecutionTotalMrjob.pdf}
+\caption{\label{fig:TotalMrjob}Tiempos de ejecución de los diferentes archivos analizados con la librería \textit{mrjob} utilizando una máquina local convencional y tres máquinas incluidas en Amazon Web Services.}
+\end{center}
+\end{figure}
+
+Finalmente, se ha intentando analizar el tiempo empleado por las diferentes máquinas únicamente para ejecutar el código descrito en la Sección \ref{subsec:codigo_mrjob}, excluyendo el tiempo necesario para levantar las instancias y configurarlas. Para obtener ese tiempo de cálculo, se ha recurrido a analizar los .log de cada simulación. En cada uno de ellos, ha quedado registrado cuando se ha ejecutado el Paso 1 y el Paso 2 de dicho código. En concreto, para el Paso 1, se puede observar en todos los casos que en el .log se ha registrado lo siguiente:
+
+\texttt{...} \\
+\texttt{RUNNING FOR .... $\sim$ 30 s} \\
+\texttt{RUNNING FOR .... $\sim$ 60 s} \\
+\texttt{RUNNING FOR .... $\sim$ 90 s} \\
+\texttt{...}
+
+donde el número de segundos incluido es una aproximación y difiere para cada caso. Se entiende que, por cada intervalo de unos 30 segundos, se escribe en el .log que dicho Paso 1 se está ejecutando. Por lo tanto, atendiendo a la última línea en la que se ha hecho tal registro, se puede obtener, de manera aproximada, el tiempo de ejecución de dicho Paso 1. Para el Paso 2, no se ha registrado ninguna de esas líneas, lo que hace indicar que su tiempo de ejecución es menor siempre a 30 segundos. De hecho, en los propios .logs, se ha observado que el tiempo utilizado por todas las CPUs para ejecutar el Paso 1 es muy superior al del Paso 2. Por lo tanto, se puede aproximar que el tiempo de ejecución del código es el obtenido para el Paso 1. La Fig. \ref{fig:Step1Mrjob} muestra dicho tiempo de ejecución para las diferentes instancias utilizadas y para los diferentes archivos analizados. Se pueden obtener varias conclusiones. En primer lugar, para la instancia \textit{c1.xlarge} y un tamaño de archivo de 60 MBs, dicho tiempo de ejecución es muy inferior ($\sim$ 170 s) al tiempo de cálculo total observado en la Fig. \ref{fig:TotalMrjob} (1600 s). Por lo tanto, tal y como se comentó en párrafos anteriores, para este caso, el tiempo necesario para levantar y configurar la instancia es mucho mayor al tiempo de análisis. Este fenómeno ocurre para todos los archivos analizados para la instancia \textit{cc2.8xlarge}, volviendo a confirmar de nuevo lo dicho sobre este aspecto en párrafos anteriores. Finalmente, como era de esperar, el tiempo de análisis para archivos de igual tamaño en las diferentes instancias decrece de manera importante a medida que aumentamos los recursos computacionales. 
+
+\begin{figure}[H]
+\begin{center}
+%\includegraphics[scale=1]{Figuras/ExecutionStep1Mrjob.pdf}
+\caption{\label{fig:Step1Mrjob}Tiempos de ejecución del Paso 1 de los diferentes archivos analizados con la librería \textit{mrjob} en Amazon Web Services utilizando diferentes máquinas.}
+\end{center}
+\end{figure}
+
+\section{Conclusiones}
+
+En la presente práctica, se ha llevado a cabo un análisis de una cantidad importante de \textit{tweets} aplicando algoritmos \textit{MapReduce}, utilizando un enfoque \textit{streaming} convencional y la librería \textit{mrjob}. Por una parte, se ha realizado un análisis de sentimientos de los \textit{tweets} obteniéndose la felicidad para cada uno de los estados de EEUU. Además, se han obtenidos los 10 \textit{trending topics} más comentados, en los que ha quedado patente la gran preocupación de la población por el mercado laboral. Además, se ha realizado un estudio sobre la escalabilidad de ambos modos de ejecución utilizados sobre diferentes plataformas. Se ha constatado, en primer lugar, las enormes ventajas de la librería \textit{mrjob} dado que permite ejecutar el mismo código desarrollado en local en diferentes instancias de Amazon EMR sin tener que realizar ningún tipo de configuración manual adicional. Sin embargo, también han quedado patente dos aspectos: primero, el uso de la propia librería \textit{mrjob} introduce tiempos de cálculo adicionales importantes en comparación con el enfoque \textit{streaming}; y segundo, de manera adicional, el inicio y configuración de las propias instancias de Amazon EMR también introduce tiempos muy importantes al análisis a realizar. Por lo tanto, el uso de la librería \textit{mjrob} junto con instancias de Amazon EMR será beneficioso sólo en aquellos casos en los que la cantidad de datos a analizar sera muy importante, del orden de los TBs. Sin embargo, su escalabilidad queda más que demostrada, siendo este uno de los aspectos más importantes dentro del mundo del \textit{Big Data}.
+
+\section{Comentarios personales}
+
+La realización de esta práctica se ha llevado a cabo en un equipo formado por dos integrantes. La cooperación y las ganas por querer obtener unos buenos resultados han sido claves en el desarrollo y finalización de la misma.
+
+Entre las dificultades encontradas, caben destacar dos principalmente. La primera de ellas ha sido la obtención del estado a partir de la información proporcionada por los tweets. El lugar indicado donde se genera cada tweet, es el nombre de una ciudad o pueblo. Por ello, se tuvo que buscar la manera de relacionar cada ciudad con un estado. Finalmente se usó un diccionario Python \cite{USCityDic} cuyas claves son ciudades y sus valores el estado al que pertenecen. La segunda dificultad reside en la ejecución del proceso \textit{mrjob} en el servicio de EMR que proporciona Amazon Web Services. En concreto, a la hora de ver el tiempo de ejecución de cada paso, así como de provisionamiento de máquinas. El resultado obtenido a partir de los .logs, no deja claro de una manera explícita cuánto tiempo se emplea en el proceso \textit{mrjob} en cada paso y cuánto en otras tareas a realizar por EMR. Debido a esto, se ha tenido que emplear la salida de error del sistema, con la llamada sys.error proporcionada por Python, de tal manera que indicase un mensaje con el tiempo empleado.
+
+En cuanto al tiempo dedicado, ha sido de dos semanas aproximádamente. La realización de pruebas, obtención, análisis y representación de los resultados obtenidos han ocupado la mayor parte de este tiempo. Por ejemplo, en EMR, para determinar si el comando ejecutado en la terminal es el correcto, se tiene que esperar a que se provisionen las instancias solicitadas, llevando esto una gran parte de tiempo. Por otro lado, la salida de los .logs que dan como resultado, muchas veces no dan la suficiente información como para saber dónde ha estado el fallo, lo que llevaba a un mayor tiempo de depuración.
+
+%\begin{subappendices}
+%\renewcommand{\thesection}{\Alph{section}}%
+%% or try \arabic{section}
+
+%\section{Also you should know this}
+%Really.
+%\section{And I also came across this}
+%But I need to put this in an appendix so that my paper is not too long.
+%\end{subappendices}
+
+
+%\begin{appendices}
+%\chapter{Some Appendix}
+%The contents...
+%\end{appendices}
+
+
+\bibliographystyle{ieeetr}
+
+\bibliography{bibliografia}
+
+\titleformat{\section}{\large\bfseries}{\appendixname~\thesection .}{0.5em}{}
+\begin{appendices}
+\section{Ficheros entregados en la presente práctica}
+\label{app:ficheros}
+
+En la presente práctica se han entregado un conjunto de ficheros organizados en cuatro carpetas principales de la siguiente forma:
+
+\begin{itemize}
+\item \textbf{Memoria}: En esta carpeta, se incluye la memoria de la práctica en el archivo \\
+\textit{Memoria\_TareaSistemasDistribuidos\_IgnacioArias\_RaulSanchez.pdf}
+\item \textbf{DatosIniciales:} En esta carpeta, se incluye un archivo .txt (\textit{DatosIniciales.txt}) donde se especifican las direcciones URLs donde se pueden descargar los diferentes grupos de archivos analizados en la práctica.
+\item \textbf{Código:} En esta carpeta, se incluyen todos los códigos desarrollados en esta práctica. Dichos códigos se han agrupado en dos subcarpetas:
+\begin{itemize}
+\item \textit{AlgoritmosMapReduce:} En esta carpeta, se incluyen los principales códigos para llevar a cabo el análisis planteado en el texto bajo un esquema \textit{MapReduce}. En concreto, se incluyen dos subcarpetas, \textit{Streaming} y \textit{Mrjob}, donde se incluyen los algoritmos \textit{MapReduce} desarrollados para cada uno de los modos de ejecución tenidos en cuenta. Dentro de la subcarpeta \textit{Streaming}, se incluyen dos subcarpetas: \textit{MapReduce} y \textit{Postprocesado}. En la primera, se incluye el código principal del \texttt{mapper} y el \texttt{reducer}, mientras que en la segunda, un código de postprocesado necesario para obtener el mismo resultado en el enfoque \textit{streaming} que utilizando la librería \textit{mrjob}.
+\item \textit{PostProcesado\&Visualización:} En esta carpeta, se incluyen dos subcarpetas:
+\begin{itemize}
+\item \textit{Postprocesado}: en esta subcarpeta se incluye un código que hay que utilizar sobre los resultados obtenidos utilizando la librería \textit{mrjob} obteniéndose un archivo que será utilizado para la visualización de los resultados.
+\item \textit{Visualización}: en esta subcarpeta se incluyen dos archivos .R utilizados en la visualización de los datos incluidos en esta memoria.
+\end{itemize}
+\end{itemize}
+
+De manera adicional, se incluye el siguiente fichero:
+
+\begin{itemize}
+\item \textit{ExecCommands.txt}: En este fichero, se recogen todos los comandos necesarios para ejecutar los códigos previamente comentados en formato texto. Para llevar a cabo dicha ejecución, se recomienda al lector revisar la Sección \ref{app:ejecucion_codigos}, donde se indica de una manera detallada todos y cada uno de los pasos a seguir para la ejecución de dichos códigos utilizando los comandos incluidos en el archivo \textit{ExecCommands.txt}.
+\end{itemize}
+
+En todas las ocasiones en las que algún código en particular necesitara de la presencia de otros módulos adicionales, dichos módulos también han sido incluidos en la carpeta correspondiente donde el código inicial en cuestión estaba incluido.
+
+\item \textbf{Resultados:} En esta carpeta, se incluyen los principales resultados obtenidos en la presente práctica en formato numérico. En concreto, se incluyen los siguientes archivos y directorios:
+\begin{itemize}
+\item \textit{TiemposCálculo.txt}: En este archivo, se incluyen los tiempos de cálculo obtenidos para los diferentes modos de ejecución analizados.
+\item \textit{AnálisisFelicidadTTs}: En esta carpeta, se localizan tres archivos .txt en los que se incluyen los resultados del análisis de la felicidad y \textit{trending topics} para cada uno de los conjuntos de datos iniciales considerados.
+\item \textit{EMRLogs}: En esta carpeta, se incluyen los .logs de los cálculos realizados en Amazon EMR.
+
+\end{itemize}
+
+\end{itemize}
+
+\section{Ejecución de los códigos desarrollados}
+\label{app:ejecucion_codigos}
+
+A continuación se proporcionarán una serie de consejos en caso de que el lector deseara reproducir el análisis completo realizado en este trabajo, desde la propia obtención de los datos, hasta su visualización pasando por su análisis y postprocesado.
+
+\begin{itemize}
+\item \textbf{Obtención de los \textit{tweets}}: Para la obtención de los datos, se utilizará el propio script \texttt{twitterstream.py} proporcionado en el enunciado de la práctica, siguiendo las instrucciones indicadas en el mismo. 
+\item \textbf{Análisis de los datos}: El archivo obtenido en el paso anterior se podrá analizar utilizando el código incluido en la Sección \ref{subsec:codigo_mrjob} (utilizando la librería \textit{mrjob}) o en la Sección \ref{subsec:codigo_streaming} (utilizando la metodología \textit{streaming} convencional):
+\begin{itemize}
+\item \textit{Mrjob}: Utilizando la librería \textit{mrjob}, se han considerado dos casos:
+\begin{itemize}
+\item Ejecución en local: Para realizar la ejecución en local del código incluido en la Sección \ref{subsec:codigo_mrjob}, habría crear en primer lugar un carpeta donde realizar el cálculo (\texttt{CarpetaCalculoMrjobLocal}). En dicha carpeta, pegamos todos los archivos incluidos en la carpeta \\
+\texttt{Código/AlgoritmosMapReduce/Mrjob/} y el archivo \texttt{Tweets1.txt}, \texttt{Tweets2.txt} o \\ \texttt{Tweets3.txt}, que se corresponden con los ficheros de 60MBs, 600MBs y 2.6GBs utilizados. Por otro lado, en el archivo copiado \texttt{TwitterMRJob.py}, en la línea 147, habría que modificar la ruta del archivo \texttt{AFINN-111.txt} de acuerdo con la máquina donde se está realizando el cálculo. Una vez que se han realizado todos estos pasos previos, habría que abrir un terminal, situar el directorio de trabajo en la carpeta \texttt{CarpetaCalculoMrjobLocal}, y ejecutar el siguiente comando:
+
+\texttt{python TwitterMRJob.py -r local <Tweets1.txt>\hspace{1mm} > \hspace{1mm} <outputMrjobLocal.txt>}
+
+en el que \texttt{outputMrjobLocal.txt} es el nombre del archivo donde queremos guardar los resultados.
+
+\item Ejecución en Amazon EMR: La ejecución en la plataforma de servicios proporcionada por Amazon se ha realizado desde una terminal de ubuntu con el siguiente comando:
+
+\texttt{python <TwitterMRJob.py>\hspace{1mm} -r emr \newline <s3://urjc.datascience.iarias/Tweets/Tweets1.txt> \hspace{1mm}--file <AFINN-111.txt> \hspace{1mm} \newline--python-archive  <CityToState.py>\hspace{1mm} \newline--output-dir=<s3://urjc.datascience.iarias/Tweets/MRJob2\_6GBEMR\_1insXXXLARGE> \newline--ec2-instance-type <cc2.8xlarge>\hspace{1mm} --num-core-instances <1> \hspace{1mm}<--no-output>}
+
+donde \texttt{<TwitterMRJob.py>} es el nombre del programa, \texttt{<AFINN-111.txt>} el fichero de equivalencia de palabras y su felicidad, \texttt{<CityToState.py>} un diccionario con las ciudades de cada estado, \texttt{<s3://urjc.datascience.iarias/Tweets/Tweets1.txt>} el fichero de tweets situado en un bucket de S3,  \texttt{<cc2.8xlarge>} el tipo de instancia utilizada para el análisis,
+\texttt{<s3://urjc.datascience.iarias/Tweets/MRJob2\_6GBEMR\_1insXXXLARGE>} un directorio de salida para los resultados del análisis en un bucket de S3 (no debe existir previamente dicho directorio, si no obtenemos error), \texttt{<1>} el número de instancias a usar y \texttt{<--no-output>} la opción de que el resultado final no lo muestre por pantalla.
+
+Los archivos que se han incluido en la opción --file y --python-archive, se subirán a EMR para el proceso de análisis ya que serán necesarios en el mismo. Los archivos que contienen los \textit{tweets}, se subieron previamente para que en cada ejecución del comando para cada tipo de análisis, no se pierda tiempo en la subida de archivos de 600MB y 2.6GB a los servicios de AWS, ya que retrasaría mucho el tiempo de pruebas.
+
+Finalmente los resultados son volcados en el directorio en el que se ejecuta el siguiente comando:
+
+\texttt{s3cmd get s3://<bucket donde se encuentran los archivos>/*}
+
+Para el análisis del resultado, tenemos que fusionar todos los archivos en uno sólo. Para ello se ha introducido el siguiente comando en una terminal:
+
+\texttt{cat <directorio resultados/*> \hspace{1mm}<nombre\_archivo\_final>}
+
+\end{itemize}
+\item \textit{Streaming}: En este caso, se utilizará el código incluido la Sección \ref{subsec:codigo_streaming}. En primer lugar, crearemos una carpeta, llamada por ejemplo \texttt{CarpetaCalculoStreamingLocal}, donde se realizará el cálculo. En ella, copiamos todos los archivos incluidos en la carpeta \\
+\texttt{Código/AlgoritmosMapReduce/Streaming/MapReduce} y el archivo \texttt{Tweets<num>.txt}. Posteriormente, abrimos un terminal situando el directorio de trabajo en la carpeta \\
+\texttt{CarpetaCalculoStreamingLocal} y ejecutamos el siguiente comando:
+
+\texttt{cat \texttt{Tweets<num>.txt} | ./twitter\_streaming\_mapper.py | sort -t 1 | \newline  twitter\_streaming\_reducer.py \hspace{1mm} >\hspace{1mm} <OutputStreamingLocal.txt>}
+
+donde \texttt{OutputStreamingLocal.txt} es el nombre del archivo donde queremos guardar los resultados del cálculo. Para obtener exactamente el mismo resultado final que el obtenido utilizando la librería \textit{mrjob}, sobre dicho archivo \texttt{outputStreamingLocal.txt}, habría que aplicar un postprocesado. Para ello, pegamos en la carpeta \texttt{CarpetaCalculoStreamingLocal} el archivo \texttt{PostProcessingStreaming.py} localizado en la carpeta \\
+\texttt{Código/AlgoritmosMapReduce/Streaming/PostProcessingStreaming}. En el archivo \\
+\texttt{PostProcessingStreaming.py}, habría que asignar el valor de la variable \texttt{dataFileName} (línea 2) a \texttt{outputStreamingLocal.txt} (o al nombre elegido en el paso anterior en su caso). A continuación, habría que ejecutar el siguiente comando:
+
+\texttt{python PostProcessingStreaming.py}
+
+Como resultado, se obtendrá un archivo llamado \texttt{filtered\_outputStreamingLocal.txt}, que será el resultado final del análisis y cuyos resultados debieran de ser idénticos a los incluidos en \texttt{outputMrjobLocal.txt}.
+
+\end{itemize}
+\item \textbf{Postprocesado de los datos finales}: Una vez obtenidos los resultados del análisis, habrá que aplicarles un postprocesado final para prepararlos para la etapa de visualización. Para ello, creamos una carpeta llamada \texttt{PostprocesadoFinal}. En ella, pegamos todos los archivos localizados en la carpeta \texttt{Código/Postprocesado\&Visualización/Postprocesado} y el archivo donde están incluidos los resultados de los análisis previos. Los códigos de posprocesado finales están preparados para ejecutarse sobre archivos generados por los códigos incluidos en la Sección \ref{subsec:codigo_mrjob}, por lo que este archivo de resultados debiera de ser \texttt{outputMrjobLocal.txt} o \texttt{outputMrjobEMR<instancia>\_<tamañofichero>.txt}. En el archivo \texttt{FinalPostprocessing.py}, habría que asignar el valor de la variable \texttt{dataFileName} (línea 7) al nombre del archivo donde se han incluido los resultados a procesar (\texttt{outputMrjobLocal.txt} o \texttt{outputMrjobEMR<instancia>\_<tamañofichero>.txt}). A continuación, habría que abrir una terminal, situar el directorio de trabajo en la carpeta \texttt{PostprocesadoFinal}, y ejecutar el siguiente comando:
+
+\texttt{python FinalPostprocessing.py}
+
+Como resultado, se han de obtener tres ficheros, \texttt{dfStates.csv}, \texttt{dfStates2.csv} y \texttt{dfWords.csv}. Estos ficheros serán utilizados en la etapa de visualización.
+
+
+\item \textbf{Visualización de los datos finales}: Para la visualización de los datos finales, en primer lugar habrá que crear una carpeta denominada \texttt{Visualización} en la que hay que copiar todos los archivos localizados en la carpeta \texttt{Código/Postprocesado\&Visualización/Visualización} y los tres archivos obtenidos anteriormente: \texttt{dfStates.csv}, \texttt{dfStates2.csv} y \texttt{dfWords.csv}. Posteriormente, habrá que ejecutar, utilizando \textit{RStudio}, los scripts \texttt{RPlotingExeModes.R} y \texttt{RPlotingHappTTs.R}. Si se han ejecutado correctamente, se debieran de producir una serie de archivos \texttt{.pdf} en los que se incluyen las diversas figuras utilizadas en la presente memoria para la visualización de los datos.
+\end{itemize}
+
+\textbf{Consideraciones adicionales}. 
+\begin{itemize}
+\item Para ejecutar todos los pasos descritos anteriormente, hay que utilizar, menos para la etapa de visualización, Python. En dicha etapa de visualización se hace uso de R. Para efectuar el análisis anteriormente descrito, se hacen uso de una serie de librerías externas, tanto en el caso de Python como de R, que en el caso de que no estén incluidas en la máquina donde se está realizando el análisis, habría que instalarlas. Tanto el interprete de Python como de R indicarán las librerías a instalar.
+\item Todos los comandos de ejecución incluidos en esta sección están recogidos en el archivo \textit{ExecCommands.txt} (cuya localización se especifica en la Sección \ref{app:ficheros} para facilitar así facilitar al lector su ejecución.
+
+\end{itemize}
+
+
+
+
+\end{appendices}
+
+%--BIBLIOGRAPHY--%
+%\begin{thebibliography}{99}
+
+%\bibitem{SampleBibLabel} Author, "Title",  Journal, %Volume, Pages, Year. \\
+%This is the annotation for this bibliographic record.
+
+% Figura título: http://www.codigosocial.es/analisis-de-sentimiento-en-redes-sociales/
+% Diccionario ciudades: https://github.com/agalea91/city_to_state_dictionary
+
+%\end{thebibliography}
+
+\end{document}

@@ -1,0 +1,7 @@
+Librarias nltk y scikit-learn
+
+Mejorar representación --> Utilizar entidades, cambiar TF-IDF, eliminar entitades. Hago steaming y mejora, 
+
+Utilizar ngramas, trigramas
+
+Memoria en que se justifique lo que se está haciendo.

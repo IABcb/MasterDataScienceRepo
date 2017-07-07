@@ -1,0 +1,11 @@
+Las personas que se dedican a la ciencia de datos se les conoce como científico de datos, de acuerdo con el proyecto Master in Data Science define al científico de datos como una mezcla de estadísticos, computólogos y pensadores creativos, con las siguientes habilidades:
+
+Recopilar, procesar y extraer valor de las diversas y extensas bases de datos.
+Imaginación para comprender, visualizar y comunicar sus conclusiones a los no científicos de datos.
+Capacidad para crear soluciones basadas en datos que aumentan los beneficios, reducen los costos.
+Los científicos de datos trabajan en todas las industrias y hacen frente a los grandes proyectos de datos en todos los niveles.
+El doctor en estadística Nathan Yau, precisó lo siguiente: el científico de datos es un estadístico que debería aprender interfaces de programación de aplicaciones (APIs), bases de datos y extracción de datos; es un diseñador que deberá aprender a programar; y es un computólogo que deberá saber analizar y encontrar datos con significado. 6
+
+En la tesis doctoral de Benjamin Fry explicó que el proceso para comprender mejor a los datos comenzaba con una serie de números y el objetivo de responder preguntas sobre los datos, en cada fase del proceso que él propone (adquirir, analizar, filtrar, extraer, representar, refinar e interactuar), se requiere de diferentes enfoques especializados que aporten a una mejor comprensión de los datos. Entre los enfoques que menciona Fry están: ingenieros en sistemas, matemáticos, estadísticos, diseñadores gráficos, especialistas en visualización de la información y especialistas en interacciones hombre-máquina, mejor conocidos por sus siglas en inglés “HCI” (Human-Computer Interaction). Además, Fry afirmó que contar con diferentes enfoques especializados lejos de resolver el problema de entendimiento de datos, se convierte en parte del problema, ya que cada especialización conduce de manera aislada el problema y el camino hacia la solución se puede perder algo en cada transición del proceso. 7
+
+en:Drew Conway en su página web explica con la ayuda de un diagrama de Venn, las principales habilidades que le dan vida y forma a la ciencia de datos, así como sus relaciones de conjuntos.

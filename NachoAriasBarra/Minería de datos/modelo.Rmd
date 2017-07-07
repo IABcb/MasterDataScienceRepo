@@ -1,0 +1,1068 @@
+---
+title: "DataMining - DataDrillers"
+author: "Ignacio Arias, Marc Rubinat, Juan Manuel Pacheco, Javier Cano"
+date: "4 May 2017"
+output:
+  html_document:
+    toc: yes
+    toc_depth: 2
+  pdf_document:
+    toc: yes
+    toc_depth: 2
+---
+
+En el presente trabajo se va a llevar a cabo el análisis de un conjunto de datos cuya temática principal consiste en la extracción en pozos petrolíferos y el tipo de roca encontrada en cada capa de la tierra.
+
+A continuación se detalla el origen del dataset:
+
+http://chasm.kgs.ku.edu/ords/qualified.well_page.DisplayWell?f_kid=1044871715
+
+El fichero en el que se encuentran los datos descargados lo podemos encontrar en "../data/drill.txt"
+
+La estructura del presente documento es la siguiente:
+
+  - Librerías usadas
+  - Funciones creadas para el desarrollo del análisis
+  - Programa principal (análisis de los datos):
+      1. Descripción del problema.
+      2. Descripción de los datos.
+      3. Preparación de los datos.
+      4. Modelado.
+      5. Evaluación.
+      6. Conclusiones.
+      
+# LIBRER??AS
+
+```{r load_libraries, warning=FALSE, message=FALSE, error=FALSE}
+library(dplyr)
+library(ggplot2)
+library(lattice)
+library(reshape2)
+library(caret)
+library(mlbench)
+library(rpart)
+library(party)
+library(mice)
+ library(e1071)
+library(ROCR)
+# library(MissingDataGUI)
+library(forcats)
+library(corrplot)
+library(lattice)
+library(DMwR2)
+library(foreach)
+library(class)
+library(devtools)
+library(randomForest)
+library(adabag)
+library(plotrix)
+library(neuralnet)
+# install_github("flagroth/j1071")
+#library(j1071)
+rm(list=ls())
+set.seed(39)
+```
+
+# FUNCIONES
+
+En la sección de funciones se desarollarán aquellas necesarias para conseguir un código más manejable y legible en la parte del análisis de los datos.
+
+Esta sección se divide en:
+  - Preparación de los datos
+    * Limpieza de datos
+    * Visualización de histogramas
+    * Normalidad de los datos
+    * Visualización de correlaciones cruzadas
+    * Estimación de los datos faltantes, NAs
+      + Knn
+  - Muestreo
+    * Train y Test
+  - Modelado
+    * ??rbol de decisión
+    * Random Forest
+    * Bagging
+    * Boosting
+    * SVM
+    * Red neuronal
+    * Effects
+    
+### PREPARACI??N DE LOS DATOS
+
+##### Limpieza de datos
+
+Para la limpieza de datos se ha creado la siguiente función en la cual se recibe como parámetro los
+datos leídos directamente del fichero csv y se aplican las siguientes transformaciones:
+
+  * Filtrado de NAs en la variable salida
+  * Valores sin sentido convertidos a NAs
+  * Agrupación de la variable resultado
+  * Eliminación de variables
+  
+Todos estas transformaciones serán explicadas en el programa principal.
+
+Como resultado se obtiene el dataset con las transformaciones aplicadas y el número de columnas resultante
+
+```{r clean_data, warning=FALSE}
+removeLitoNA <- function(data){
+  # Filtramos por los valores nulos de la variable respuesta
+  data <- data %>% filter(!is.na(Lito))
+}
+
+cleandata <- function(data){
+  # Los valores -999.250 no tienen sentido
+  data[data == -999.25] = NA
+
+  
+  # Agrupamos la variable respuesta en 3 grupos, ya que de estos dos grupos hay muy pocos casos
+  data[which(data$Lito == 'Carb shale'),'Lito'] <- 'Shale'
+  data[which(data$Lito == 'Sandstones'),'Lito'] <- 'Shale'
+  data$Lito <- droplevels(data$Lito)
+  
+  # Quitamos la variable profundidad, por relacion practicamente 1 a 1 con la salida
+  data <- data[,-2]
+  n_col <- ncol(data)
+  
+  return(list(clean_data = data,n_col = n_col))
+} 
+```
+
+##### Visualización de histogramas
+
+De cara a poder realizar un estudio de la distribución de las variables, se ha desarrollado la
+siguiente función, para la representación del histograma de todas las variables.
+
+En el siguiente código, se observa que se quitan las 2:4 en la función histograma. Esto es debido a que estas variables no aportan
+información. El valor de esas variables se ha calculado sumando 1 por cada metro cúbico de material extraído.
+
+```{r histograms, fig.height=15, fig.width=15}
+var_histograms <- function(data){
+  d <- melt(data)
+  ggplot(d,aes(x = value, fill = Lito)) + 
+    facet_wrap(~variable,scales = "free_x") + 
+    geom_histogram()
+}
+
+#antigua:
+#var_histograms <- function(data){
+#  d <- melt(data[,-c(2:4)])
+#  ggplot(d,aes(x = value, fill = Lito)) + 
+#    facet_wrap(~variable,scales = "free_x") + 
+#    geom_histogram()
+#}
+```
+
+##### Normalidad de los datos
+
+A priori las variables del problema no presentan una distribución normal. Pero esto no es de gran preocupación ya que la
+normalidad de los datos es más relevante cuando se realizan modelos de regresiones lineales. La variable respuesta de nuestro problema, es un factor, por lo que no se van a realizar regresiones lineales y no será por lo tanto preocupante la poca normalidad de los datos.
+
+##### Visualización de correlaciones
+
+La siguiente funció?? mostrará una representación de un cuadro de correlaciones cruzadas entre todas
+las variables. La diagonal superior se verán representados los resultados en forma de puntos y
+colores y en la diagonal inferior se verá representado el valor de la correlación cruzada.
+
+```{r correlations}
+# Corrplot function
+corrplot_func <- function(cor){
+  corrplot(cor,type="upper",tl.pos="d",tl.cex=0.75)
+  corrplot(cor,add=TRUE, type="lower", method="number", diag=FALSE,tl.pos="n", cl.pos="n")
+}
+```
+
+<!-- #### Visualización de los datos faltantes -->
+<!-- ```{r} -->
+<!-- MissingDataGUI(data_drill) -->
+<!-- ``` -->
+<!-- Función para ver de foerma gráfica los datos y poder observar los NAs de forma interactiva-->
+
+
+##### Estimación de los datos faltantes o NAs
+
+###### Knn
+
+Esta función realiza una estimación de NAs por el método knn.
+
+Recibe como parámetros los siguientes:
+
+  - data: conjunto de datos
+  - knn_factor: número de vecinos a tener en cuenta
+  - nORp: factor que determina el límite cuando una columna tiene muchos NAs
+  - method = "median": metodo para escoger en caso de empate en la elección de valor
+  
+En esta función se eliminan las filas que tengan muchos NAs y se estimas los valores para los NAs de las filas restantes con la funció?? *knnImputation*.
+
+Como output, devuelve el dataset sin NAs.
+
+```{r knn_estimation} 
+imput_data_knn <- function(data, knn_factor, nORp=0.2, method = 'median'){
+  data <- data[-manyNAs(data, nORp = nORp),]
+  data <- knnImputation(data, k = knn_factor, meth = method)
+  return(data)
+}
+```
+
+La siguiente función lleva a cabo la imputación de NAs mediante la imputación múltiple que nos
+proporciona el paquete MICE.
+
+```{r Mice_estimation}
+imput_data_multiple <-function(data, m, maxit, method, seed, printFlag){
+  data_imputed = mice(data, m = m, maxit = maxit, method = method, seed = seed, printFlag = printFlag)
+  data_completed = complete(data_imputed, action = 1)
+
+  return(data_completed)
+}
+```
+
+### MUESTREO
+
+Para poder evaluar nuestros modelos, tenemos que tener un conjunto de datos de train que entrenen
+nuestros modelos y un conjunto de datos que test que los evaluen.
+
+La función que se presenta a continuación, realiza un muestreo de filas aleatorio del conjunto de datos dando como resultado dos conjuntos de datos diferentes, uno de test y otro de train.
+
+Para ello, se extrae la dimensión de los datos introducidos en la función y se obtiene el número de filas que van a componer el conjunto de train y test.
+
+Acto seguido, se crea un vector de índices del tamaño de todas las filas del dataset. Después, se muestrean aleatoriamente un conjunto de índices del tamaño del conjunto de train y el resto de
+índices para test. Por último, trasladamos las filas correspondientes a los índices del conjunto de train a un dataset de train, desde el dataset inicial. Repetimos el paso para el dataset de test
+
+Esta función recibe como parámetros el conjunto de datos a dividir y el porcentaje de conjunto de datos de train que se desee obtener.
+
+##### Train y Test
+
+```{r train_test}
+# Split datasets in train and test
+splitdata_test_train <- function (data_df, train_percentage){
+
+  n_data=dim(data_df)[1]
+
+  n_train=round(train_percentage*n_data)
+  # Tomamos el resto para test
+  n_test=n_data-n_train
+  
+  # Creamos los indices del conjunto de entrenamiento y de test, 
+  # ya que los hemos cogido aleatoriamente
+  indices=1:n_data
+  # Cogemos una muestra de los indices de n_train
+  indices_train= sample(indices,n_train)
+  # Aqui coge los indices contrarios
+  indices_test=indices[-indices_train]
+  # La idea es quedarnos con las filas de cada tipo de dato, no con los datos
+  
+  data_df_train=data_df[indices_train,]
+  data_df_test=data_df[indices_test,]
+  
+  return(list(training = data_df_train, test = data_df_test))
+  
+  # La salida es:
+  # output <- splitdata_test_train(data_df, train_percentage)
+  # output$training
+  # output$test
+}
+```
+
+##### Medición del rendimiento de clasificación
+
+Para comprobar el rendimiento de un modelo necesitamos establecer algunas medidas. Estas medidas se calculan a partir de la matriz de confusión y son:
+-Accuracy: Porcentaje global de aciertos en la clasificación
+-Precision: Porcentaje de los predichos como perteneciente a una clase que es correcto
+-Recall: Porcentaje de la clase que se está clasificando correctamente
+
+```{r}
+mediciones <- function(cm){
+  accuracy <- sum(diag(cm))/sum(cm)
+  precision <- diag(cm)/rowSums(cm)
+  recall <- (diag(cm)/colSums(cm))
+  print("Accuracy")
+  print(accuracy)
+  print("Precision")
+  print(precision)
+  print("Recall")
+  print(recall)
+  return(data.frame(acc=accuracy,prec=precision,rec=recall))
+}
+```
+### MODELADO
+
+En este apartado se encuentran las funciones correspondientes a diferentes tipos de modelos, los cuáles se aplicarán al conjunto de datos.
+
+##### Arbol decisión
+
+##### Random Forest
+
+El siguiente código corresponde al modelo de Random Forest modificado. La idea principal consiste en crear un bosque de modelos de
+árbol de decisión. En cada árbol, se introducirá un conjunto de muestras escogidas del conjunto de train. En cada árbol se creará
+un modelo además con un número de variables escogidas al azar y menor que el número total de variables del dataset. De esta forma,
+crearemos tantos modelos como árboles tenga el bosque y para un conjunto nuevo de datos que evalúe el modelo, se recogerán las
+votaciones o resultados que originará cada modelo y se tomará una decisión en base al resultado más común entre los modelos.
+
+Exactamente en el código primero  creamos una lista para guardar todos los modelos y guardamos en otra variable, las variables que
+conendrá cada árbol o modelo. En el bucle creamos una matriz en el se introducirán las variables y las muestras de cada modelo,
+pasaremos esas variables al modelo y guardaremos los resultados obtenidos para cada modelo.
+
+Por último, evaluamos el sistema tanto con el conjunto de datos de train como el de test.
+
+Esta función recibo como parámetros:
+
+  * data_df: datos sobre los que se aplica el modelo
+  * col_in: columnas de las variables que compondrán el modelo
+  * col_ans: columna de la variable respuesta
+  * data_train_df: datos de train
+  * data_test_df: datos de test
+  * n_trees:  numero de árboles del bosque
+  * n_vars_tree: variables de cada árbol
+  * n_samples_tree: número de muestras en cada árbol
+  * data_split: método de split de los datos del bosque 
+
+Como salida se obtiene una tabla comparativa de los aciertos y los fallos del modelo.
+
+```{r randomForest_func}
+myRandomForest <- function(data_df, col_in, col_ans, data_train_df, data_test_df, n_trees = 100, n_vars_tree = 4, n_samples_tree = 100, data_split = 'gini'){
+  # Pasos del proceso:
+  # 1. Dividimos el conjunto en train y test
+  # 2. Creación del bosque
+  
+  ## N n_trees --> numero de arboles
+  ## K n_vars_tree --> numero de variables en cada arbol
+  ## M n_samples_tree --> numero de muestras en cada arbol
+  ## data_df --> datos en un dataframe
+  ## col_in --> columnas del modelo
+  ## col_ans --> columna respuesta, deben ser factores
+  ## data_train_df --> conjunto de training
+  ## data_test_df --> conjunto de test
+  ## data_split --> método de split de los datos del bosque
+
+  # 3. Error en train --> votaciones de los arboles. Se calcula el que más veces se ha votado
+  # 4. Error en test --> votaciones de los arboles. Se calcula el que más veces se ha votado
+  
+  x.train=  data_train_df
+  x.test = data_test_df
+  
+  # Lista de árboles (modelos)
+  models= vector("list", n_trees) 
+  # Guardamos el número de cada variable usada en cada modelo o árbol. Inicializamos esa matriz
+  vars=matrix(0,n_vars_tree,n_trees)
+  
+  # Tamanno de la muestra de train
+  k=dim(x.train)[1] 
+  # Para cada árbol...
+  for (i in 1:n_trees) 
+  {
+    # a son los indices de las variables de cada modelo, de las n_vars_tree posibles, ordenadas
+    a=sort(sample(col_in,n_vars_tree))
+    # b son los indices de los n_samples_tree individuos para cada arbol
+    b=sort(sample(1:k,n_samples_tree,replace=TRUE))
+    # Matriz de b indices de individuos (filas) por a columnas, # que son las variables mas la respuesta, la 14
+    x.train.vot=x.train[b,c(a,col_ans)]
+
+    model.rp <- rpart(x.train.vot[,n_vars_tree+1] ~., data=x.train.vot[,1:n_vars_tree], cp=0.0001, parms=list(split=data_split))
+    # Guardamos el modelo
+    models[[i]]=model.rp 
+    # Guardamos las variables
+    vars[,i]=as.vector(a) 
+  }
+
+  # ERROR EN TRAIN
+  # Filas como individuos y columnas cada una de las votaciones de cada arbol
+  y.old.predict.matrix=matrix(0,k,n_trees) 
+  # Rellenamos por columna. Sacamos un modelo y
+  # damos las predicciones para cada individuo 
+  # para ese modelo, es decir, la columna.
+  for (j in 1:n_trees) 
+  {
+    # Sacamos la columna de predicciones del primer modelo, para todos los indiviuos y guardamos las variables de vars
+    prediction=predict(models[[j]], x.train[,vars[,j]]) 
+    # Pasamos a factores
+    factores=colnames(prediction) 
+    prediction.fact= factores[max.col(prediction)]
+    # Metemos las votaciones en la columna del modelo para todos los individuos
+    y.old.predict.matrix[,j]= prediction.fact 
+  }
+  # Elegimos para cada fila el factor con mayor probabilidad (más veces aparece en la fila)
+  # Revisar esto
+  max_freq <- apply(y.old.predict.matrix,1,function(x) names(which.max(table(x))))
+  
+  y.train.pred.fact=max_freq
+  y.real.train.fact=x.train[,col_ans]
+  table.rforest.train=table(y.train.pred.fact,y.real.train.fact)
+
+  # ERROR EN TEST
+  m=dim(x.test)[1] #tamanno de la muestra de test
+  y.new.predict.matrix=matrix(0,m,n_trees)
+  for (j in 1:n_trees)
+  {
+    prediction=predict(models[[j]], x.test[,vars[,j]] )
+    factores=colnames(prediction)
+    prediction.fact= factores[max.col(prediction)]
+    y.new.predict.matrix[,j]= prediction.fact
+  }
+  
+  max_freq <- apply(y.new.predict.matrix,1,function(x) names(which.max(table(x))))
+  
+  y.test.pred.fact = max_freq
+  y.real.test.fact=x.test[,col_ans]
+  table.rforest.test=table(y.test.pred.fact,y.real.test.fact)
+
+  return(list(forest_test = table.rforest.test, forest_train = table.rforest.train, cm = table.rforest.test))
+}
+```
+
+Esta técnica de random forest se podria considerar como una técnica Bagging, ya que para entrenar el modelo utilizamos diferentes conjuntos de variables y de muestras.
+
+##### Bagging
+
+```{r}
+bagging_dtree<-function(training,testing,length_divisor=4,iterations=1000)
+{
+
+  predictions<-foreach(m=1:iterations,.combine=cbind) %do% {
+    training_positions <- sample(nrow(training),
+    size=floor((nrow(training)/length_divisor)))
+    # training_positions <- seq(div_init, div_end) 
+    # # training_positions
+    train_pos<-1:nrow(training) %in% training_positions
+    
+    ctree_model <- ctree(Lito ~ ., data=training[train_pos,])
+    
+    # div_init <- div_init + mult
+    # div_end <- div_end + mult
+    # 
+    # if (div_init > nrow(training) | div_end > nrow(training)) {
+    #     div_init <- 1
+    #     div_end <- mult
+    # }
+
+    predict(ctree_model, testing)
+    
+  }
+  
+  kk <- sapply(1:nrow(predictions), function(idx) {
+  # get the number of time each entry in df occurs
+  t <- table(t(predictions[idx, ]))
+  # get the maximum count (or frequency)
+  t.max <- max(t)
+  # get all values that equate to maximum count
+  t <- as.numeric(names(t[t == t.max]))
+  })
+  
+  v <- c('Anhidrite','Cherty limestones','Limestones', 'Shale')
+  predictions <- sapply(kk, function(x){v[as.numeric(x[1])]})
+  
+  return(predictions) # rowMeans(predictions)
+}
+
+
+```
+
+###############################################################################################
+#                               *PROGRAMA PRINCIPAL*  
+
+## 1. DESCRIPCI??N DEL PROBLEMA
+
+El objetivo principal de los registros de pozos que se realizan en la industria petrolera es, determinar si una formación contiene hidrocarburos, así como también las características litológicas de la formación que los contiene. Con anterioridad a la invención de los registros geofísicos de pozos, prácticamente la única manera de conocer las propiedades fundamentales de las rocas era mediante la inspección y el análisis directo de las rocas extraídas de los sondeos y pruebas de formación.
+Los orígenes de los registros de pozos se remontan probablemente a la segunda década de este siglo; sin embargo, no fue hasta el año de 1927 cuando los hermanos Schlumberger efectuaron algunos registros de resistividad en forma experimental con objeto de localizar formaciones productoras de hidrocarburos. Posteriormente se descubrieron registros, sin embargo, podrían clasificarse en dos grandes grupos:
+
+Aquellos que registran propiedades que naturalmente existen en las rocas o debidas a fenómenos que se generan espontáneamente al perforar el pozo. Ej. Rayos Gamma y Potencial Natural.
+Aquellos que tienen como denominador común el envío de cierta señal a través de la formación, cuyo nivel de energía propia o transformada, se mide al haber recorrido cierta distancia, para obtener indirectamente propiedades de las rocas. Ej. Resistividad, Densidad y Neutrones.
+
+Los registros de los pozo representan las propiedades geofísicas de diversas propiedades de las rocas en un sondeo y puede ser utilizado para las interpretaciones geológicas. Se utilizan diferentes tipos de registros para el análisis de facies (litología, porosidad, evaluación de fluidos), y también para hacer correlaciones entre diferentes sondeos.
+Los registros geofísicos tienen ventajas y desventajas en relación con lo que ofrecen los afloramientos en términos de datos de facies. Una ventaja importante de los registros geofísicos aporta información continua de los afloramientos. Este tipo de perfil (curvas de registro) permite ver las tendencias en diversas escalas, desde el tamaño de elementos individuales dentro de un sistema de depósito, dentro de la cuenca. Por lo tanto, las investigaciones del subsuelo de las relaciones de facies y las correlaciones estratigráficas generalmente pueden llevarse a cabo a una escala mucho más grande que si se estudiara solo el afloramiento. Por otro lado, estos los registros geofísicos no pueden sustituir el estudio de rocas reales, para contar con más detalle estos pueden ser obtenidos de los afloramientos
+
+![Bajada de una sonda a un pozo para el registro geofísico](../Images/Drill.png) 
+
+Un registro geofísico, es un muestro eléctrico de los sondeos, consiste en una serie de mediciones, obtenidas por una sonda con varios sensores o antenas transmisoras y receptoras que se introduce en una perforación para determinar las curvas de cada parámetro que se desea conocer. Con esta técnica se obtiene a diferentes profundidades los parámetros físicos de la formación.
+
+Con estos datos de determina:
+
+  * Litología (en lo que se centra este trabajo)
+  * Resistividad real
+  * Densidad volumétrica
+  * Geometría
+  * Porosidad
+  * Permeabilidad.
+
+Objetivos principales de los Registros Geofísicos:
+
+  * Localizar la presencia de Hidrocarburos
+  * Determinar características de la formación (porosidad, saturación de agua, densidad, etc.).
+  * Delimitación (cambios de litología).
+  * Desviación y rumbo del sondeo.
+  * Medición del diámetro del sondeo.
+  * Dirección e inclinación de la formación.
+  * Evaluación de la cementación.
+
+
+La experiencia de Marc Rubinat como geólogo aportará al equipo los conocimientos necesarios sobre el dominio.
+
+## 2. DESCRIPCI??N DE LOS DATOS
+
+Los datos se corresponden a los resultados obtenidos de la realización de diversas pruebas de sondeo en el suelo. Estas pruebas generan unas reacciones en los materiales que son las presenta el
+dataset.
+
+```{r load_data}
+data_drill <- read.table("../data/drill.txt", sep=",", header=TRUE)
+summary(data_drill)
+```
+
+Descripción de las variables:
+
+Variabe respuesta:
+
+  * lito: litología del material.
+
+Resto de variables:
+
+  * ~A Depth: profundidad respecto la superficie (en pies).
+  * BVTX: Marcador de un volumen de un ft3 del material extraído por el taladro.
+  * AVTX : Marcador de un volumen de un ft3 extraído de la caja del sondeo AVTX = TOTAL - BVTX.
+  * RxoRt : saturación de agua (resistividad de la parte superior del sondeo(ohm·m) / resistividad de la parte
+  a perforar por el sondeo (Ohm·m)) Su valor describe el comportamiento de un material frente al paso de
+  corriente eléctrica, por lo que da una idea de lo buen o mal conductor que es.
+  * CILD : Conductividad electrica (1/ohm·m) del material es decir la inversa de la oposición que dicho material
+  presenta al movimiento de los electrones a través de el.
+  * RLL3 : Es una medida de la resistividad poco dependiente del diámetro del sondeo, el grosor de la formación
+  y la saturación en agua debido al uso de 3 electrodos para su registro. (Ohm·m).
+  * SP : Potencial Espontaneo, mide la diferencia de Voltage (DC) que existe entre un electrodo situado en el
+  sondeo y otro localizado en la superficie, se expresa en mV.
+  * RILD : Curvas de inducción profundas. Mide la conductividad de los materiales a través de la generación de
+  un campo electromagnético. Se mide en Ohm·m RILM : Curvas de inducción medias. Mide la conductividad
+  de los materiales a través de la generación de un campo electromagnético, en este caso más débil que el
+  anterior. Se mide en Ohm·m.
+  * DCAL : Mide el tamaño y la forma del sondeo.
+  * RHOB : Densidad aparente. Mediante algún tipo de material que emite radiación se mide cuantos de los
+  neutrones rebotan contra los electrones de los materiales y vuelven y cuantos electrones se pierden para inferir
+  la densidad. Se mide en g/cm3.
+  * RHOC : Densidad corregida. Mediante algún tipo de material que emite radiación se mide cuantos de los
+  neutrones rebotan contra los electrones de los materiales y vuelven y cuantos electrones se pierden para inferir
+  la densidad, en este caso la medida de densidad se corrige teniendo en cuenta el material que se utiliza para
+  la perforación. Se mide en g/cm3.
+  * DPOR : Densidad de la porosidad medido mediante la emisión y recepción de neutrones.
+  * CNLS : Registro compensado de Neutrones, realiza medidas termales y epitermales para calcular la porosidad
+  basándose en la presencia de hidrógeno en la formación.
+  * GR : Gamma ray. Mide la radiación Gamma que emite de forma natural los materiales.
+  * MCAL : microcaliper . Combinación de un caliper(DCAL) y un log compuesto por electrodos que miden la
+  resistividad de los materiales para combinando ambas informaciones conocer el diámetro del sondeo.
+  * 1MI : Micro-resistividad inversa, mide la resistividad a través de la diferencia de potencial entre dos electrodos
+  que se encuentran muy juntos y con intensidad constante .La penetración y el angulo de este es muy bajo. Se
+  mide en Ohm·m.
+  * MN : Micro-resistividad normal, mide la resistividad de los materiales a través de la diferencia de potencial
+  entre dos electrodos que se encuentran muy juntos. La penetración y el angulo de este es muy bajo. Se mide
+  en Ohm·m.
+  * DT : Tiempo Delta. Tiempo que tarda una onda sónica de alta frecuencia en viajar una cierta distancia, en μs.
+  * ITT : Distancia que tarda una onda sónica en recorrer 1 msec.
+  * SPOR : Porosidad sónica, porosidad inferida a partir del tiempo que tarda una onda sónica de alta frecuencia
+  en viajar una cierta distancia.
+  
+#### Exportación de datos sin tratar
+
+El siguiente apartado nos servirá para exportar los datos sin tratar hacia un csv.
+
+```{r export_tocsv_dirty}
+write.csv(data_drill, file = "DirtyData.csv")
+```
+
+```{r histograms_show0, warning=FALSE, fig.width=15, fig.height=8, fig.align='center'}
+var_histograms(data_drill)
+```
+
+## 3. PREPARACIÓN DE LOS DATOS
+
+A continuación se detallarán los pasos seguidos para limpiar los datos.
+
+
+
+#### Limpieza de datos
+
+```{r cleandata}
+data_drill_no_NA_Lito <- removeLitoNA(data_drill)
+data_output <- cleandata(data_drill_no_NA_Lito) 
+data_drill <- data_output$clean_data
+num_cols <- data_output$n_col
+```
+
+  * Filtrado de NAs en la variable salida *
+  
+  La variable resultado presenta valores que son NAs. En estas muestras a priori no nos valen para incluirlas en el modelo, ya que no nos dan información. Podríamos introducir un método de predicción para estos casos, pero en principio decidimos eliminar dichos casos. Tras eliminar los NAs en la variable de salida:
+  
+```{r, , warning=FALSE, fig.width=15, fig.height=10, fig.align='center'}
+var_histograms(data_drill_no_NA_Lito)
+
+```
+  
+  
+  * Valores sin sentido convertidos a NAs
+  
+  En algunas de las variables encontramos valores numéricos que, según nuestro experto en el dominio, no tienen sentido (por ejemplo, -999.25). Por ello, estos valores serán reconvertidos en NAs.
+  
+  * Agrupación de la variable resultado
+  
+  Dentro de la variable resultado, tenemos dos valores concretos con muy pocas muestras y que no son representativas para nuestro problema. Además, por su semejanza en el material con otros valores de la variable respuesta, los agruparemos. Los casos son los siguientes:
+  
+    - Carb shale, lo transformamos en -> Shale
+    - Sandstones, lo transformamos en -> Shale
+  
+  * Eliminación de variables
+  
+  La última transformación que llevaremos a cabo será la eliminicación de la variable profundidad. Esto es debido a que dicha variable puede ser considerada como un "id" con el material resultante. Es decir, con los valores de dicha variable podríamos indicar con una seguridad bastante alta, el material al que nos estamos refiriendo. Para que tenga mayor sentido el análisis de los datos, eliminaremos esta variable.
+  
+El resultado que obtenemos de la función de limpiado de datos será el dataset con los cambios aplicados y el número todal de columnas.
+
+#### Normalización de variables
+
+Como se puede observar, algunas variables se centran alrededor de un valor. Se les aplicará un logaritmo para intentar separarlas y poder extraer mas información de ellas.
+```{r separacion}    
+for(name in c("RLL3","RILD","RILM","DCAL","MCAL","MI","MN","RHOC"))
+{
+  i <- which(colnames(data_drill)==name)
+  data_drill[i] <- log(data_drill[i])
+}
+
+```
+
+#### Visualización histogramas antes de las estimaciones de datos faltantes
+
+A continuación se representarán los histogramas de los datos una vez aplicadas las transformaciones anteriormente mencionadas.
+
+```{r histograms_show1, warning=FALSE, fig.width=15, fig.height=8, fig.align='center'}
+summary(data_drill)
+var_histograms(data_drill)
+```
+
+
+#### Visualización de correlaciones antes de las estimaciones de datos faltantes
+
+A continuación se representarán los correlaciones cruzadas entre todas las variables del dataset.
+
+```{r corr1, fig.width=10, fig.height=10, fig.align='center'}
+# Vemos la correlaci??³n antes y despu??©s, sin tener en cuenta la variable respuesta, para ver si cambia la correlaci??³n entre las variables al imputar los NAs
+cm_prev <- cor(data_drill[complete.cases(data_drill),-1])
+corrplot_func(cm_prev)
+```
+
+Este gráfico se encuentra dividido por la diagonal principal con el nombre de las variables. En la diagonal superior se ven representadas las correlaciones cruazadas en forma de puntos. Cuando más grande sea el punto, mayor será la correlación. Además, dichos puntos se encuentran rellenos de color. Este color representa el signo de la correlación. Cuando más se aproxima al azul oscuro, la correlación es positiva. El contrario sería el rojo. Por otro lado, en la diagonal inferior tenemos representado la misma correlación de forma diferente. En este caso tenemos directamente el valor, con el mismo color anteriormente explicado.
+
+En la matriz anterior, podemos ver variables que se encuentran muy correladas con otras, como por ejemplo los pares DT-SPOR o
+RILD-RILM. En el caso de que tuviéramos muchas variables que tuvieran una relación muy fuerte entre ellas, podríamos emplear
+métodos para ver si pudiéramos eliminar alguna. Sin embargo, esta situación no la tenemos, por lo que formaremos los modelos
+teniendo en cuenta las variables que actualmente tenemos.
+
+<!--```{r pairs}
+pairs (~ SP + DCAL +DPOR + GR+ DT + ITT+ CILD+ RILD + RILM + MN, data_drill)
+```-->
+
+#### Tratamiento NAs
+
+Como se mencionó en el apartado 3 (PREPARACI??N DE DATOS), en concreto en la parte de limpieza de datos, tenemos muestras del conjunto que contienen valores nulos o NAs. Para poder llevar a cabo una ejecución correcta de los modelos y evitar resultados extraños, tendremos que realizar una estimación de datos faltantes sobre estos NAs. Entre las posibles opciones disponibles tenemos:
+
+  + Eliminación de las muestras con NAs 
+  + Estimación según la media de esa variable
+  + Estimación  según la mediana de esa variable
+  + Estimación  por correlación y modelado
+    Se detectan variables con NAs y las variables que tienen altas correlaciones con las primeras. A partir de éstas, se crean modelos que sirvan para la imputación de dichas muestras
+  + Estimación  por knn
+    Detección de los n valores más cercanos, según algoritmos de clusterización y elección automática del valor a imputar.
+
+En nuestro caso, hemos considerado que el método knn es el que mejores resultados nos pueden dar a priori, por lo que se realizarán todos los modelos con datos estimados con este método.
+
+##### Estimación de datos faltantes - Knn
+
+```{r estimation1}
+data_drill_knn <- imput_data_knn(data_drill,4,nORp = 0.2, "median")
+```
+
+```{r estimation2}
+data_drill_MICE <- imput_data_multiple(data_drill, m = 5, maxit = 50, method = "pmm", seed = 300, printFlag = FALSE)
+```
+#### Visualización histogramas a posteriori de las estimaciones de datos faltantes
+
+A continuación se visualizan los histogramas con las estimaciones de los datos realizadas.
+
+```{r}
+summary(data_drill_knn)
+```
+
+```{r}
+summary(data_drill_MICE)
+```
+
+```{r histograms_show2, fig.width=15, fig.height=8, fig.align='center'}
+var_histograms(data_drill_knn)
+```
+
+```{r histograms_show2_b, fig.width=15, fig.height=8, fig.align='center'}
+var_histograms(data_drill_MICE)
+```
+
+#### Visualización de correlaciones a posteriori de las estimaciones de datos faltantes
+
+```{r corr2, fig.width=10, fig.height=10, fig.align='center'}
+cm_post_knn <- cor(data_drill_knn[,-1])
+corrplot_func(cm_post_knn)
+```
+
+Si comparamos esta tabla representativa de las correlaciones con la realizada antes de las estimaciones de NAs, prácticamente obtenemos los mismos valores, por lo que dicho proceso no ha alterado la naturaleza de los datos en exceso.
+
+```{r corr2_b, fig.width=10, fig.height=10, fig.align='center'}
+cm_post_MICE <- cor(data_drill_MICE[,-1])
+corrplot_func(cm_post_MICE)
+```
+
+#### Diferencia antes y después de las estimaciones de datos faltantes
+
+```{r corrfinal, fig.width=10, fig.height=10, fig.align='center'}
+cm_dif_knn <- cm_post_knn - cm_prev
+corrplot_func(cm_dif_knn)
+```
+
+```{r corrfinal_b, fig.width=10, fig.height=10, fig.align='center'}
+cm_dif_MICE <- cm_post_MICE - cm_prev
+corrplot_func(cm_dif_MICE)
+```
+
+
+Otra prueba de que los datos no se han visto alterados en exceso ni las relaciones entre ellos, es la resta de ambas tablas de correlación. La figura anterior representa
+esta operación. Como podemos ver la mayoría de los valores están cercanos al 0. Esto nos indica que las estimaciones de NAs han servido para rellenar los valores
+faltantes sin alterar la naturaleza de los datos.
+
+Sin embargo, comparando ambos cuadros de correlaciones, vemos que en el caso de la imputación por knn, obtenemos mejores resultados (resultados más cercanos a cero en la diferencia, por lo tanto, correlaciones más similares)
+
+Elegimos la mejor estimación, que en este caso ha sido según el método de knn y renombramos el dataset.
+
+```{r}
+data_drill <- data_drill_knn
+```
+
+
+##### Train y Test
+
+De cara a ver la performance de los modelos, tenemos que entrenarlos con un conjunto de datos y evaluarlo con otro. Para ello, dividimos el conjunto de datos principal en dos datasets diferentes, uno de training compuesto por el 70% de las muestras, y otro de test, compuesto por el 30% restante.
+
+```{r train_test_split}
+train_percentage=0.7
+data_output <- splitdata_test_train(data_drill, train_percentage)
+train_df <- data_output$training
+summary(train_df)
+test_df <- data_output$test
+summary(test_df)
+```
+
+## 4. MODELADO
+
+##### Regresión logística
+
+La regresión logística es un modelo binario, es decir, sirve para separar dos clases. Como nuestro conjunto de datos es multiclase vamos a centrarnos en identificar las limestones del resto de rocas, ya que según nuestro experto, este tipo de rocas son en las que debemos centrarnos para encontrar hidrocarburos. Para ello agruparemos las limestones y cherty limestones en una clase llamada Limestones y las shale y anhidrite en Others.
+
+```{r logistic}
+levels(train_df[,1])
+aux <- train_df
+aux[,1] <- 0
+aux_test <- test_df
+aux_test[,1] <- 0
+
+
+# Objetivo: diferenciar entre limestones y otro tipo de rocas
+aux[which(train_df[,1]=="Cherty limestones"),1] <- "Limestones"
+aux[which(train_df[,1]=="Limestones"),1] <- "Limestones"
+aux[which(train_df[,1]=="Shale"), 1] <- "Others"
+aux[which(train_df[,1]=="Anhidrite"),1] <- "Others"
+
+aux_test[which(test_df[,1]=="Cherty limestones"),1] <- "Limestones"
+aux_test[which(test_df[,1]=="Limestones"),1] <- "Limestones"
+aux_test[which(test_df[,1]=="Shale"), 1] <- "Others"
+aux_test[which(test_df[,1]=="Anhidrite"),1] <- "Others"
+
+
+aux[,1] <- as.factor(aux[,1])
+aux_test[,1] <- as.factor(aux_test[,1])
+
+data_drill_glm = glm(Lito ~ ., family=binomial(link='logit'), data=aux)
+
+summary(data_drill_glm)
+
+```
+
+
+```{r}
+pred <- predict(data_drill_glm,test_df)
+pred <- ifelse(pred > 0.5,"Others","Limestones")
+cm <- table(pred=pred,real=aux_test[,1])
+print(cm)
+mediciones_glm <- mediciones(cm)
+```
+
+Los resultados obtenidos, si realizamos la predición sin tener en cuenta los subtipos de roca (mismo criterio que train), obtienen muy buenos resultados para diferenciar limestones de otro tipo de rocas. A continuación crearemos modelos multiclase y que permitan la clasificación en los distintos tipos de roca.
+
+
+##### Knn
+
+```{r}
+train_df_knn = train_df[,-(1), drop=FALSE]
+test_df_knn = test_df[,-(1), drop=FALSE]
+train_labels = train_df[,1]
+
+knn_model = knn(train_df_knn, test_df_knn, cl=train_labels, k=3)
+cm <- table(pred=knn_model,real=test_df[,1])
+print(cm)
+```
+
+A continuación se muestra el rendimiento del modelo de acuerdo a las medidas anteriormente descritas.
+
+```{r}
+mediciones_knn <- mediciones(cm)
+# print(mediciones_knn)
+```
+Se puede observar en la matriz de confusión del modelo k-nn que el resultado es bastante mejor que el obtenido con la regresión logística, aunque las cherty limestones siguen causándonos problemas, ya que solo recuperamos un 45% de las muestras.
+
+##### Arbol decisión
+
+```{r decision_tree}
+data_drill_tree <- ctree(Lito ~ ., data=train_df)
+pred <- predict(data_drill_tree, test_df)
+# summary(test_df[,1])
+
+# pred <- ifelse(pred > 0.5,1,0)
+cm <- table(pred=pred,real=test_df[,1])
+print(cm)
+
+# print.tree(data_drill_tree)
+summary(data_drill_tree)
+```
+```{r}
+mediciones_dt <- mediciones(cm)
+```
+
+Como se puede observar en la matriz de confusión, el árbol de decisión se comporta peor en nuestro conjunto de datos que el modelo k-nn, especialmente con las cherty limestones.
+
+```{r, fig.width=15, fig.height=15}
+plot(data_drill_tree)
+```
+
+
+
+
+##### Random Forest
+
+Utilizando implementación propia
+
+```{r randomForest}
+mrf <- myRandomForest(data_df = data_drill, col_in = 2:21, col_ans = 1,  data_train_df = train_df, data_test_df = test_df, n_trees = 100, n_vars_tree = 4, n_samples_tree = 1000, data_split = 'information')
+print(mrf$cm)
+mediciones_mrf <- mediciones(mrf$cm)
+```
+
+Utilizando la implementación propia vista en clase de randomForest, se puede observar que la recuperación es similar a la obtenida con el árbol de decisión. Las cherty limestones siguen siendo un problema a la hora de realizar la clasificación.
+
+
+```{r randomForest2}
+lito.rf = randomForest::randomForest(Lito ~ ., train_df)
+pred <- predict(lito.rf,test_df)
+print(lito.rf)
+cm <- table(pred=pred,real=test_df[,1])
+print(cm)
+mediciones_rf2 <- mediciones(cm)
+```
+
+Podemos ver que usando la implementación randomForest, la clasificación mejora, en gran parte debido a la clasificación correcta de las cherty limestones.
+
+##### Imputación MICE
+
+Además de la imputación de datos por Knn, se ha realizado una imputación múltiple mediante la librería MICE. Como se ha podido comprobar, ofrece unos mejores resultados la imputación knn por lo que todo el proceso de análisis se está llevando a cabo con los datos originados mediante este método.
+
+##### Bagging
+
+A continuación se llevará a cabo una técnica Bagging con la que veremos el efecto que tiene sobre los resultados obtenidos con el árbol de decisión (la técnica que ha dado peores resultados en el análisis anterior)
+
+```{r}
+btree_preds =bagging_dtree(training = train_df ,testing = test_df,length_divisor = 2,iterations = 10000)
+```
+
+```{r}
+cm <- table(pred = btree_preds, real = test_df$Lito)
+cm
+```
+
+```{r}
+# DA ERROR, NO RECONOCE CHERTY
+mediciones_bag <- mediciones(cm)
+```
+Además de nuestro propio bagging, usamos el que nos proporciona la librería adaboost
+
+```{r}
+# sub <- c(sample(1:50, 35), sample(51:100, 35), sample(101:150, 35))
+bagging_model <- bagging(Lito ~ ., data=train_df, mfinal=10)
+#Predicting with labeled data
+predbagging_model_train <-predict.bagging(bagging_model, newdata=train_df)
+predbagging_model_test <-predict.bagging(bagging_model, newdata=test_df)
+predbagging_model_train$confusion
+```
+
+```{r}
+predbagging_model_test$confusion
+```
+
+```{r}
+cm <- predbagging_model_train$confusion
+mediciones(cm)
+```
+
+```{r}
+cm <- predbagging_model_test$confusion
+mediciones_prebag <- mediciones(cm)
+```
+
+##### Boosting
+
+A partir de la librería adaboost, se ha implementado un modelo boosting.
+
+```{r}
+## rpart library should be loaded
+adaboost_model <- boosting(Lito~., data=train_df, boos=TRUE, mfinal=6)
+predboost_model_train<-predict.boosting(adaboost_model, newdata=train_df)
+predboost_model_test<-predict.boosting(adaboost_model, newdata=test_df)
+predboost_model_train$confusion
+```
+
+```{r}
+predboost_model_test$confusion
+```
+```{r}
+cm <- predboost_model_train$confusion
+mediciones(cm)
+```
+
+```{r}
+cm <- predboost_model_test$confusion
+mediciones_boost <- mediciones(cm)
+```
+
+```{r}
+importanceplot(adaboost_model)
+```
+
+##### SVM
+
+Para la implentación de las máquinas de vector soporte, hemos utilizado la librería e1071.
+
+```{r}
+#svm_model <- svm(x=train_df[,-1], y=train_df$Lito, type = "C-classification", kernel="radial", cost=10, gamma=.5, iter=1000) # Mejor con 1000 iter
+svm_model <- svm(x=train_df[,-1], y=train_df$Lito, type = "C-classification", kernel="radial", cost=10, gamma=.5)
+
+svm_predictions_train = predict(svm_model, train_df[,-1])
+svm_predictions_test = predict(svm_model, test_df[,-1])
+
+cm_train <- table(pred=svm_predictions_train, real=train_df[,1])
+cm_test <- table(pred=svm_predictions_test,real=test_df[,1])
+```
+
+```{r}
+cm_train
+```
+
+```{r}
+cm_test
+```
+
+```{r}
+# Meciciones train
+mediciones(cm_train)
+```
+
+```{r}
+# Meciciones test
+mediciones_svm <- mediciones(cm_test)
+```
+
+##### Red neuronal
+
+## Tutorial que he seguido
+https://www.r-bloggers.com/multilabel-classification-with-neuralnet-package/
+
+```{r }
+
+# Scale columns
+ maxs <- apply(train_df[,-1], 2, max) 
+ mins <- apply(train_df[,-1], 2, min)
+ scaled_train = as.data.frame(scale(train_df[,-1], center = mins, scale = maxs-mins))
+ scaled_test = as.data.frame(scale(test_df[,-1], center = mins, scale = maxs-mins))
+ # scaled_train$Lito = train_df$Lito
+# f <- as.formula(paste("Lito ~", paste(n[!n %in% "Lito"], collapse = " + ")))
+# n = colnames(scaled_train)
+# scaled_train$Lito <- train_df$Lito
+
+ scaled_train <- cbind(scaled_train,nnet::class.ind(as.factor(train_df$Lito)))
+ scaled_test <- cbind(scaled_test,nnet::class.ind(as.factor(test_df$Lito)))
+
+ names(scaled_train)[which(names(scaled_train)=="Cherty limestones")] <- "Cherty"
+ names(scaled_test)[which(names(scaled_test)=="Cherty limestones")] <- "Cherty"
+
+ nn <- neuralnet(Anhidrite+Cherty+Limestones+Shale~BVTX+AVTX+RxoRt+CILD+RLL3+SP+RILD+RILM+DCAL+RHOB+RHOC+DPOR+CNLS+GR+MCAL+MI+MN+DT+ITT+SPOR, 
+                data=scaled_train, 
+                hidden=c(3,2), 
+                act.fct = "logistic",
+                err.fct = "sse",
+                linear.output = F,
+                lifesign = "minimal",
+                threshold = 0.1,
+                rep = 1
+                )
+plot(nn)
+pr.nn <- compute(nn, scaled_test %>% select(-Anhidrite,-Cherty,-Limestones,-Shale))
+pr.nn_ <- pr.nn$net.result
+
+original_values <- max.col(scaled_test[, 21:24])
+pr.nn_2 <- max.col(pr.nn_)
+mean(pr.nn_2 == original_values)
+```
+
+
+## 5. EVALUACIÓN
+
+A continuación mostramos el precision y el recall de los algoritmos que hemos estudiado.
+
+```{r union_mediciones}
+mediciones_dt$alg <- rep("dt",4)
+mediciones_knn$alg <- rep("knn",4)
+mediciones_mrf$alg <- rep("mrf",4)
+mediciones_rf2$alg <- rep("rf2",4)
+mediciones_svm$alg <- rep("svm",4)
+mediciones_boost$alg <- rep("boost",4)
+mediciones_bag$alg <- rep("bag",4)
+mediciones_prebag$alg <- rep("prebag",4)
+union_mediciones <- rbind(mediciones_dt,
+                          mediciones_knn,
+                          mediciones_mrf,
+                          mediciones_rf2,
+                          mediciones_svm,
+                          mediciones_boost,
+                          mediciones_bag,
+                          mediciones_prebag)
+union_mediciones$alg <- factor(union_mediciones$alg)
+
+union_mediciones_no_acc <- union_mediciones %>% select(-acc)
+```
+
+```{r plot prec_vs_rec}
+
+par(bg = "burlywood1")
+plot(union_mediciones_no_acc$prec, union_mediciones_no_acc$rec, 
+     col=union_mediciones_no_acc$alg, 
+     pch=rownames(union_mediciones_no_acc), 
+     xlab = "Precision", ylab = "Recall", xlim = c(0,1), ylim=c(0,1))
+draw.arc(1, 1, (sqrt(2)/2)*(1:100/10), deg2=-360, col = 1, lty=3)
+legend(x="topleft", legend = unique(union_mediciones_no_acc$alg), fill=unique(union_mediciones_no_acc$alg))
+
+```
+
+Se puede observar que el mejor algoritmo que hemos estudiado  es la SVM, porque en media los cuatro tipos de roca aparecen más cerca de la esquina superior derecha, equivalente al punto (1,1).
+
+## 6. CONCLUSIONES
+
+Se ha realizado un estudio sobre un dataset multiclase cuya temática principal consiste en la extracción en pozos petrolíferos y el tipo de roca encontrada en cada capa de la tierra.
+
+En dicho dataset se ha realizado una preparación previa (limpieza, separación e imputación). También se han ejecutado varios modelos de clasificación sobre el conjunto de datos para intentar predecir a qué tipo de roca pertenece una extracción y se ha evaluado el rendimiento de cada uno de estos modelos con las medidas accuracy, precision y recall. Según estas medidas de rendimiento, de los modelos estudiados, el que mejor se ha comportado ha sido randomForest con una clasificación correcta de más del 88% de las muestras.
+
+En la segunda tanda de análisis, se ha incorporado un nuevo método de imputación de datos faltantes, llamado imputación múltiple. Tras compararlo con la imputación realizada (knn) se ha demostrado que el con el knn se obtienen mejores resultados. La forma de comparación ha sido mediante la diferencia de matrices de correlaciones cruzadas antes y después de realizar dichas imputaciones. Se ha podido ver que la matriz resultante con la imputación por knn, tiene valores más cercanos a cero. Esto quiere decir que apenas se ha introducido perturbación entre las dependencias de variables, lo que da como resultado una buena imputación.
+
+En cuanto a los modelos, se han implementado técnicas de bagging con el algoritmo que nos había dado peores resultados, el árbol de decisión, mejorándo desde un 82% a un 85%.. Otras técnicas aplicadas han sido boosting, SVM cuyo resultado en test ha igualado el 88% del random forest y por último una red neuronal de dos capas y 3 y 2 neuronas.
+
+

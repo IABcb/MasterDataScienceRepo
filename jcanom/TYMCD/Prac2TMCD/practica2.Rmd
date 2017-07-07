@@ -1,0 +1,137 @@
+---
+title: "Práctica Variable Aleatoria Unidimensional"
+author: "Javier Cano"
+date: "29 de octubre de 2016"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(ggplot2)
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+# 1. Calcula k para que f(x) sea realmente una funcion de densidad
+
+Sea `func` la función definida en el enunciado de la práctica. Para que sea una función de densidad debe cumplirse que la integral de la función entre -Infinito e Infinito sea igual a 1, por lo que es necesario calcular una `k` que cumpla esta restricción.
+
+Con `k=1` tenemos la siguiente función.
+
+```{r}
+func <- function(x){
+  ifelse(x>=5&x<=25,(25-x),0)
+}
+
+integrate(func,-Inf,Inf)
+
+descuento <- seq(-5,30,0.1)
+densidad <- func(descuento)
+ggplot(data.frame(descuento,densidad),aes(x=descuento,y=densidad)) + geom_area(fill="lightblue")
+```
+
+La integral de la función es 200. Despejando `k`, nos queda `k=1/200`.
+
+```{r}
+func <- function(x){
+  k <- 1/200
+  ifelse(x>=5&x<=25,(25-x)*k,0)
+}
+densidad <- func(descuento)
+p <- ggplot(data.frame(descuento,densidad),aes(x=descuento,y=densidad)) + geom_area(fill="lightblue")
+plot(p)
+```
+
+Comprobamos que la integral de la función cumple que la integral entre -Infinito e Infinito es igual a 1.
+
+```{r}
+integrate(func,-Inf,Inf)
+```
+
+# 2. Calcula la probabilidad de que un cliente obtenga más de un 20% de descuento
+
+La probabilidad es igual a la integral de la función entre 20 e infinito:
+```{r}
+integrate(func,20,Inf)
+```
+
+El área marcada en la siguiente gráfica corresponde con el valor de la integral.
+```{r}
+p + geom_area(aes(fill=descuento>20))
+```
+
+# 3. ¿Cuál es el descuento medio que se espera aplicar?
+
+Como la función es continua, la media se obtiene aplicando la integral entre -Infinito e Infinito de `x*func(x)`.
+```{r}
+fmedia <- function(x){x*func(x)}
+media <- integrate(fmedia,-Inf,Inf)
+media
+```
+
+En el siguiente gráfico se representa el valor de la media en la función de densidad.
+```{r}
+p + geom_vline(aes(xintercept=media$value), color="blue", linetype="dashed", size=1)
+```
+
+# 4. Calcula la varianza de la variable aleatoria
+
+Para calcular la varianza de una función continua, se obtiene calculando el momento de orden 2 y restándole el cuadrado de la media.
+```{r}
+fesperanza <- function(x){(x^2)*func(x)}
+varianza <- integrate(fesperanza,-Inf,Inf)$value - media$value^2
+varianza
+```
+
+# 5 ¿Entre qué valores estarán probablemente la mitad de los descuentos realizados?
+
+Para calcular los valores entre los que estarán la mitad de los descuentos realizados usamos la desigualdad de Chebyshev.
+
+```{r}
+inferior <- media$value-sqrt(2)*sqrt(varianza)
+superior <- media$value+sqrt(2)*sqrt(varianza)
+inferior
+superior
+```
+
+A continuación se muestran gráficamente:
+```{r}
+p + geom_vline(aes(xintercept=inferior), color="blue", linetype="dashed", size=1) + geom_vline(aes(xintercept=superior), color="blue", linetype="dashed", size=1)
+```
+
+# 6. ¿Cuál es la moda de la variable aleatoria?
+
+La moda es el valor que obtiene el resultado máximo en la función de densidad.
+
+```{r}
+descuento[which(densidad==max(func(descuento)))]
+```
+
+# 7. Calcula la mediana de la variable aleatoria
+
+Primero hay que calcular la función de distribución. Para ello integramos la función de densidad (usando wolframalpha) y obtenemos la siguiente función.
+```{r}
+func_d <- function(x){
+  ifelse(x>=5,
+         ifelse(x<=25,(x/8 - x^2/400)-0.5625,1)
+         ,0)
+}
+
+x2 <- seq(1,30,0.1)
+y2 <- func_d(x2)
+q <- qplot(x2,y2) + labs(title="Distribución", x="Descuento", y="Probabilidad acumulada")
+q
+```
+
+A partir de la función de distribución, obtenemos su función inversa (usando wolframalpha) y calculamos el cuantil 50 o mediana.
+```{r}
+func_di <- function(p){
+  25-20*sqrt(1-p)
+}
+
+func_di(0.5)
+```
+
+A continuación, representamos gráficamente la mediana
+```{r}
+q + geom_vline(aes(xintercept=func_di(0.5)), color="blue", linetype="dashed", size=1)
+```

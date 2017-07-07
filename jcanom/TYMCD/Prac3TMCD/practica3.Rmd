@@ -1,0 +1,169 @@
+---
+title: "Práctica 3"
+author: "Javier Cano"
+date: "5 de noviembre de 2016"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(PASWR2)
+library(ggplot2)
+library(dplyr)
+datos <- BATTERY
+```
+
+# Actividad 1
+
+```{r}
+ggplot(datos, aes(datos$lifetime)) + 
+  geom_histogram(bins=50) +
+  labs(x="Lifetime", y="Count", title="Histograma Lifetime")
+```
+
+Como se puede observar en el histograma, se observan una distribución bimodal. A continuación representaremos los datos con colores para comprobar si interesa separarlos.
+
+```{r}
+ggplot(datos,aes(datos$lifetime)) +
+  geom_histogram(aes(fill = facility, col = I("black")),bins = 50) +
+  labs(x="Lifetime", y="Count", title="Histograma Lifetime")
+```
+
+Como se observa en el segundo histograma, cada una de las modas pertenece a un fabricante distinto, por lo que sí es recomendable separar los datos.
+
+```{r}
+datos_a <- filter(datos,facility=="A")
+datos_b <- filter(datos,facility=="B")
+
+ggplot(datos_a,aes(datos_a$lifetime)) +
+  geom_histogram(fill = "pink", col = I("black"),bins = 20) +
+  labs(x="Lifetime", y="Count", title="Histograma Lifetime")
+
+ggplot(datos_b,aes(datos_b$lifetime)) +
+  geom_histogram(fill = "turquoise", col = I("black"),bins = 20) +
+  labs(x="Lifetime", y="Count", title="Histograma Lifetime")
+```
+
+A simple vista, parece que ambos tipos de batería siguen una distribución normal. Vamos a comprobarlo con gráficos QQ y correlaciones.
+
+```{r}
+qq_a <- qqnorm(datos_a$lifetime)
+cor(qq_a$x,qq_a$y)
+qq_b <- qqnorm(datos_b$lifetime)
+cor(qq_b$x,qq_b$y)
+```
+Como se puede observar en los gráficos y las correlaciones, la escala probabilística está dispuesta como una línea cercana a la recta, por lo que se puede afirmar que ambos tipos de batería siguen una distribución normal.
+
+# Actividad 2
+
+Estimaremos la media y desviación típica de cada tipo de batería.
+```{r}
+# Ya que hemos terminado con los gráficos descartamos $facility y 
+# nos quedamos exclusivamente con $lifetime para simplificar el resto del código.
+datos_a <- datos_a$lifetime
+datos_b <- datos_b$lifetime
+
+mean_a <- mean(datos_a)
+sd_a <- sd(datos_a)
+mean_b <- mean(datos_b)
+sd_b <- sd(datos_b)
+
+mean_a; sd_a;
+mean_b; sd_b
+```
+
+La probabilidad de que una batería al azar del tipo A dure más de 210 horas es:
+```{r}
+pnorm(210,mean_a,sd_a,lower.tail = F)
+```
+
+La probabilidad de que una batería al azar del tipo B dure menos de 175 horas es:
+```{r}
+p_175_b <- pnorm(175,mean_b,sd_b)
+p_175_b
+```
+
+La duración máxima del 3% que dura menos de la baterías del tipo B:
+```{r}
+qnorm(0.03,mean_b,sd_b)
+```
+
+# Actividad 3
+
+La probabilidad de que en un lote de  10 baterías del tipo B no haya defectuosas:
+```{r}
+dbinom(0,10,p_175_b)
+```
+
+La probabilidad de que la quinta batería sea la primera defectuosa:
+```{r}
+dgeom(4,p_175_b)
+```
+
+La probabilidad de que, en una caja de 20 baterías con 3 defectuosas, haya 1 defectuosa al tomar 5 sin reposición.
+```{r}
+dhyper(1,5,20-5,3)
+```
+
+# Actividad 4
+
+La fábrica B manufactura 100 baterías diarias:
+```{r}
+n_b <- 1000
+```
+
+Probabilidad de que se produzcan más de 20 baterías defectuosas, para una media de 12:
+```{r}
+ppois(20,12,F)
+```
+
+Probabilidad de que no haya baterías defectuosas:
+```{r}
+ppois(0,12)
+```
+
+La distribución de las baterías defectuosas a lo largo de la semana:
+```{r}
+set.seed(100)
+# Generamos 5000 baterías
+semana_p <- rpois(5*n_b,p_175_b)
+# Para calcular la distribución a lo largo de la semana,
+# separamos los días en un vector y sumamos las baterías defectuosas diarias
+dias <- vector()
+for(i in 1:5)
+  dias[i] <- sum(semana_p[n_b*i-1:n_b*i])
+# Comprobamos que la distribución es normal y si tiene correlación
+dist_semana <- qqnorm(dias)
+cor(dist_semana$x,dist_semana$y)
+```
+Como se observa en el gráfico QQ y la correlación, la distribución de las baterías defectuosas se ajusta a la normal.
+
+# Actividad 5
+
+Realizamos la simulación con los nuevos materiales que ajustan la fabricación a una distribución Weibull:
+```{r}
+# Generamos 5000 baterías
+total_semana_w <- rweibull(5*n_b,100,185)
+# Nos quedamos con las defectuosas
+semana_w <- total_semana_w[which(total_semana_w<175)]
+```
+
+Comprobemos si el nuevo proceso mejora la duración de las baterías. Con el proceso anterior, se generaban las siguientes baterías defectuosas a la semana:
+```{r}
+sum(semana_p)
+```
+
+Con el nuevo proceso, las baterías defectuosas por semana son:
+```{r}
+length(semana_w)
+```
+
+Por tanto, teniendo en cuenta que el proceso anterior tenía una probabilidad 
+```{r}
+p_175_b
+```
+de crear una batería defectuosa y el nuevo proceso
+```{r}
+length(semana_w)/(5*n_b)
+```
+sí que merece la pena aplicar el nuevo proceso.

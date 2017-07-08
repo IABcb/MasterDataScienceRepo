@@ -1,0 +1,142 @@
+---
+title: "Practica modelos de distribucion de probabilidad"
+author: "Alejandro Pérez Barreiro"
+date: "8 de noviembre de 2016"
+output: pdf_document
+---
+
+```{r}
+library(PASWR2)
+datos <- BATTERY
+```
+
+## Actividad 1
+
+### Punto 1
+
+```{r,warning=FALSE}
+hist(datos$lifetime, xlab = "Tiempo de duracion", main = "Histograma del tiempo de duracion")
+```
+
+Se observa claramente como la poblacion esta dividida en dos subpoblaciones que mirando en los datos se corresponden 
+a las pilas del tipo A y B
+
+### Punto 2
+
+```{r, warning=FALSE}
+library(dplyr)
+datosA <- filter(datos, facility == "A")
+datosB <- filter(datos, facility == "B")
+```
+
+### Punto 3
+
+```{r, warning=FALSE}
+hist(datosA$lifetime, xlab = "Tiempo de duracion", main = "Histograma del tiempo de duracion de las pilas A")
+hist(datosB$lifetime, xlab = "Tiempo de duracion", main = "Histograma del tiempo de duracion de las pilas B")
+```
+
+A simple vista parece que los dos tipos de pilas siguen una distribucion normal, habria que hacer una prueba mas
+exahustiva para confirmarlo.
+
+### Punto 4
+
+```{r, warning=FALSE}
+shapiro.test(datosA$lifetime)
+shapiro.test(datosB$lifetime)
+```
+
+En ambos test se obtiene un p-valor muy alto por tanto se puede suponer que la distribucion del tiempo de duracion de los dos tipos de pilas sigue una distribucion normal.
+
+## Actividad 2
+
+### Punto 1
+
+```{r}
+muA <- mean(datosA$lifetime)
+muB <- mean(datosB$lifetime)
+sdA <- sd(datosA$lifetime)
+sdB <- sd(datosB$lifetime)
+```
+
+### Punto 2
+
+```{r}
+pnorm(q = 210, mean = muA, sd = sdA, lower.tail = FALSE)
+```
+
+### Punto 3
+
+```{r}
+p <- pnorm(q = 175, mean = muB, sd = sdB)
+p
+```
+
+### Punto 4
+
+```{r}
+qnorm(p = 0.03, mean = muB, sd = sdB)
+```
+
+## Actividad 3
+
+### Punto 1
+
+```{r}
+pbinom(q = 0, size = 10, prob = p)
+```
+
+### Punto 2
+
+```{r}
+pgeom(q = 4, prob = p)
+```
+
+### Punto 3
+
+```{r}
+phyper(q = 0, m = 5, n = 15, k = 3, lower.tail = FALSE )
+```
+
+## Actividad 4
+
+### Punto 1
+
+```{r}
+ppois(q = 20, lambda = 12, lower.tail = FALSE)
+```
+
+### Punto 2
+
+```{r}
+dpois(x = 0, lambda = 12)
+```
+
+### Punto 3
+
+Como el numero de baterias defectuosas por dia sigue una distribucion de Poisson de parametro 12 y esta distribucion
+es aditiva, la distribucion semanal sera una Poisson de parametro 12*5 = 60
+
+## Actividad 5
+
+### Punto 1
+
+```{r}
+v <- rweibull(n = 5000, shape = 100, scale = 185)
+```
+
+### Punto 2
+
+```{r}
+mean(v)
+```
+
+En principio parece que si se mejora la duracion media de las baterias B que pasa de ser 179.68 a 183.93
+
+### Punto 3
+
+```{r}
+pweibull(q = 175, shape = 100, scale = 185)
+```
+
+Se observa que la proporcion de ìezas defectuosas desciende desde 0.012 a 0.003

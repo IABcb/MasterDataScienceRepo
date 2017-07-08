@@ -1,0 +1,35 @@
+---
+title: "Analisis de datos"
+output: pdf_document
+---
+
+## Ejercicio 1
+
+```{r}
+nr = 46
+no = 150
+pr = 16/nr # Probabilidad coches rojos accidentados
+po = 40/no # Probabilidad coches otro color accidentados
+intr = c(pr - qnorm(0.99,0,1)*sqrt((pr*(1-pr))/nr),pr + qnorm(0.99,0,1)*sqrt((pr*(1-pr))/nr)); intr
+into = c(po - qnorm(0.99,0,1)*sqrt((po*(1-po))/no),po + qnorm(0.99,0,1)*sqrt((po*(1-po))/no)); into
+```
+
+
+## Ejercicio 2
+
+```{r}
+prop.test(x=c(16,40), n=c(46,150), alternative="two.sided")
+```
+
+## Ejercicio 4
+
+```{r}
+p1 <- rbeta(10000,17,31)
+p2 <- rbeta(10000,41,111)
+dif <- p1 - p2
+mean(dif)
+var(dif)
+plot(density(dif))
+quantile(dif,c(0.025,0.975))
+```
+

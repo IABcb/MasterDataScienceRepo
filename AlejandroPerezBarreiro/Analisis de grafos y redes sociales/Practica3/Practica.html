@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <title>Entorno artistico de Melendi</title>
+    <link rel="stylesheet" href="practica.css">
+</head>
+<body>
+
+<script src='http://d3js.org/d3.v3.min.js'></script>
+<script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
+<script>
+
+    var colors = d3.scale.category10();
+
+    var width = 1024,
+            height = 658
+
+    var tip = d3.tip()
+            .attr('class', 'd3-tip')
+            .offset([-10, 0])
+            .html(function(d) {
+                switch (d['type']) {
+                        case 'artist':
+                            return "<strong>" + d['id'] + "</strong>" +
+                                    "<br>" +
+                                    "<strong>Followers: " + d['followers']['total'] + "</strong>" +
+                                    "<br>" +
+                                    "<strong>Popularity: " + d['popularity'] + "</strong>";
+                        default:
+                            return "<strong>" + d['id'] + "</strong>";
+                    }
+            });
+
+    var svg = d3.select("body").append("svg")
+            .attr("width", width)
+            .attr("height", height);
+
+    var pattern_def = svg.append("defs");
+
+    var force = d3.layout.force()
+            .gravity(0.02)
+            .distance(100)
+            .charge(-300)
+            .size([width, height]);
+
+    svg.call(tip);
+
+    d3.json('data/melendi_proces.json', function(error, json) {
+        if (error) throw error;
+
+        force
+                .nodes(json.nodes)
+                .links(json.links)
+                .start();
+
+        var link = svg.selectAll(".link")
+                .data(json.links)
+                .enter().append("line")
+                .attr("class", "link");
+
+        var node = svg.selectAll(".node")
+                .data(json.nodes)
+                .enter().append("g")
+                .attr("class", "node")
+                .call(force.drag)
+                .on('mouseover', tip.show)
+                .on('mouseout', tip.hide);
+
+        node.append("circle")
+                .attr("r", function (d) {
+                    if (d['type'] == 'artist') {
+                        return  7 + (d['importance'] * 70);
+                    } else {
+                        return 8;
+                    }
+                })
+                .each(function(d,i) {
+                    if (7 + (d['importance'] * 70) > 20) {
+                        if ('images' in d) {
+                            // append image pattern for each node
+                            pattern_def.append("pattern")
+                                    .attr("id", "node-img" + i)
+                                    .attr("patternUnits", "objectBoundingBox")
+                                    .attr({
+                                        "width": "100%",
+                                        "height": "100%"
+                                    })
+                                    .attr({
+                                        "viewBox": "0 0 1 1"
+                                    })
+                                    .append("image")
+                                    .attr("xlink:href", d['images'][0]['url'])
+                                    .attr({
+                                        "x": 0,
+                                        "y": 0,
+                                        "width": "1",
+                                        "height": "1",
+                                        "preserveAspectRatio": "none"
+                                    })
+
+                            d3.select(this).attr("fill", "url(#node-img" + i + ")")
+                        }
+                    } else {
+                        return 8;
+                    }
+                })
+                .style("stroke", function (d) {
+                    switch (d['community']) {
+                        case 0:
+                            return colors(0);
+                        case 1:
+                            return colors(1);
+                        case 2:
+                            return colors(2);
+                        case 3:
+                            return colors(3);
+                        default:
+                            return '#ffffff';
+                    }
+                });
+
+        var padding = 5,
+           maxRadius = 50;
+
+        node.select("circle").forEach(collide(0.1));
+
+        node.attr("fill", function (d) {
+            switch (d['community']) {
+                case 0:
+                    return colors(0);
+                case 1:
+                    return colors(1);
+                case 2:
+                    return colors(2);
+                case 3:
+                    return colors(3);
+                default:
+                    return '#ffffff';
+            }
+        });
+
+        node.on('dblclick', function (d) {
+            if (d['type'] == 'artist') {
+                window.open(d['external_urls']['spotify'], '_blank');
+            }
+        })
+
+        force.on("tick", function() {
+            link.attr("x1", function(d) { return d.source.x; })
+                    .attr("y1", function(d) { return d.source.y; })
+                    .attr("x2", function(d) { return d.target.x; })
+                    .attr("y2", function(d) { return d.target.y; });
+
+            node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+        });
+
+        function collide(alpha) {
+            var quadtree = d3.geom.quadtree(node);
+            return function(d) {
+                var r = d.radius + maxRadius + padding,
+                        nx1 = d.x - r,
+                        nx2 = d.x + r,
+                        ny1 = d.y - r,
+                        ny2 = d.y + r;
+                quadtree.visit(function(quad, x1, y1, x2, y2) {
+                    if (quad.point && (quad.point !== d)) {
+                        var x = d.x - quad.point.x,
+                                y = d.y - quad.point.y,
+                                l = Math.sqrt(x * x + y * y),
+                                r = d.radius + quad.point.radius + padding;
+                        if (l < r) {
+                            l = (l - r) / l * alpha;
+                            d.x -= x *= l;
+                            d.y -= y *= l;
+                            quad.point.x += x;
+                            quad.point.y += y;
+                        }
+                    }
+                    return x1 > nx2 || x2 < nx1 || y1 > ny2 || y2 < ny1;
+                });
+            };
+        }
+    });
+
+</script>
+</body>
+</html>

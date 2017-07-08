@@ -1,0 +1,169 @@
+CR,1 ,1 _1,Príncipe Pío
+CR,1 ,1 _2,Pirámides
+CR,1 ,1 _3,Delicias
+CR,1 ,1 _4,Méndez Álvaro
+CR,1 ,1 _5,Atocha
+CR,1 ,1 _6,Recoletos
+CR,1 ,1 _7,Nuevos Ministerios
+CR,1 ,1 _8,Chamartín
+CR,1 ,1 _9,Fuente de la Mora
+CR,1 ,1 _10,Valdebebas
+CR,1 ,1 _11,Aeropuerto T4
+CR,2 ,2 _1,Guadalajara
+CR,2 ,2 _2,Azuqueca
+CR,2 ,2 _3,Meco
+CR,2 ,2 _4,Alcalá de Henares Universidad
+CR,2 ,2 _5,Alcalá de Henares
+CR,2 ,2 _6,La Garena
+CR,2 ,2 _7,Soto del Henares
+CR,2 ,2 _8,Torrejón de Ardoz
+CR,2 ,2 _9,San Fernando
+CR,2 ,2 _10,Coslada
+CR,2 ,2 _11,Vicálvaro
+CR,2 ,2 _12,Santa Eugenia
+CR,2 ,2 _13,Vallecas
+CR,2 ,2 _14,El Pozo
+CR,2 ,2 _15,Asamblea de Madrid-Entrevías
+CR,2 ,2 _16,Atocha
+CR,2 ,2 _17,Recoletos
+CR,2 ,2 _18,Nuevos Ministerios
+CR,2 ,2 _19,Chamartín
+CR,3 ,3 _1,Aranjuez
+CR,3 ,3 _2,Ciempozuelos
+CR,3 ,3 _3,Valdemoro
+CR,3 ,3 _4,Pinto
+CR,3 ,3 _5,Getafe Industrial
+CR,3 ,3 _6,El Casar
+CR,3 ,3 _7,San Cristóbal Industrial
+CR,3 ,3 _8,San Cristóbal de los Ángeles
+CR,3 ,3 _9,Villaverde Bajo
+CR,3 ,3 _10,Atocha
+CR,3 ,3 _11,Sol
+CR,3 ,3 _12,Nuevos Ministerios
+CR,3 ,3 _13,Chamartín
+CR,3 ,3 _14,Ramón y Cajal
+CR,3 ,3 _15,Pitis
+CR,3 ,3 _16,Pinar de las Rozas
+CR,3 ,3 _17,Las Matas
+CR,3 ,3 _18,Torrelodones
+CR,3 ,3 _19,Galapagar - La Navata
+CR,3 ,3 _20,Villalba
+CR,3 ,3 _21,San Yago
+CR,3 ,3 _22,Las Zorreras
+CR,3 ,3 _23,El Escorial
+CR,4 ,4 _1,Parla
+CR,4 ,4 _2,Getafe Sector 3
+CR,4 ,4 _3,Getafe Centro
+CR,4 ,4 _4,Las Margaritas - Universidad
+CR,4 ,4 _5,Villaverde Alto
+CR,4 ,4 _6,Villaverde Bajo
+CR,4 ,4 _7,Atocha
+CR,4 ,4 _8,Sol
+CR,4 ,4 _9,Nuevos Ministerios
+CR,4 ,4 _10,Chamartín
+CR,4 ,4 _11,Fuencarral
+CR,4 ,4 _12,Cantoblanco Universidad
+CR,4 ,4 _13,Universidad P. Comillas (C-4a)
+CR,4 ,4 _14,Valdelasfuentes (C-4a)
+CR,4 ,4 _15,Alcobendas - S.S. de los Reyes (C-4a)
+CR,4 ,4 _16,El Goloso (C-4b)
+CR,4 ,4 _17,Tres Cantos (C-4b)
+CR,4 ,4 _18,Colmenar Viejo (C-4b)
+CR,5 ,5 _1,Móstoles - El Soto
+CR,5 ,5 _2,Móstoles
+CR,5 ,5 _3,Las Retamas
+CR,5 ,5 _4,Alcorcón
+CR,5 ,5 _5,San José de Valderas
+CR,5 ,5 _6,Cuatro Vientos
+CR,5 ,5 _7,Las Águilas
+CR,5 ,5 _8,Fanjul
+CR,5 ,5 _9,Aluche
+CR,5 ,5 _10,Laguna
+CR,5 ,5 _11,Embajadores
+CR,5 ,5 _12,Atocha
+CR,5 ,5 _13,Méndez Álvaro
+CR,5 ,5 _14,Doce de Octubre
+CR,5 ,5 _15,Orcasitas
+CR,5 ,5 _16,Puente Alcocer
+CR,5 ,5 _17,Villaverde Alto
+CR,5 ,5 _18,Zarzaquemada
+CR,5 ,5 _19,Leganés
+CR,5 ,5 _20,Parque Polvoranca
+CR,5 ,5 _21,La Serna
+CR,5 ,5 _22,Fuenlabrada
+CR,5 ,5 _23,Humanes
+CR,7 ,7 _1,Alcalá de Henares
+CR,7 ,7 _2,La Garena
+CR,7 ,7 _3,Soto del Henares
+CR,7 ,7 _4,Torrejón de Ardoz
+CR,7 ,7 _5,San Fernando
+CR,7 ,7 _6,Coslada
+CR,7 ,7 _7,Vicálvaro
+CR,7 ,7 _8,Santa Eugenia
+CR,7 ,7 _9,Vallecas
+CR,7 ,7 _10,El Pozo
+CR,7 ,7 _11,Asamblea de Madrid-Entrevías
+CR,7 ,7 _12,Atocha
+CR,7 ,7 _13,Recoletos
+CR,7 ,7 _14,Nuevos Ministerios
+CR,7 ,7 _15,Chamartín
+CR,7 ,7 _16,Ramón y Cajal
+CR,7 ,7 _17,Pitis
+CR,7 ,7 _18,Las Rozas
+CR,7 ,7 _19,Majadahonda
+CR,7 ,7 _20,El Barrial - C.C. Pozuelo
+CR,7 ,7 _21,Pozuelo
+CR,7 ,7 _22,Aravaca
+CR,7 ,7 _23,Príncipe Pío
+CR,7 ,7 _24,Pirámides
+CR,7 ,7 _25,Delicias
+CR,7 ,7 _26,Méndez Álvaro
+CR,7 ,7 _27,Atocha
+CR,7 ,7 _28,Recoletos
+CR,7 ,7 _29,Nuevos Ministerios
+CR,7 ,7 _30,Chamartín
+CR,7 ,7 _31,Fuente de la Mora
+CR,8 ,8 _1,Atocha
+CR,8 ,8 _2,Recoletos
+CR,8 ,8 _3,Nuevos Ministerios
+CR,8 ,8 _4,Chamartín
+CR,8 ,8 _5,Ramón y Cajal
+CR,8 ,8 _6,Pitis
+CR,8 ,8 _7,Pinar de las Rozas
+CR,8 ,8 _8,Las Matas
+CR,8 ,8 _9,Torrelodones
+CR,8 ,8 _10,Galapagar - La Navata
+CR,8 ,8 _11,Villalba
+CR,8 ,8 _12,San Yago (C-8a)
+CR,8 ,8 _13,Las Zorreras (C-8a)
+CR,8 ,8 _14,El Escorial (C-8a)
+CR,8 ,8 _15,Zarzalejo (C-8a)
+CR,8 ,8 _16,Robledo de Chavela (C-8a)
+CR,8 ,8 _17,Santa María de la Alameda (C-8a)
+CR,8 ,8 _18,Los Negrales (C8-b)
+CR,8 ,8 _19,Alpedrete (C-8b)
+CR,8 ,8 _20,Collado Mediano (C-8b)
+CR,8 ,8 _21,Los Molinos (C-8b)
+CR,8 ,8 _22,Cercedilla (C-8b)
+CR,9 ,9 _1,Cercedilla
+CR,9 ,9 _2,Puerto de Navacerrada
+CR,9 ,9 _3,Cotos
+CR,10,10_1,Villalba
+CR,10,10_2,Galapagar - La Navata
+CR,10,10_3,Torrelodones
+CR,10,10_4,Las Matas
+CR,10,10_5,Pinar de Las Rozas
+CR,10,10_6,Las Rozas
+CR,10,10_7,Majadahonda
+CR,10,10_8,El Barrial - C.C. Pozuelo
+CR,10,10_9,Pozuelo
+CR,10,10_10,Aravaca
+CR,10,10_11,Príncipe Pío
+CR,10,10_12,Pirámides
+CR,10,10_13,Delicias
+CR,10,10_14,Méndez Álvaro
+CR,10,10_15,Atocha
+CR,10,10_16,Recoletos
+CR,10,10_17,Nuevos Ministerios
+CR,10,10_18,Chamartín
+CR,10,10_19,Fuente de la Mora

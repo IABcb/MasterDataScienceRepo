@@ -1,0 +1,73 @@
+---
+title: "Practica variable aleatoria unidimensional"
+author: "Alejandro Pérez Barreiro"
+date: "7 de noviembre de 2016"
+output: pdf_document
+---
+
+## Apartado 1
+Para que f(x) sea funcion de densidad basta con que se cumpla que f(x) >= 0 para todo x y que el area encerrada bajo la curva sea igual a 1. 
+La primera condicion es obvio que se cumple para todo k no negativo, con la segunda condicion vamos a calcular el valor de k. Basta con integrar la funcion entre 5 y 25 ya que en el resto vale 0.
+
+```{r,warning=FALSE}
+intg <- integrate(function(x) (25-x), 5, 25)
+k <- 1/intg$value
+k
+```
+
+Por tanto k = 1/200
+
+## Apartado 2
+Para obtener esta probabilidad basta con hacer la integral entre 20 y 25 de la funcion.
+
+```{r, warning=FALSE}
+integrate(function(x) (25-x)/200, 20, 25)
+```
+
+Por tanto la probabilidad de que un cliente obtenga mas de un 20% de descuento es 0.0625
+
+## Apartado 3
+Para calcular el descuento medio basta con calcular la esperanza de la funcion, que se calcula haciendo la integral de x*f(x)
+
+```{r, warning=FALSE}
+esp <- integrate(function(x) x*(25-x)/200, 5, 25)
+esp$value
+```
+
+De esta manera el valor medio esperado sera de 11.6667
+
+## Apartado 4
+
+```{r, warning=FALSE}
+esp2 <- integrate(function(x) x^2*(25-x)/200, 5, 25)
+var <- esp2$value - esp$value^2
+var
+```
+
+El valor de la varianza es 22.2222
+
+## Apartado 5
+La mitad de los valores centrales estaran entre el percentil de orden 25 y el de orden 75. Para calcular estos dos
+valores hay que calcular previamente la funcion de distribucion y despues su inversa.
+La funcion de distribucion es F(x)=1/400*(-x^2+50x-225) y su inversa en el intervalo [0,1] es F1(p) = 25-20sqrt(1-p).
+Por tanto los perctentiles 25 y 75 seran:
+· Percentil 25: F1(0.25) = 7.6795
+· Percentil 75: F1(0.75) = 15
+
+## Apartado 6
+
+La moda es el maximo de la funcion f(x), vamos a representarla para ver cual es este maximo
+
+```{r, warning=TRUE}
+x <- seq(5,25,0.5)
+y <- (25-x)/200
+plot(x,y,xlim = c(0,25),'l')
+```
+
+Se observa claramente como el maximo esta en x=5 ya que fuera del intervalo [0,25] la funcion vale 0, 
+por tanto Mo(x)=5
+
+## Apartado 7
+
+La mediana es el percentil 50, asi usando la inversa de la funcion de distribucion calculada antes:
+· F1(0.5) = 10.8579

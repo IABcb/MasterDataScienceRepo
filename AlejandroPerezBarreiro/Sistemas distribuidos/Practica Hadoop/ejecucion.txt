@@ -1,0 +1,11 @@
+Pasos para la correcta ejecución del analisis de sintimientos:
+
+1- Ejecutar el script diccionario.py para, a partir del fichero AFINN-111.txt, crear el diccionario de las palabras con sus valores (diccionario.txt)
+
+2- Subir a un bucket de S3 todos los ficheros necesarios: map_tweet.py, reduce_tweet.py, diccionario.txt y tweets.json (datos de entrada)
+
+3- Crear un cluster con hadoop desde AWS EMR.
+
+4- Una vez iniciado el cluster seleccionar Add step y rellenar el formulario con la ruta S3 de nuestros archivos como se indica en la memoria.
+
+5- Los resultados se obtendran en la carpeta de salida de S3 especificada en el paso anterior.

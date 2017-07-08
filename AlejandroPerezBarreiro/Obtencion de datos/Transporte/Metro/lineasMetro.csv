@@ -1,0 +1,289 @@
+METRO,1 ,1 _1,Pinar de Chamartín
+METRO,1 ,1 _2,Bambú
+METRO,1 ,1 _3,Chamartín
+METRO,1 ,1 _4,Plaza de Castilla
+METRO,1 ,1 _5,Valdeacederas
+METRO,1 ,1 _6,Tetuán
+METRO,1 ,1 _7,Estrecho
+METRO,1 ,1 _8,Alvarado
+METRO,1 ,1 _9,Cuatro Caminos
+METRO,1 ,1 _10,Ríos Rosas
+METRO,1 ,1 _11,Iglesia
+METRO,1 ,1 _12,Bilbao
+METRO,1 ,1 _13,Tribunal
+METRO,1 ,1 _14,Gran Vía
+METRO,1 ,1 _15,Sol
+METRO,1 ,1 _16,Tirso de Molina
+METRO,1 ,1 _17,Antón Martín
+METRO,1 ,1 _18,Atocha
+METRO,1 ,1 _19,Atocha Renfe
+METRO,1 ,1 _20,Menéndez Pelayo
+METRO,1 ,1 _21,Pacífico
+METRO,1 ,1 _22,Puente de Vallecas
+METRO,1 ,1 _23,Nueva Numancia
+METRO,1 ,1 _24,Portazgo
+METRO,1 ,1 _25,Buenos Aires
+METRO,1 ,1 _26,Alto del Arenal
+METRO,1 ,1 _27,Miguel Hernández
+METRO,1 ,1 _28, Sierra de Guadalupe
+METRO,1 ,1 _29,Villa de Vallecas
+METRO,1 ,1 _30,Congosto
+METRO,1 ,1 _31,La Gavia
+METRO,1 ,1 _32,Las Suertes
+METRO,1 ,1 _33,Valdecarros
+METRO,2 ,2 _1,Las Rosas
+METRO,2 ,2 _2,Avenida de Guadalajara
+METRO,2 ,2 _3,Alsacia
+METRO,2 ,2 _4,La Almudena
+METRO,2 ,2 _5,La Elipa
+METRO,2 ,2 _6,Ventas
+METRO,2 ,2 _7,Manuel Becerra
+METRO,2 ,2 _8,Goya
+METRO,2 ,2 _9,Príncipe de Vergara
+METRO,2 ,2 _10,Retiro
+METRO,2 ,2 _11,Banco de España
+METRO,2 ,2 _12,Sevilla
+METRO,2 ,2 _13, Sol
+METRO,2 ,2 _14,Ópera
+METRO,2 ,2 _15,Santo Domingo
+METRO,2 ,2 _16,Noviciado
+METRO,2 ,2 _17,San Bernardo
+METRO,2 ,2 _18,Quevedo
+METRO,2 ,2 _19,Canal
+METRO,2 ,2 _20,Cuatro Caminos
+METRO,3 ,3 _1,Villaverde Alto
+METRO,3 ,3 _2,San Cristóbal
+METRO,3 ,3 _3,Villaverde Bajo - Cruce
+METRO,3 ,3 _4,Ciudad de los Ángeles
+METRO,3 ,3 _5,San Fermín - Orcasur
+METRO,3 ,3 _6,Hospital 12 de Octubre
+METRO,3 ,3 _7,Almendrales
+METRO,3 ,3 _8,Legazpi
+METRO,3 ,3 _9,Delicias
+METRO,3 ,3 _10,Palos de la Frontera
+METRO,3 ,3 _11,Embajadores
+METRO,3 ,3 _12,Lavapiés
+METRO,3 ,3 _13,Sol
+METRO,3 ,3 _14,Callao
+METRO,3 ,3 _15,Plaza de España
+METRO,3 ,3 _16,Ventura Rodríguez
+METRO,3 ,3 _17,Argüelles
+METRO,3 ,3 _18,Moncloa
+METRO,4 ,4 _1,Argüelles
+METRO,4 ,4 _2,San Bernardo
+METRO,4 ,4 _3,Bilbao
+METRO,4 ,4 _4,Alonso Martínez
+METRO,4 ,4 _5,Colón
+METRO,4 ,4 _6,Serrano
+METRO,4 ,4 _7,Velázquez
+METRO,4 ,4 _8,Goya
+METRO,4 ,4 _9,Lista
+METRO,4 ,4 _10,Diego de León
+METRO,4 ,4 _11,Avenida de América
+METRO,4 ,4 _12,Prosperidad
+METRO,4 ,4 _13,Alfonso XIII
+METRO,4 ,4 _14,Avenida de la Paz
+METRO,4 ,4 _15,Arturo Soria
+METRO,4 ,4 _16,Esperanza
+METRO,4 ,4 _17,Canillas
+METRO,4 ,4 _18,Mar de Cristal
+METRO,4 ,4 _19,San Lorenzo
+METRO,4 ,4 _20,Parque de Santa María
+METRO,4 ,4 _21,Hortaleza
+METRO,4 ,4 _22,Manoteras
+METRO,4 ,4 _23,Pinar de Chamartín
+METRO,5 ,5 _1,Alameda de Osuna
+METRO,5 ,5 _2,El Capricho
+METRO,5 ,5 _3,Canillejas
+METRO,5 ,5 _4,Torre Arias
+METRO,5 ,5 _5,Suanzes
+METRO,5 ,5 _6,Ciudad Lineal
+METRO,5 ,5 _7,Pueblo Nuevo
+METRO,5 ,5 _8,Quintana
+METRO,5 ,5 _9,El Carmen
+METRO,5 ,5 _10,Ventas
+METRO,5 ,5 _11,Diego de León
+METRO,5 ,5 _12,Núñez de Balboa
+METRO,5 ,5 _13,Rubén Darío
+METRO,5 ,5 _14,Alonso Martínez
+METRO,5 ,5 _15,Chueca
+METRO,5 ,5 _16,Gran Vía
+METRO,5 ,5 _17,Callao
+METRO,5 ,5 _18,Ópera
+METRO,5 ,5 _19,La Latina
+METRO,5 ,5 _20,Puerta de Toledo
+METRO,5 ,5 _21,Acacias
+METRO,5 ,5 _22, Pirámides
+METRO,5 ,5 _23,Marqués de Vadillo
+METRO,5 ,5 _24,Urgel
+METRO,5 ,5 _25,Oporto
+METRO,5 ,5 _26,Vista Alegre
+METRO,5 ,5 _27,Carabanchel
+METRO,5 ,5 _28, Eugenia de Montijo
+METRO,5 ,5 _29,Aluche
+METRO,5 ,5 _30,Empalme
+METRO,5 ,5 _31,Campamento
+METRO,5 ,5 _32, Casa de Campo
+METRO,6 ,6 _1,Laguna
+METRO,6 ,6 _2,Carpetana
+METRO,6 ,6 _3,Oporto
+METRO,6 ,6 _4,Opañel
+METRO,6 ,6 _5,Plaza Elíptica
+METRO,6 ,6 _6,Usera
+METRO,6 ,6 _7,Legazpi
+METRO,6 ,6 _8, Arganzuela - Planetario
+METRO,6 ,6 _9,Méndez Álvaro
+METRO,6 ,6 _10,Pacífico
+METRO,6 ,6 _11,Conde de Casal
+METRO,6 ,6 _12,Sáinz de Baranda
+METRO,6 ,6 _13,O'Donnell
+METRO,6 ,6 _14,Manuel Becerra
+METRO,6 ,6 _15,Diego de León
+METRO,6 ,6 _16,Avenida de América
+METRO,6 ,6 _17,República Argentina
+METRO,6 ,6 _18,Nuevos Ministerios
+METRO,6 ,6 _19,Cuatro Caminos
+METRO,6 ,6 _20,Guzmán el Bueno
+METRO,6 ,6 _21,Metropolitano
+METRO,6 ,6 _22,Ciudad Universitaria
+METRO,6 ,6 _23,Moncloa
+METRO,6 ,6 _24,Argüelles
+METRO,6 ,6 _25,Príncipe Pío
+METRO,6 ,6 _26,Puerta del Ángel
+METRO,6 ,6 _27,Alto de Extremadura
+METRO,6 ,6 _28,Lucero
+METRO,7 ,7 _1,Hospital del Henares
+METRO,7 ,7 _2,Henares
+METRO,7 ,7 _3,Jarama
+METRO,7 ,7 _4,San Fernando
+METRO,7 ,7 _5,La Rambla
+METRO,7 ,7 _6,Coslada Central
+METRO,7 ,7 _7,Barrio del Puerto
+METRO,7 ,7 _8,Estadio Olímpico
+METRO,7 ,7 _9,Las Musas
+METRO,7 ,7 _10,San Blas
+METRO,7 ,7 _11,Simancas
+METRO,7 ,7 _12,García Noblejas
+METRO,7 ,7 _13,Ascao
+METRO,7 ,7 _14,Pueblo Nuevo
+METRO,7 ,7 _15,Barrio de la Concepción
+METRO,7 ,7 _16,Parque de las Avenidas
+METRO,7 ,7 _17,Cartagena
+METRO,7 ,7 _18,Avenida de América
+METRO,7 ,7 _19,Gregorio Marañón
+METRO,7 ,7 _20,Alonso Cano
+METRO,7 ,7 _21,Canal
+METRO,7 ,7 _22,Islas Filipinas
+METRO,7 ,7 _23,Guzmán el Bueno
+METRO,7 ,7 _24,Francos Rodríguez
+METRO,7 ,7 _25,Valdezarza
+METRO,7 ,7 _26,Antonio Machado
+METRO,7 ,7 _27,Peñagrande
+METRO,7 ,7 _28,Avenida de la Ilustración
+METRO,7 ,7 _29,Lacoma
+METRO,7 ,7 _30,Pitis
+METRO,8 ,8 _1,Nuevos Ministerios
+METRO,8 ,8 _2,Colombia
+METRO,8 ,8 _3,Pinar del Rey
+METRO,8 ,8 _4,Mar de Cristal
+METRO,8 ,8 _5,Campo de las Naciones
+METRO,8 ,8 _6,Aeropuerto T1-T2-T3
+METRO,8 ,8 _7,Barajas
+METRO,8 ,8 _8,Aeropuerto T4
+METRO,9 ,9 _1,Paco de Lucía
+METRO,9 ,9 _2,Mirasierra
+METRO,9 ,9 _3,Herrera Oria
+METRO,9 ,9 _4,Barrio del Pilar
+METRO,9 ,9 _5,Ventilla
+METRO,9 ,9 _6,Plaza de Castilla
+METRO,9 ,9 _7,Duque de Pastrana
+METRO,9 ,9 _8,Pío XII
+METRO,9 ,9 _9,Colombia
+METRO,9 ,9 _10,Concha Espina
+METRO,9 ,9 _11,Cruz del Rayo
+METRO,9 ,9 _12,Avenida de América
+METRO,9 ,9 _13,Núñez de Balboa
+METRO,9 ,9 _14,Príncipe de Vergara
+METRO,9 ,9 _15, Ibiza
+METRO,9 ,9 _16,Sáinz de Baranda
+METRO,9 ,9 _17,Estrella
+METRO,9 ,9 _18,Vinateros
+METRO,9 ,9 _19,Artilleros
+METRO,9 ,9 _20,Pavones
+METRO,9 ,9 _21,Valdebernardo
+METRO,9 ,9 _22,Vicálvaro
+METRO,9 ,9 _23,San Cipriano
+METRO,9 ,9 _24,Puerta de Arganda
+METRO,9 ,9 _25,Rivas Urbanizaciones
+METRO,9 ,9 _26,Rivas Futura
+METRO,9 ,9 _27,Rivas Vaciamadrid
+METRO,9 ,9 _28,La Poveda
+METRO,9 ,9 _29,Arganda del Rey
+METRO,10,10_1,Hospital Infanta Sofía
+METRO,10,10_2,Reyes Católicos
+METRO,10,10_3,Baunatal
+METRO,10,10_4,Manuel de Falla
+METRO,10,10_5,Marqués de la Valdavia
+METRO,10,10_6,La Moraleja
+METRO,10,10_7,La Granja
+METRO,10,10_8,Rda. de la Comunicación
+METRO,10,10_9,Las Tablas
+METRO,10,10_10,Montecarmelo
+METRO,10,10_11,Tres Olivos
+METRO,10,10_12,Fuencarral
+METRO,10,10_13,Begoña
+METRO,10,10_14,Chamartín
+METRO,10,10_15,Plaza de Castilla
+METRO,10,10_16,Cuzco
+METRO,10,10_17,Santiago Bernabéu
+METRO,10,10_18,Nuevos Ministerios
+METRO,10,10_19,Gregorio Marañón
+METRO,10,10_20,Alonso Martínez
+METRO,10,10_21,Tribunal
+METRO,10,10_22,Plaza de España
+METRO,10,10_23,Príncipe Pío
+METRO,10,10_24, Lago
+METRO,10,10_25,Batán
+METRO,10,10_26,Casa de Campo
+METRO,10,10_27,Colonia Jardín
+METRO,10,10_28,Aviación Española
+METRO,10,10_29,Cuatro Vientos
+METRO,10,10_30,Joaquín Vilumbrales
+METRO,10,10_31,Puerta del Sur
+METRO,11,11_1,Plaza Elíptica
+METRO,11,11_2,Abrantes
+METRO,11,11_3,Pan Bendito
+METRO,11,11_4,San Francisco
+METRO,11,11_5,Carabanchel Alto
+METRO,11,11_6,La Peseta
+METRO,11,11_7,La Fortuna
+METRO,12,12_1,Puerta del Sur
+METRO,12,12_2,Parque Lisboa
+METRO,12,12_3,Alcorcón Central
+METRO,12,12_4,Parque Oeste
+METRO,12,12_5,Universidad Rey Juan Carlos
+METRO,12,12_6,Móstoles Central
+METRO,12,12_7,Pradillo
+METRO,12,12_8,Hospital de Móstoles
+METRO,12,12_9,Manuela Malasaña
+METRO,12,12_10,Loranca
+METRO,12,12_11,Hospital de Fuenlabrada
+METRO,12,12_12,Parque Europa
+METRO,12,12_13,Fuenlabrada Central
+METRO,12,12_14,Parque de los Estados
+METRO,12,12_15,Arroyo Culebro
+METRO,12,12_16,Conservatorio
+METRO,12,12_17,Alonso de Mendoza
+METRO,12,12_18,Getafe Central
+METRO,12,12_19, Juan de la Cierva
+METRO,12,12_20,El Casar
+METRO,12,12_21,Los Espartales
+METRO,12,12_22,El Bercial
+METRO,12,12_23,El Carrascal
+METRO,12,12_24,Julian Besteiro
+METRO,12,12_25,Casa del Reloj
+METRO,12,12_26,Hospital Severo Ochoa
+METRO,12,12_27,Leganés Central
+METRO,12,12_28,San Nicasio
+METRO,R ,R _1,Ópera
+METRO,R ,R _2,Príncipe Pío

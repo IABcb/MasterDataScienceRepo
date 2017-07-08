@@ -1,0 +1,128 @@
+---
+title: "Hoja de ejercicios 1"
+author: "Alejandro Perez Barreiro"
+date: "13 de febrero de 2017"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r warning=FALSE, message=FALSE}
+library(igraph)
+```
+
+## Pregunta 1
+
+```{r warning=FALSE}
+setwd("C:/Users/MSI/Desktop/Master en Data Science/Analisis de grafos y redes sociales/Evaluacion/Practica1/grafo_twitter")
+data <- read.table("out.ego-twitter", sep = " ")
+vertid <- c(1:max(data[,1:2]))
+g <- graph.data.frame(data,directed=TRUE, vertices = vertid)
+```
+
+## Pregunta 2
+
+```{r warning=FALSE, echo = FALSE}
+plot(g)
+conexo <- is.connected(g)
+dirigido <- is.directed(g)
+ponderado <- is.weighted(g)
+```
+¿Es el grafo conexo? `r conexo`.
+¿Se trata de un grafo dirigido? `r dirigido`.
+¿Es un grafo ponderado? `r ponderado`.
+Por tanto se trata de un grafo no conexo que se divide en `r clusters(g)$no` subgrafos, dirigido y no ponderado. La densidad del grafo es del `r graph.density(g)*100`%, por lo que se trata de un grafo disperso. En este caso, la matriz de adyacencia no es eficiente, puesto que contiene una gran cantidad de huecos. Por lo tanto, es recomendable utilizar la lista de adyacencia, que es mas compacta.
+En el caso de la visualizacion no se puede apreciar nada a simple vista.
+
+## Pregunta 3
+
+En este caso, al ser el grafo un grafo dirigido, cada vertice va a tener un grado de entrada y un grado de salida. El grado de entrada indicara que el numero de seguidores que tiene ese usuario en Twitter mientras que el grado de salida indicara el numero de personas a las que sigue dicho usuario. Siendo la suma de ambos grados el grado total.
+
+```{r warning=FALSE, echo=FALSE}
+d <- graph.strength(g)
+hist(d, breaks = 10, col="red", xlab="Vertex Strength", ylab="Frequency", main="", xlim = c(0,100))
+```
+
+Se observa como la mayoria de los vertices no tienen un grado superior a 20, lo que significa que en esta red la mayoria de los usuarios siguen y son seguidos por poca gente.
+
+## Pregunta 4
+
+```{r, echo = FALSE}
+subgraph1 = induced.subgraph(g,c('190','191','192','192','193','194','13167'))
+plot(subgraph1)
+```
+
+Se ve claramente como el subgrafo inducido por esos vertices no es fuertemente conexo ya que desde el vertice 194 no hay ningun camino hasta el 190. Este subgrafo seria debilmente conexo puesto que si lo suponemos no dirigido entonces existe un camino entre todos los pares de vertices.
+
+## Pregunta 5
+
+El usuario con mayor numero de seguidores es el `r V(g)$name[degree(g,mode = "in")==max(degree(g, mode="in"))]` con `r max(degree(g, mode="in"))` seguidores. Y el usuario que mas gente sigue es el `r V(g)$name[degree(g,mode = "out")==max(degree(g, mode="out"))]` que sigue a `r max(degree(g, mode="out"))` usuarios.
+
+## Pregunta 6
+
+El usuario 1305 tiene `r degree(g, v=1305, mode="in")` seguidores, que son: `r neighbors(g, v = 1305, mode = "in")`
+
+## Pregunta 7
+
+El usuario 1373 sigue a `r degree(g, v=1373, mode="out")` usuarios, que son: `r neighbors(g, v = 1373, mode = "out")`
+
+## Pregunta 8
+
+La proporcion de seguidores/seguidos es `r degree(g, v = 13815, mode = "in")/degree(g, v = 13815, mode = "out")` que es una proporcion muy baja, por tanto no es un usuario influyente.
+
+## Pregunta 9
+
+```{r}
+im <- infomap.community(g)
+sizes(im)
+```
+
+El grafo esta formado por 95 comunidades donde hay una principal con 22283 nodos.
+
+## Pregunta 10
+
+```{r, echo=FALSE}
+indices1 <- which(im$membership[vertid]==5)
+subgraph2 <- induced.subgraph(g, indices1)
+plot(subgraph2)
+```
+
+Representando el subgrafo de esa comunidad se observa claramente que el usuario menos influyente es el 1445 ya que sigue a `r degree(subgraph2, v = 1, mode = "out")` de `r length(V(subgraph2))` usuarios y a el le siguen `r degree(subgraph2, v = 1, mode = "in")`
+
+## Pregunta 11
+
+```{r}
+indices <- which(im$membership[vertid]==1)
+subgraph3 <- induced.subgraph(g, indices)
+```
+
+### A)
+
+Para responder a esta pregunta hay que mirar la centralidad de los vertices con la medida closeness centrality, el mas central sera el mas cercano al resto.
+
+```{r}
+sort(closeness(subgraph3), decreasing = TRUE)[1]
+```
+
+Asi se obtiene que el vertice mas cercano al resto es el 7045 con una closeness centrality de 2.35702
+
+### B)
+
+El controlador de mayor flujo de informacion sera aquel con mayor betweenness centrality
+
+```{r}
+sort(betweenness(subgraph3), decreasing = TRUE)[1]
+```
+
+Por tanto el vertice que controla un mayor flujo de informacion es el 1368
+
+
+
+
+
+
+
+
+
